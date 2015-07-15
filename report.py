@@ -50,16 +50,16 @@ def drawIspAll(fpath):
     print("ISP Total URL: " + plot_url)
     py.image.save_as({'data': data}, 'ISPTotal.png')
     
-def drawTldPolar(fpath, gname):
+def drawTldPolar(fpath, gname, fields):
     with open(fpath) as tldCsv:
         reader = csv.DictReader(tldCsv)
         tld = []
         count = []
         total = 0
         for row in reader:
-            tld.append(row['Top Level Domain'])
-            count.append(float(row['count']))
-            total += float(row['count'])
+            tld.append(row[fields[0]])
+            count.append(float(row[fields[1]]))
+            total += float(row[fields[1]])
         wedges = []
         for i in range(len(count)):
             wedges.append(
@@ -87,12 +87,17 @@ def drawTldPolar(fpath, gname):
         fig = Figure(data=data, layout=layout)
         plot_url = py.plot(fig, filename=gname)
         print(gname + ': ' + plot_url)
-        py.image.save_as({'data': data}, gname + '.png')
+        #py.image.save_as({'data': data}, gname + '.png')
 
 def main():
-    csvDir = 'HKSWROutput/report/'    
+    csvDir = 'HKSWROutput/report/'    # Relative path to .csv data files  
     drawIspAll(csvDir + 'ISPAll.csv')
-    drawTldPolar(csvDir + 'DefacementTld.csv', 'Defacement - ISP Distribution')
+    drawTldPolar(csvDir + 'DefacementTld.csv', 'Defacement - ISP Distribution',
+                    ['Top Level Domain', 'count'])
+    drawTldPolar(csvDir + 'MalwareTld.csv', 'Malware - ISP Distribution',
+                    ['Top Level Domain', 'count'])
+    drawTldPolar(csvDir + 'PhishingTld.csv', 'Phishing - ISP Distribution',
+                    ['Tld', 'Count'])
 
 if __name__ == "__main__":    
     main()    
