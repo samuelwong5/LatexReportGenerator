@@ -49,7 +49,9 @@ def drawBarChart(file_path, max, chart_title, bar_mode):
     fig = Figure(data=chartData,layout=layout)
     plot_url = py.plot(fig, chart_title)
     downloadPng(plot_url, 'graphs/' + chart_title + '.png')      
-            
+
+
+# DEPRECATED FUNCTION: DRAWISPALL
 def drawIspAll(fpath):
     isp = []
     dfc = []
@@ -135,7 +137,9 @@ def drawTldPolar(fpath, gname, fields):
         plot_url = py.plot(fig, filename=gname)
         print(gname + ': ' + plot_url)
         downloadPng(plot_url, 'graphs/' + gname + '.png')
-        
+
+# url: html url to .png file
+# output: output relative file location        
 def downloadPng(url, output):
     r = requests.get(url + '.png', stream=True)
     if r.status_code == 200:
@@ -148,8 +152,17 @@ def downloadPng(url, output):
         print('Saving image\nFROM: ' + url + '.png\nTO:   ' + output)
 
 def main():
-    csvDir = 'HKSWROutput/report/'    # Relative path to .csv data files  
-    drawIspAll(csvDir + 'ISPAll.csv')
+    csvDir = 'HKSWROutput/report/'    # Relative path to .csv data files
+    bar_chart_max_bars = 10           # Number of bars in bar chart  
+    bar_chart_fname = [('ISPAll.csv', 'Top 10 ISPs for all event types'),
+                       ('ISPServerAll.csv', 'Top 10 ISPs by Server related event types'),
+                       ('ISPBotnets.csv', 'Top 10 ISPs by Non-server event type')                       
+                      ]
+    for b in bar_chart_fname:
+        drawBarChart(csvDir + b[0], 
+                        bar_chart_max_bars, 
+                        b[1], 'stack')
+                        
     drawTldPolar(csvDir + 'DefacementTld.csv', 'Defacement - ISP Distribution',
                     ['Top Level Domain', 'count'])
     drawTldPolar(csvDir + 'MalwareTld.csv', 'Malware - ISP Distribution',
@@ -158,8 +171,19 @@ def main():
                     ['Tld', 'Count'])
 
 def test():
-    csvDir = 'HKSWROutput/report/'    # Relative path to .csv data files  
-    drawBarChart(csvDir + 'ISPAll.csv', 10, 'ISP_Total', 'stack')
+    csvDir = 'HKSWROutput/report/'    # Relative path to .csv data files
+    bar_chart_max_bars = 10           # Number of bars in bar chart  
+    bar_chart_fname = [('ISPAll.csv', 'Top 10 ISPs for all event types'),
+                       ('ISPServerAll.csv', 'Top 10 ISPs by Server related event types'),
+                       ('ISPBotnets.csv', 'Top 10 ISPs by Non-server event type')                       
+                      ]
+    for b in bar_chart_fname:
+        fname = str(bar_chart_fname[0])
+        ctitle = str(bar_chart_fname[1])
+        drawBarChart(csvDir + fname, 
+                        bar_chart_max_bars, 
+                        ctitle, 'stack')
     
 if __name__ == "__main__":    
-    test() #main()   
+    main() 
+    #test()   
