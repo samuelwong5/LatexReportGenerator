@@ -1,0 +1,80 @@
+Botnet family,count
+Conficker,10964
+ZeroAccess,10191
+Zeus,4249
+Virut,2210
+Non Botnet,1873
+Tinba,750
+Unclassified-ddos-participant-ssdp-amplifier,692
+Pushdo,659
+Ramnit,370
+Sality,312
+Unclassified-bitdefender-foreign,302
+Unclassified-intel-darknet,257
+Bankpatch,248
+Unclassified-bedep,241
+Unclassified-multiple-malware-unknown-requests,227
+Citadel,214
+Darknet,172
+Gamarue,144
+-,119
+Wapomi,103
+Unclassified-multiple-malware-test-t11-citadel-report,98
+Unclassified-multiple-malware unknown-requests,97
+Dyre,73
+Unclassified-multiple-malware test-t11 citadel:report,54
+Ramdo,49
+Unclassified-aaeh,44
+Unclassified-multiple-malware-citadel-report,41
+Unclassified-intel-honeypot-syn,41
+Torpig,40
+Unclassified-multiple-malware-cit-21-citadel-report,36
+Unclassified-cryptphp,30
+Gozi,26
+Caphaw,24
+Unclassified-multiple-malware cit-21 citadel:report,22
+Unclassified-multiple-malware,18
+Geodo,17
+Unclassified-multiple-malware citadel:report,17
+IRC Bot,17
+Unclassified-nymaim,13
+APT,13
+Unclassified-kovter,12
+Feodo,11
+Unclassified-gamaure,11
+Unclassified-multiple-malware-malware-andromeda-gamarue-report-andromeda,11
+Unclassified-rovnix,8
+Unclassified-Kovter,7
+Unclassified-domreg,6
+Unclassified-bezigate,6
+Unclassified-spambot1,6
+Unclassified-javascript-bot,6
+Patcher,6
+Simda,6
+Unclassified-CryptPHP,5
+Unclassified-bitdefender-sumxa,5
+Unclassified-andromeda,4
+Unclassified-multiple-malware malware:andromeda gamarue report:andromeda,4
+Spyeye,3
+Unclassified-downloaderbot-2,3
+Unclassified-dyndns-mirage-apt,3
+Unclassified-plasma-tomas,3
+Ebury,2
+Dorkbot,2
+Unclassified-downloaderbot-mxb,2
+Unclassified-maliciouswebsites,2
+Unclassified-redyms,2
+DDoS_DirtJumper,2
+Unclassified-ircbot-b54,1
+Unclassified-keylogger-vbklip,1
+Dofoil,1
+Unclassified-vbklip-vbklip,1
+Unclassified-shiz,1
+Unclassified-vbklip,1
+dorkbot,1
+Unclassified-Nymaim,1
+Unclassified-bitdefender-nymaim,1
+Unclassified-Redyms,1
+Unclassified-multiple-malware mix2 malware:citadel citadel:report,1
+Unclassified-malwaretom,1
+Unclassified-smart12,1

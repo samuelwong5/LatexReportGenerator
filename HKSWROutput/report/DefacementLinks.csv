@@ -1,0 +1,384 @@
+ip,url,attack_vector,count
+202.181.160.227,http://oriontrading.hk,SQL Injection,0
+124.248.244.59,http://446.hk/index.php,known vulnerability (i.e. unpatched system),0
+124.248.244.59,http://16788.org,known vulnerability (i.e. unpatched system),0
+124.248.244.59,http://8888bogou.com/index.php,known vulnerability (i.e. unpatched system),0
+58.64.161.132,http://www.ambiance.hk/mw.php,known vulnerability (i.e. unpatched system),0
+58.64.161.132,http://www.ejointech.com/mw.php,known vulnerability (i.e. unpatched system),0
+58.64.161.132,http://www.ksairfilter.com/mw.php,known vulnerability (i.e. unpatched system),0
+58.64.161.132,http://mxzj365.com/ksh.htm,File Inclusion,0
+58.64.161.132,http://pacaserver.com/ksh.htm,File Inclusion,0
+58.64.161.132,http://szzuoku.com/ksh.htm,File Inclusion,0
+58.64.161.132,http://zjugx.com/ksh.htm,File Inclusion,0
+58.64.161.132,http://www.fuxinglong.com/mw.php,known vulnerability (i.e. unpatched system),0
+58.64.161.132,http://www.goodtake.tv/mw.php,known vulnerability (i.e. unpatched system),0
+58.64.161.132,http://bluemen.cn/ksh.htm,File Inclusion,0
+58.64.161.132,http://cezju.com/ksh.htm,File Inclusion,0
+58.64.161.132,http://zhanlanlvcai.com/ksh.htm,File Inclusion,0
+58.64.161.132,http://mailaobao.com/ksh.htm,File Inclusion,0
+58.64.161.132,http://www.jhn168.com/mw.php,known vulnerability (i.e. unpatched system),0
+58.64.161.132,http://www.zenghaoyun.com/mw.php,known vulnerability (i.e. unpatched system),0
+58.64.161.132,http://gzuan.com/ksh.htm,File Inclusion,0
+58.64.161.132,http://989933.com/ksh.htm,File Inclusion,0
+58.64.161.132,http://www.tianzisalon.com/mw.php,known vulnerability (i.e. unpatched system),0
+58.64.161.132,http://www.getdesigns.cn/mw.php,known vulnerability (i.e. unpatched system),0
+58.64.161.132,http://web.szdns.cn/mw.php,known vulnerability (i.e. unpatched system),0
+58.64.161.132,http://www.jidanhua.me/mw.php,known vulnerability (i.e. unpatched system),0
+58.64.161.132,http://www.efooo.com/mw.php,known vulnerability (i.e. unpatched system),0
+58.64.161.132,http://www.szatp56.com/mw.php,known vulnerability (i.e. unpatched system),0
+58.64.161.132,http://www.sibaotang.com/mw.php,known vulnerability (i.e. unpatched system),0
+58.64.161.132,http://fxtxh.com/ksh.htm,File Inclusion,0
+58.64.161.132,http://whhx.org/ksh.htm,File Inclusion,0
+58.64.161.132,http://uoogou.com.cn/ksh.htm,File Inclusion,0
+58.64.161.132,http://www.zjuceo.cn/mw.php,known vulnerability (i.e. unpatched system),0
+58.64.161.132,http://www.yugan888.com/mw.php,known vulnerability (i.e. unpatched system),0
+58.64.161.132,http://www.zorenhoda.com/mw.php,known vulnerability (i.e. unpatched system),0
+58.64.161.132,http://www.zwnfm.com/mw.php,known vulnerability (i.e. unpatched system),0
+58.64.161.132,http://www.chinabj-ip.com/mw.php,known vulnerability (i.e. unpatched system),0
+58.64.161.132,http://www.jjmxjx.com/mw.php,known vulnerability (i.e. unpatched system),0
+58.64.161.132,http://kprsensors.com/ksh.htm,File Inclusion,0
+58.64.161.132,http://nfjd.cc/ksh.htm,File Inclusion,0
+58.64.161.132,http://tvdreambox.com/ksh.htm,File Inclusion,0
+58.64.161.132,http://underreef.com/ksh.htm,File Inclusion,0
+58.64.161.132,http://ysppmh.cn/ksh.htm,File Inclusion,0
+58.64.161.132,http://kqglq.com/ksh.htm,File Inclusion,0
+58.64.161.132,http://sinocea.com/ksh.htm,File Inclusion,0
+58.64.161.132,http://song4.cn/ksh.htm,File Inclusion,0
+58.64.161.132,http://sunlaws.com/ksh.htm,File Inclusion,0
+58.64.161.132,http://wuhangeli.com/ksh.htm,File Inclusion,0
+58.64.161.132,http://zgxsjt.com/ksh.htm,File Inclusion,0
+58.64.161.132,http://ie-expo.com/ksh.htm,File Inclusion,0
+58.64.161.132,http://www.happymeishi.com/mw.php,known vulnerability (i.e. unpatched system),0
+58.64.161.132,http://www.pagfacades.com/mw.php,known vulnerability (i.e. unpatched system),0
+58.64.161.132,http://www.gzhuixie.com/mw.php,known vulnerability (i.e. unpatched system),0
+58.64.161.132,http://www.szgyuv.com/mw.php,known vulnerability (i.e. unpatched system),0
+58.64.161.132,http://www.bosonic-china.com/mw.php,known vulnerability (i.e. unpatched system),0
+58.64.161.132,http://www.szhighlevel.com/mw.php,known vulnerability (i.e. unpatched system),0
+58.64.161.132,http://www.ictzh.com.cn/mw.php,known vulnerability (i.e. unpatched system),0
+116.251.204.34,http://lovevoyage.hk/wp-admin/admin-ajax.php?action=revslider_ajax_action&client_action=get_captions_css,SQL Injection,0
+210.184.154.27,http://www.sme.gig.hk/_input_3_.txt,SQL Injection,0
+58.64.130.189,http://ecotravel.hk,File Inclusion,0
+58.64.130.189,http://eco-engineering.com.hk/index.html,SQL Injection,0
+58.64.130.189,http://nd.hktraveler.com,Other Web Application bug,0
+58.64.130.189,http://sd.hktraveler.com,File Inclusion,0
+121.54.171.197,http://www.emark.hk/wp-admin/admin-ajax.php?action=revslider_ajax_action&client_action=get_captions_css,SQL Injection,0
+202.52.43.80,http://www.teslaclub.hk,SQL Injection,0
+103.6.86.250,http://gbsasia.hk/dawn-angel.php,brute force attack,0
+103.6.86.250,http://kowloonwatch.com.hk/dawn-angel.php,brute force attack,0
+103.6.86.250,http://www.jacobsonmedical.com.hk/dawn-angel.php,brute force attack,0
+103.6.86.250,http://www.toyo-led.com/dawn-angel.php,brute force attack,0
+103.6.86.250,http://huidenghk.com/dawn-angel.php,brute force attack,0
+103.6.86.250,http://www.ckhair.com.hk/dawn-angel.php,brute force attack,0
+103.6.86.250,http://www.sabinebeauty.com/dawn-angel.php,brute force attack,0
+103.6.86.250,http://www.8premier.com/dawn-angel.php,brute force attack,0
+103.6.86.250,http://www.upll.com.hk/dawn-angel.php,brute force attack,0
+103.6.86.250,http://www.winghongdon.com/dawn-angel.php,brute force attack,0
+103.6.86.250,http://www.fcscs.com/dawn-angel.php,brute force attack,0
+103.6.86.250,http://yangallery.com/dawn-angel.php,brute force attack,0
+103.6.86.250,http://amusehongkong.com/dawn-angel.php,brute force attack,0
+124.248.249.91,http://www.466.hk/index.php,known vulnerability (i.e. unpatched system),0
+104.151.123.250,http://1450.hk,known vulnerability (i.e. unpatched system),0
+217.199.187.73,http://proteuscoms.hk/A.php,SQL Injection,0
+104.151.123.252,http://1623.hk,known vulnerability (i.e. unpatched system),0
+104.151.123.254,http://1913.hk,known vulnerability (i.e. unpatched system),0
+104.151.123.245,http://3933.hk,known vulnerability (i.e. unpatched system),0
+104.151.123.251,http://1164.hk/index.htm,known vulnerability (i.e. unpatched system),0
+100.42.58.155,http://topschools.hk,Mail Server intrusion,0
+221.133.246.54,http://www.asc-wines.hk/A.php,SQL Injection,0
+104.151.123.249,http://1251.hk,known vulnerability (i.e. unpatched system),0
+106.187.34.70,http://cispa.hk/wp-content/_input_3_css.php5,Other Server intrusion,0
+173.255.226.80,http://lavigna.hk/wp-content/_input_3_css.php5,Other Server intrusion,0
+121.52.216.240,http://www.mixbox.hk/d.htm,File Inclusion,0
+104.151.123.247,http://1993.hk,known vulnerability (i.e. unpatched system),0
+104.151.123.246,http://2601.hk,known vulnerability (i.e. unpatched system),0
+104.151.123.248,http://6880.hk,known vulnerability (i.e. unpatched system),0
+192.185.39.77,http://rough.hk/zxcbincx.php,social engineering,0
+192.163.250.220,http://www.freshgraduate.hk/A.php,SQL Injection,0
+210.0.192.208,http://www.dc-inc.us/index.html,RPC Server intrusion,0
+103.238.224.159,http://ttclz.net/al.txt,known vulnerability (i.e. unpatched system),0
+103.246.247.163,http://www.xingzhilv.com,Other Web Application bug,0
+113.10.219.159,http://www.gzanmo.com/ayar.txt,Other Server intrusion,0
+113.10.219.159,http://www.268tl.com,known vulnerability (i.e. unpatched system),0
+113.10.219.159,http://www.paijujiage.com,known vulnerability (i.e. unpatched system),0
+113.10.219.159,http://www.szpaijujiage.com,known vulnerability (i.e. unpatched system),0
+113.10.219.159,http://www.china-plastic-part.com,known vulnerability (i.e. unpatched system),0
+113.10.219.159,http://www.gzanye.com,known vulnerability (i.e. unpatched system),0
+113.10.219.159,http://www.zuoyidianti.com,known vulnerability (i.e. unpatched system),0
+113.10.219.159,http://www.126tl.com,known vulnerability (i.e. unpatched system),0
+113.10.219.159,http://www.baidutl.com,known vulnerability (i.e. unpatched system),0
+113.10.219.159,http://www.szzhentan.com,known vulnerability (i.e. unpatched system),0
+113.10.219.159,http://www.654tl.com,known vulnerability (i.e. unpatched system),0
+113.10.219.159,http://www.paijubaojia.com,known vulnerability (i.e. unpatched system),0
+113.10.219.159,http://www.tl556.com,known vulnerability (i.e. unpatched system),0
+113.10.219.159,http://www.xiaoyouhuiwang.com,known vulnerability (i.e. unpatched system),0
+113.10.219.159,http://www.987tl.com,known vulnerability (i.e. unpatched system),0
+113.10.219.159,http://www.szpaijupifa.com,known vulnerability (i.e. unpatched system),0
+113.10.219.159,http://www.paijugongsi.com,known vulnerability (i.e. unpatched system),0
+113.10.219.159,http://www.ydysad.com/ayar.txt,Other Server intrusion,0
+113.10.219.159,http://www.szjingpai.com/Alarg53.html,Not available,0
+123.254.107.86,http://www.syqpz.com/ayar.txt,Other Server intrusion,0
+123.254.107.86,http://www.syyyzyy.com/ayar.txt,Other Server intrusion,0
+123.254.107.86,http://www.syjingshenbing.net/ayar.txt,Other Server intrusion,0
+123.254.107.86,http://www.syyiyuzheng.net/ayar.txt,Other Server intrusion,0
+123.254.107.86,http://qpzyy.net/s.htm,known vulnerability (i.e. unpatched system),0
+123.254.107.86,http://www.syzhiqiguan.com/hacked.htm,brute force attack,0
+123.254.107.86,http://www.gmxxc.net/team.txt,URL Poisoning,0
+123.254.107.86,http://31815688.com/a.txt,known vulnerability (i.e. unpatched system),0
+123.254.107.86,http://www.syjingshenbing.com/ayar.txt,Other Server intrusion,0
+123.254.107.86,http://www.syzhiliao.com/ayar.txt,Other Server intrusion,0
+123.254.107.86,http://www.syjsb.net/ayar.txt,Other Server intrusion,0
+123.254.107.86,http://www.syshimian.com/ayar.txt,Other Server intrusion,0
+123.254.107.86,http://www.smzmb.net/ayar.txt,Other Server intrusion,0
+123.254.107.86,http://www.syjsk.net/ayar.txt,Other Server intrusion,0
+123.254.107.86,http://www.syshimian.net/ayar.txt,Other Server intrusion,0
+123.254.107.86,http://www.syqpz.net/ayar.txt,Other Server intrusion,0
+123.254.107.86,http://www.syyiyuzheng.com/ayar.txt,Other Server intrusion,0
+123.254.107.86,http://www.syzhiliao.net/ayar.txt,Other Server intrusion,0
+123.254.107.86,http://www.syyyzyy.net/ayar.txt,Other Server intrusion,0
+123.254.107.86,http://www.syjsbyy.net/ayar.txt,Other Server intrusion,0
+123.254.107.86,http://www.syhxk.com/ayar.txt,Other Server intrusion,0
+123.254.107.86,http://www.qpzyy.com/ayar.txt,Other Server intrusion,0
+123.254.107.86,http://www.syyyz.net/ayar.txt,Other Server intrusion,0
+123.254.107.86,http://yyz120.net/s.htm,known vulnerability (i.e. unpatched system),0
+123.254.107.86,http://www.syhuxi.com/team.txt,URL Poisoning,0
+119.81.165.21,http://repaircomputereasy.com,Other Server intrusion,0
+119.81.165.21,http://howtofixwin8.com,Other Server intrusion,0
+210.209.94.227,http://www.zjgjqzl.com,Other Server intrusion,0
+210.209.84.125,http://yangguanghunqing.com,File Inclusion,0
+210.209.84.125,http://xushizj.com,File Inclusion,0
+59.188.69.171,http://ihwan.net/index.html,File Inclusion,0
+101.1.27.168,http://xclp9.com,File Inclusion,0
+103.226.126.82,http://brightelectron.com,File Inclusion,0
+103.226.126.82,http://hongyuanjiaoyue.com,File Inclusion,0
+103.226.126.82,http://biyezheng2013.com,File Inclusion,0
+103.226.126.82,http://byzyb2013.com,File Inclusion,0
+103.226.126.82,http://xiwangjiaoyu13.com,File Inclusion,0
+103.226.126.82,http://batongjie.com,File Inclusion,0
+103.226.126.82,http://yangmeikeng.net,File Inclusion,0
+103.253.98.149,http://taobaojbc.com,File Inclusion,0
+210.209.75.87,http://fjswwy.com/index.html,File Inclusion,0
+103.229.116.3,http://jing456.com,File Inclusion,0
+123.1.158.163,http://gzhtggbp.com,File Inclusion,0
+123.1.157.145,http://ycblt.org/index.html,File Inclusion,0
+121.127.249.99,http://qiluhui.org,File Inclusion,0
+103.229.116.67,http://xqsnlz.com,File Inclusion,0
+103.229.116.67,http://duigunposuijichang.com,File Inclusion,0
+103.229.116.67,http://sigunposuijichang.com,File Inclusion,0
+103.229.116.67,http://sichigunposuiji.com,File Inclusion,0
+103.229.116.67,http://sdsnlz.com,File Inclusion,0
+103.229.116.67,http://weifangxingwang.com,File Inclusion,0
+103.229.116.67,http://banhezhan888.com,File Inclusion,0
+103.254.108.223,http://anhuicreditaaa.org,File Inclusion,0
+103.224.22.13,http://rc-hostingcon.com/wp-content/_input_3_css.php5,Other Server intrusion,0
+103.224.22.13,http://www.hk77.cn/qeleshacker.php,Not available,0
+180.149.252.196,http://lwkpy.com.hk,known vulnerability (i.e. unpatched system),0
+180.149.252.196,http://www.grass-root.org,SQL Injection,0
+103.28.44.48,http://wofcx.com,known vulnerability (i.e. unpatched system),0
+103.28.44.48,http://www.admieo.com,known vulnerability (i.e. unpatched system),0
+122.128.111.159,http://www.boliinc.com,SQL Injection,0
+203.86.239.180,http://www.flo.cn/brasserie/_input_3_.gif,SQL Injection,0
+103.28.44.193,http://huaguitrading.com,undisclosed (new) vulnerability,0
+103.28.44.193,http://goldenbonta.com/index.htm,known vulnerability (i.e. unpatched system),0
+103.28.44.193,http://www.goldeneaglepetfoods.cn/index.htm,known vulnerability (i.e. unpatched system),0
+103.28.44.193,http://www.southchinafood.com/index.htm,known vulnerability (i.e. unpatched system),0
+103.28.44.193,http://www.a1finewines.com/index.htm,known vulnerability (i.e. unpatched system),0
+103.28.44.193,http://www.southeastasiatrading.com/index.htm,known vulnerability (i.e. unpatched system),0
+202.155.248.197,http://www.easystem.com.hk/mine.htm,SQL Injection,0
+59.188.216.169,http://www.waihuiclub.com,File Inclusion,0
+59.188.216.169,http://www.waihuimarket.com,known vulnerability (i.e. unpatched system),0
+59.188.216.169,http://www.waihui-net.com,social engineering,0
+59.188.216.169,http://www.fxoufu.com,File Inclusion,0
+59.188.216.169,http://bacerafx.com,social engineering,0
+59.188.216.169,http://www.dd-fx.com,social engineering,0
+59.188.216.169,http://www.whkhmfzj.com,known vulnerability (i.e. unpatched system),0
+124.248.228.30,http://www.aland.sh.cn,Shares misconfiguration,0
+59.188.73.202,http://mulongmedia.com/index.html,Not available,0
+59.188.73.202,http://hkchangshengtang.com/index.html,Not available,0
+59.188.73.202,http://www.zfjydh.com/ayar.txt,Other Server intrusion,0
+59.188.73.202,http://cxlc.net/indonesia.txt,Other Server intrusion,0
+59.188.73.202,http://www.ningyuanwh.com/index.html,Not available,0
+59.188.73.202,http://www.duzhiteng.com/index.html,Not available,0
+59.188.73.202,http://fenghejijin.com/index.html,Not available,0
+59.188.73.202,http://www.hnjskjxh.com/index.html,Not available,0
+59.188.73.202,http://www.dadaojy.com/ayar.txt,Other Server intrusion,0
+59.188.73.202,http://i-loving.com/index.html,Not available,0
+59.188.73.202,http://www.baidashe.com/indonesia.txt,Other Server intrusion,0
+59.188.73.202,http://borckytech.com/indonesia.txt,Other Server intrusion,0
+59.188.73.202,http://yingxiehn.com/index.html,Not available,0
+59.188.73.202,http://teeyoungmedia.com/index.html,Not available,0
+210.209.84.217,http://www.tyfscgc.com,File Inclusion,0
+210.209.84.217,http://www.jcgee.com,File Inclusion,0
+210.209.84.217,http://www.jcgnn.com,File Inclusion,0
+210.209.84.217,http://www.jcgrr.com,File Inclusion,0
+210.209.84.217,http://www.jcgcc.com,File Inclusion,0
+210.209.84.217,http://www.jcguu.com,File Inclusion,0
+210.209.84.217,http://www.jcgbb.com,File Inclusion,0
+210.209.84.217,http://www.jcgdd.com,File Inclusion,0
+210.209.84.217,http://www.jcgtt.com,File Inclusion,0
+210.209.84.217,http://www.hbtyf.com,File Inclusion,0
+210.209.84.217,http://www.hbsjzdlg.com,File Inclusion,0
+210.209.84.217,http://www.jcgxx.com,File Inclusion,0
+210.209.84.217,http://www.hbzyh.com,File Inclusion,0
+210.209.84.217,http://www.qlscg.com,File Inclusion,0
+210.209.84.217,http://www.qlzjscg.com,File Inclusion,0
+210.209.84.217,http://www.jcgqq.com,File Inclusion,0
+210.209.84.217,http://www.jcgvv.com,File Inclusion,0
+43.242.131.179,http://www.luohanok.com,known vulnerability (i.e. unpatched system),0
+43.242.131.179,http://www.siwuba.com,known vulnerability (i.e. unpatched system),0
+43.242.131.179,http://www.ok5566ok.com,known vulnerability (i.e. unpatched system),0
+43.242.131.179,http://www.lilaiwang.cn,known vulnerability (i.e. unpatched system),0
+103.27.108.219,http://www.lianye03.com,File Inclusion,0
+103.27.108.219,http://www.zjscgc.com,File Inclusion,0
+103.27.108.219,http://www.tyflgl.com,File Inclusion,0
+103.27.108.219,http://www.czlianye07.com,File Inclusion,0
+103.27.108.219,http://www.lyzhizao05.com,File Inclusion,0
+103.27.108.219,http://www.csbscg.com,File Inclusion,0
+103.27.108.219,http://www.scglgl.com,File Inclusion,0
+103.27.108.219,http://www.lianye07.com,File Inclusion,0
+103.27.108.219,http://www.hblianye09.com,File Inclusion,0
+103.27.108.219,http://www.scg004.com,File Inclusion,0
+103.27.108.219,http://www.scg026.com,File Inclusion,0
+103.27.108.219,http://www.scg003.com,File Inclusion,0
+103.27.108.219,http://www.lyscg006.com,File Inclusion,0
+103.27.108.219,http://www.scg005.com,File Inclusion,0
+103.27.108.219,http://www.lianye02.com,File Inclusion,0
+103.27.108.219,http://www.18733769273.com,File Inclusion,0
+103.27.108.219,http://www.cncvp.com,File Inclusion,0
+103.27.108.219,http://www.scgjia.com,File Inclusion,0
+103.27.108.219,http://www.tyf0702.com,File Inclusion,0
+103.27.108.219,http://www.scg001.com,File Inclusion,0
+103.27.108.219,http://www.lianye80.com,File Inclusion,0
+103.27.108.219,http://www.scg017.com,File Inclusion,0
+103.27.108.219,http://www.scg010.com,File Inclusion,0
+103.27.108.219,http://www.lianyescg.com,File Inclusion,0
+103.27.108.219,http://www.czlianye80.com,File Inclusion,0
+103.27.108.219,http://www.xcscg.com,File Inclusion,0
+103.27.108.219,http://www.tyfscg04.com,File Inclusion,0
+103.27.108.219,http://www.fgzhizao.com,File Inclusion,0
+103.27.108.219,http://www.scghb.com,File Inclusion,0
+103.27.108.219,http://www.fgzhizao07.com,File Inclusion,0
+103.27.108.219,http://www.czlianye01.com,File Inclusion,0
+103.27.108.219,http://www.scgzhizao.com,File Inclusion,0
+103.27.108.219,http://www.scg00.com,File Inclusion,0
+103.27.108.219,http://www.scg029.com,File Inclusion,0
+103.27.108.219,http://www.lyzhizao80.com,File Inclusion,0
+202.181.171.74,http://www.hkbusinesscentre.com.hk/ina.php,SQL Injection,0
+113.28.149.40,http://minideer.com/nyet.html,known vulnerability (i.e. unpatched system),0
+113.28.149.40,http://roadble.com.cn/nyet.html,known vulnerability (i.e. unpatched system),0
+113.28.149.40,http://ferex.cn/nyet.html,known vulnerability (i.e. unpatched system),0
+118.99.22.87,http://avepg.com/id.txt,Other Server intrusion,0
+58.64.166.171,http://www.as-cutlery.com/bingo.html,known vulnerability (i.e. unpatched system),0
+58.64.166.171,http://www.nchor.com/bingo.php,known vulnerability (i.e. unpatched system),0
+58.64.166.171,http://www.thewinehouse.com.hk/bingo.php,known vulnerability (i.e. unpatched system),0
+113.10.155.53,http://www.czsdw.com/ayar.txt,Other Server intrusion,0
+113.10.172.5,http://investstkitts.org/F.php,SQL Injection,0
+113.28.9.130,http://isf.edu.hk/hack.txt,known vulnerability (i.e. unpatched system),0
+180.178.44.69,http://caimama.cn/Hunter.php,Other Web Application bug,0
+203.124.12.84,http://bbs.taodailang.com,known vulnerability (i.e. unpatched system),0
+203.124.12.84,http://www.taodailang.com,known vulnerability (i.e. unpatched system),0
+116.251.207.209,http://sketchhongkong.org.hk/w.htm,SQL Injection,0
+117.18.4.17,http://www.bestbetforum.com/index.html,File Inclusion,0
+119.9.73.244,http://medhavat.com/index.html,Not available,0
+43.252.231.120,http://cdzg98.com,File Inclusion,0
+103.31.74.121,http://sxhfjh.com,File Inclusion,0
+103.31.74.121,http://klyz123.com,File Inclusion,0
+103.31.74.121,http://xianchuanglw.com,File Inclusion,0
+103.31.74.121,http://sxhrkj.com,File Inclusion,0
+103.31.74.121,http://pyydkz.com,File Inclusion,0
+123.1.155.36,http://928kb.com,File Inclusion,0
+210.209.114.208,http://zksjgg.com,File Inclusion,0
+103.253.96.78,http://tongtonghaohao.com/index.html,File Inclusion,0
+113.10.167.131,http://gdbsh.com,File Inclusion,0
+210.209.93.99,http://ypyxyd.com,File Inclusion,0
+210.209.76.164,http://yifengguache.com,File Inclusion,0
+210.209.76.164,http://ycrxhw.com,File Inclusion,0
+210.209.76.164,http://yemanlvyou.com/index.html,File Inclusion,0
+182.237.3.113,http://zmdycz.com,File Inclusion,0
+182.237.3.113,http://rywhcm.com,File Inclusion,0
+182.237.3.113,http://zhengyangyigou.com,known vulnerability (i.e. unpatched system),0
+182.237.3.113,http://viewuniv.com,File Inclusion,0
+103.31.75.180,http://sunweiyan.com/index.html,File Inclusion,0
+113.10.238.51,http://www.qingdaotangyin.com,known vulnerability (i.e. unpatched system),0
+43.242.131.98,http://www.xuinchina.com,Web Server intrusion,0
+119.9.77.92,http://www.shoppertrak.com.cn/A.php,SQL Injection,0
+58.64.210.215,http://lls.sh/wp-admin/admin-ajax.php?action=revslider_ajax_action&client_action=get_captions_css,known vulnerability (i.e. unpatched system),0
+118.99.22.94,http://bakfo.com/id.txt,Other Server intrusion,0
+118.99.22.93,http://bfjeo.com/id.txt,Other Server intrusion,0
+113.52.132.27,http://kadomall.com/wp-admin/admin-ajax.php?action=revslider_ajax_action&client_action=get_captions_css,SQL Injection,0
+113.10.156.225,http://www.sh1110.com,RPC Server intrusion,0
+124.248.245.98,http://eucbd.com/wp-admin/admin-ajax.php?action=revslider_ajax_action&client_action=get_captions_css,SQL Injection,0
+123.60.63.4,http://d-searcher.com/ayar.txt,Other Server intrusion,0
+113.10.158.92,http://www.kuyun.us/wp-admin/admin-ajax.php?action=revslider_ajax_action&client_action=get_captions_css,known vulnerability (i.e. unpatched system),0
+202.85.229.32,http://www.centralfield.com.hk/A.php,SQL Injection,0
+203.86.239.110,http://www.hkmma.org.hk/test.html,SQL Injection,0
+123.1.152.124,http://www.pcyouyou.com,File Inclusion,0
+43.254.216.14,http://longtengshangwu.com,Other Web Application bug,0
+27.126.183.80,http://meinvtupian8.com,known vulnerability (i.e. unpatched system),0
+115.126.58.17,http://chinarrw.com,File Inclusion,0
+210.209.121.108,http://bjwanying.com/index.html,File Inclusion,0
+122.10.8.87,http://huayuhongbang.com,File Inclusion,0
+103.20.222.25,http://chunyuancup.com,File Inclusion,0
+103.20.222.25,http://ykadly.com,File Inclusion,0
+115.126.73.109,http://xd958.com,File Inclusion,0
+119.81.175.34,http://fitluxury.in/ksh.html,SQL Injection,0
+122.10.54.79,http://www.lbyule.com/ayar.txt,Other Server intrusion,0
+122.10.54.79,http://lbvip002.com/indonesia.txt,Other Server intrusion,0
+122.10.54.79,http://lbvip001.com/indonesia.txt,Other Server intrusion,0
+103.249.109.137,http://www.wutonggeek.com,SQL Injection,0
+218.213.244.12,http://www.cgmarketing.com.hk,FTP Server intrusion,0
+124.248.244.71,http://shujubook.com/del.htm,FTP Server intrusion,0
+118.99.22.92,http://www.bfjoe.com/ayar.txt,Other Server intrusion,0
+118.99.22.90,http://bafjo.com/id.txt,Other Server intrusion,0
+113.10.219.89,http://www.beautyxmas.com/ayar.txt,Other Server intrusion,0
+117.18.4.154,http://www.desn110.cn/ayar.txt,Other Server intrusion,0
+182.16.6.173,http://www.haili-tech.com/wp-admin/admin-ajax.php?action=revslider_ajax_action&client_action=get_captions_css,SQL Injection,0
+116.212.114.190,http://vip-b2b.cn/pwn.html,FTP Server intrusion,0
+116.212.114.190,http://c.vip-b2b.com/pwn.html,FTP Server intrusion,0
+116.212.114.190,http://tdg.vip-b2b.com/pwn.html,FTP Server intrusion,0
+116.212.114.190,http://t.vip-b2b.com/pwn.html,FTP Server intrusion,0
+116.212.114.190,http://h.vip-b2b.com/pwn.html,FTP Server intrusion,0
+119.9.91.23,http://uvic.co.uk,undisclosed (new) vulnerability,0
+101.1.27.54,http://fygmzs.com,File Inclusion,0
+59.188.77.45,http://chardata.com,File Inclusion,0
+103.244.90.62,http://shpex.net,File Inclusion,0
+103.240.181.229,http://515dc.com,File Inclusion,0
+103.242.1.21,http://meishidu.net/index.html,File Inclusion,0
+103.253.98.154,http://baobeixiaopu.com/index.html,File Inclusion,0
+210.209.76.150,http://jldxzx.com,File Inclusion,0
+103.28.46.242,http://feijiyouchushou.com/index.html,File Inclusion,0
+103.39.78.132,http://hellown.com,File Inclusion,0
+210.209.119.140,http://yuexiutuandui.com,File Inclusion,0
+182.173.76.14,http://artiste.aplus510.com.hk/wp-admin/admin-ajax.php?action=revslider_ajax_action&client_action=get_captions_css,SQL Injection,0
+113.10.155.140,http://www.linxinyao.net,brute force attack,0
+210.209.94.225,http://www.szfxd.cn,Telnet Server intrusion,0
+122.128.107.209,http://ccshixi.com/A.php,SQL Injection,0
+119.236.189.83,http://www.rach-yoga.com/A.php,SQL Injection,0
+123.254.104.87,http://www.yuanquanlaw.com/wp-admin/admin-ajax.php?action=revslider_ajax_action&client_action=get_captions_css,SQL Injection,0
+113.10.175.176,http://investantigua.cn/wp-admin/admin-ajax.php?action=revslider_ajax_action&client_action=get_captions_css,undisclosed (new) vulnerability,0
+113.10.190.219,http://www.caixiangyuan.cn/daya.html,RPC Server intrusion,0
+203.124.12.167,http://zxhaodf.com,known vulnerability (i.e. unpatched system),0
+180.92.182.106,http://event-exhibition.com.hk/w.htm,SQL Injection,0
+182.16.9.210,http://www.vb800.com,known vulnerability (i.e. unpatched system),0
+118.99.22.91,http://baekf.com/id.txt,Other Server intrusion,0
+210.177.239.161,http://dtp.bouygues-construction.com/images/al.txt,known vulnerability (i.e. unpatched system),0
+183.179.49.60,http://www.dzhk.net,Not available,0
+103.28.45.51,http://www.onlymould.com/index.php,known vulnerability (i.e. unpatched system),0
+119.81.183.80,http://www.guevent.com/A.php,SQL Injection,0
+116.251.205.18,http://sonicss.com.au/site/A.php,SQL Injection,0
+180.178.44.67,http://www.0311kaipiao.com/Hunter.php,File Inclusion,0
+103.224.22.104,http://www.13thwcec.com/dawn-angel.php,brute force attack,0
+103.28.45.179,http://en.chcd2014.org/ayar.txt,Other Server intrusion,0
+202.67.155.148,http://gx7767-studio.net/tpsg.html,Other Web Application bug,0
+59.188.245.210,http://miyvoice.com/index.html,File Inclusion,0
+123.1.152.249,http://fulierkj.com/index.html,File Inclusion,0
+58.64.186.84,http://huabei520.com/index.html,File Inclusion,0
+103.237.74.216,http://dztianxingjian.com,File Inclusion,0
+202.66.150.167,http://jsdjg.com/index.html,File Inclusion,0
+210.209.88.81,http://sxaoni.com,File Inclusion,0
+123.1.180.18,http://gzfangdichan.com,File Inclusion,0
+123.108.111.177,http://yeedoo.cn/b0x.htm,brute force attack,0
+210.209.123.197,http://www.laqiao.net,SQL Injection,0
+58.64.145.108,http://chowtaifook.com/so.html,Not available,0
+116.251.204.141,http://www.sinov.com.hk,brute force attack,0
+121.127.234.228,http://www.0543weixin.com/ayar.txt,Other Server intrusion,0
+103.253.97.108,http://www.suchenkj.com/ayar.txt,Other Server intrusion,0
