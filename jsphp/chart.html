@@ -1,0 +1,52 @@
+<html>
+<head>
+  <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
+  <script type="text/javascript">
+    google.load("visualization", '1', {packages:['corechart']});
+    google.setOnLoadCallback(drawChart);
+    alert("rof");
+    function drawChart() {
+      alert("Here");
+      var name = "DefacementTld";
+      var arr = readCsv(name + ".csv");
+      var data = google.visualization.arrayToDataTable(arr);
+      var options = {
+        title: "Defacement Tld",
+        bar: {groupWidth: '95%'},
+        legend: 'none',
+      };
+
+      var chart_div = document.getElementById('chart_div');
+      var chart = new google.visualization.PieChart(chart_div);
+      chart.draw(data, options);
+
+      google.visualization.events.addListener(chart, 'ready', function () {
+        chart_div.innerHTML = '<img src="' + chart.getImageURI() + '">';
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.open("GET", "http://localhost/download.php?s=" + chart.getImageURI() + "&name=" + name, true);
+        xmlhttp.send();
+        if(xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+            document.getElementById("success").innerHTML = xmlhttp.responseText;
+        }
+      });
+    }
+
+    function readCsv(file_name) {
+      alert("Reading csv");
+      var req = new XMLHttpRequest();
+      req.open("GET", "http://localhost/readcsv.php?=" + file_name, true);
+      req.send();
+      if (req.readyState == 4 && req.status == 200) {
+        alert(req.responseText);
+        var arr = <?php echo json_encode( req.responseText ); ?>;
+        return arr;
+      }
+    }
+
+  }
+  </script>
+
+<div id='chart_div'></div>
+<p><b>testing</b>
+<div id="success"></div>
