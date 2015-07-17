@@ -6,7 +6,8 @@
     google.setOnLoadCallback(drawChart);
     function drawChart() { 
       var file_names = ["DefacementTld", "MalwareTld", "PhishingTld",
-                        "ISPDefacement", "ISPMalware", "ISPPhishing"]; 
+                        "ISPDefacement", "ISPMalware", "ISPPhishing",
+                        "listOfBotnets"]; 
       for (i = 0; i < file_names.length; i++) { 
         readCsv(file_names[i]);
       }
@@ -30,7 +31,9 @@
 
           var options = {
             title: file_name,
-            is3D: true,
+            //is3D: true,
+            pieHole: 0.35,
+            offset: 0.1,
             width: 800,
             height: 800
           };
@@ -58,5 +61,6 @@
     <div id="ISPDefacement" style="width: 900px; height: 600px;"></div>
     <div id="ISPMalware" style="width: 900px; height: 600px;"></div>
     <div id="ISPPhishing" style="width: 900px; height: 600px;"></div>
+    <div id="listOfBotnets" style="width: 900px; height: 600px;"></div>
   </body>
 </html>
