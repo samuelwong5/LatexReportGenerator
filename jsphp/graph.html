@@ -38,12 +38,7 @@
           var chart_div = document.getElementById(file_name);
           var chart = new google.visualization.PieChart(chart_div);
           chart.draw(data, options);
-          //alert(chart.getImageURI());
           var dlreq = new XMLHttpRequest();
-          dlreq.onreadystatechange = function() {
-            if (dlreq.readyState==4 && dlreq.status == 200) { alert(dlreq.responseText); }
-          };
-
           dlreq.open("POST", "download.php", true);
           dlreq.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
           var post_param = "s=" + encodeURI(chart.getImageURI()) + "&name=" + file_name;
