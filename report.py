@@ -145,6 +145,7 @@ def drawTldPolar(fpath, gname, fields):
 # output: output relative file location        
 def downloadPng(url, output):
     r = requests.get(url + '.png', stream=True)
+    print_no_newline('Saving image: ' + output)
     if r.status_code == 200:
         dir = os.path.dirname(output)
         if not os.path.exists(dir): # Check that parent dir exists
@@ -152,9 +153,15 @@ def downloadPng(url, output):
         with open(output, 'w+b') as f:
             for chunk in r.iter_content(1024):
                 f.write(chunk)
-        print('Saving image: ' + output)
-        print(' ' * 70 + '[Done]')    
+        print_done()   
 
+def print_no_newline(text):
+    sys.stdout.write(text + (' ' * (70 - len(text))))
+    sys.stdout.flush()     
+
+def print_done():
+    print('[DONE]')    
+        
 def main():
     csvDir = 'HKSWROutput/report/'    # Relative path to .csv data files
     bar_chart_max_bars = 10           # Number of bars in bar chart  
@@ -169,16 +176,16 @@ def main():
 
     display = Display(visible=0, size=(1024, 768))
     display.start()
-    print('Initializing Selenium webdriver...')        
+    print_no_newline('Initializing Selenium webdriver...')        
     driver = webdriver.Firefox()
-    print(' ' * 70 + '[Done]')    
-    print('Rendering Google Charts...')
+    print_done()
+    print_no_newline('Rendering Google Charts...')
     driver.get("http://localhost/graph.html")
-    print(' ' * 70 + '[Done]')    
-    print('Downloading Google Charts...')
+    print_done() 
+    print_no_newline('Downloading Google Charts...')
     while ("Done" not in driver.title):
         time.sleep(1);
-    print(' ' * 70 + '[Done]')                  
+    print_done()              
     #drawTldPolar(csvDir + 'DefacementTld.csv', 'Defacement - ISP Distribution',
     #                ['Top Level Domain', 'count'], 'stack')
     #drawTldPolar(csvDir + 'MalwareTld.csv', 'Malware - ISP Distribution',
