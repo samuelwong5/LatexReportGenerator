@@ -1,0 +1,50 @@
+<html>
+<head> 
+  <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+  <script type="text/javascript">
+    google.load("visualization", '1', {packages:['corechart']});
+    google.setOnLoadCallback(drawChart);
+    function drawChart() { 
+      var file_names = ["DefacementTld", "MalwareTld", "PhishingTld",
+                        "ISPDefacement", "ISPMalware", "ISPPhishing"]; 
+      for (i = 0; i < file_names.length; i++) { 
+        readCsv(file_names[i]);
+      }
+    }
+
+    function readCsv(file_name) {
+      var req = new XMLHttpRequest();
+      var arr;
+      req.onreadystatechange = function() {
+        if (req.readyState==4 && req.status == 200) {
+          var dat = req.responseText;
+          arr = JSON.parse(dat);
+          var data = google.visualization.arrayToDataTable(arr);
+
+          var options = {
+            title: file_name,
+            is3D: true,
+            width: 800,
+            height: 800
+          };
+
+          var chart_div = document.getElementById(file_name);
+          var chart = new google.visualization.PieChart(chart_div);
+          chart.draw(data, options);
+
+        }
+      }; 
+      req.open("GET", "readcsv_beta.php?file=" + file_name + ".csv", true);
+      req.send();
+    }
+  </script>
+  </head>
+  <body>
+    <div id="DefacementTld" style="width: 900px; height: 600px;"></div>
+    <div id="MalwareTld" style="width: 900px; height: 600px;"></div>
+    <div id="PhishingTld" style="width: 900px; height: 600px;"></div>
+    <div id="ISPDefacement" style="width: 900px; height: 600px;"></div>
+    <div id="ISPMalware" style="width: 900px; height: 600px;"></div>
+    <div id="ISPPhishing" style="width: 900px; height: 600px;"></div>
+  </body>
+</html>
