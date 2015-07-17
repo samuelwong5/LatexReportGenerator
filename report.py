@@ -1,10 +1,13 @@
 import plotly.plotly as py
 from plotly.graph_objs import *
+from selenium import webdriver
+from pyvirtualdisplay import Display
 import csv
 import math
 import requests
 import shutil
 import os
+import sys
 
 # file_path: relative file path to .csv file
 # max: optional maximum number of bars
@@ -137,7 +140,7 @@ def drawTldPolar(fpath, gname, fields):
         plot_url = py.plot(fig, filename=gname)
         print(gname + ': ' + plot_url)
         downloadPng(plot_url, 'graphs/' + gname + '.png')
-
+  
 # url: html url to .png file
 # output: output relative file location        
 def downloadPng(url, output):
@@ -149,7 +152,8 @@ def downloadPng(url, output):
         with open(output, 'w+b') as f:
             for chunk in r.iter_content(1024):
                 f.write(chunk)
-        print('Saving image\nFROM: ' + url + '.png\nTO:   ' + output)
+        print('Saving image: ' + output)
+        print(' ' * 70 + '[Done]')    
 
 def main():
     csvDir = 'HKSWROutput/report/'    # Relative path to .csv data files
@@ -162,13 +166,25 @@ def main():
         drawBarChart(csvDir + b[0], 
                         bar_chart_max_bars, 
                         b[1], 'stack')
-                        
-    drawTldPolar(csvDir + 'DefacementTld.csv', 'Defacement - ISP Distribution',
-                    ['Top Level Domain', 'count'])
-    drawTldPolar(csvDir + 'MalwareTld.csv', 'Malware - ISP Distribution',
-                    ['Top Level Domain', 'count'])
-    drawTldPolar(csvDir + 'PhishingTld.csv', 'Phishing - ISP Distribution',
-                    ['Tld', 'Count'])
+
+    display = Display(visible=0, size=(1024, 768))
+    display.start()
+    print('Initializing Selenium webdriver...')        
+    driver = webdriver.Firefox()
+    print(' ' * 70 + '[Done]')    
+    print('Rendering Google Charts...')
+    driver.get("http://localhost/graph.html")
+    print(' ' * 70 + '[Done]')    
+    print('Downloading Google Charts...')
+    while ("Done" not in driver.title):
+        time.sleep(1);
+    print(' ' * 70 + '[Done]')                  
+    #drawTldPolar(csvDir + 'DefacementTld.csv', 'Defacement - ISP Distribution',
+    #                ['Top Level Domain', 'count'], 'stack')
+    #drawTldPolar(csvDir + 'MalwareTld.csv', 'Malware - ISP Distribution',
+    #                ['Top Level Domain', 'count'], 'stack')
+    #drawTldPolar(csvDir + 'PhishingTld.csv', 'Phishing - ISP Distribution',
+    #                ['Tld', 'Count'], 'stack')
 
 def test():
     csvDir = 'HKSWROutput/report/'    # Relative path to .csv data files
