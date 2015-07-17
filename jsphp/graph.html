@@ -19,6 +19,13 @@
         if (req.readyState==4 && req.status == 200) {
           var dat = req.responseText;
           arr = JSON.parse(dat);
+          for (i = 10; i < arr.length; i++) {
+            arr[9][1] += arr[i][1];
+          }
+          if (arr.length > 10) {
+            arr[9][0] = "Others";
+          }
+          arr = arr.slice(0,10);
           var data = google.visualization.arrayToDataTable(arr);
 
           var options = {
@@ -31,6 +38,7 @@
           var chart_div = document.getElementById(file_name);
           var chart = new google.visualization.PieChart(chart_div);
           chart.draw(data, options);
+          //alert(chart.getImageURI());
 
         }
       }; 
