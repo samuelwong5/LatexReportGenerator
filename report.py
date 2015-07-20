@@ -9,13 +9,19 @@ import shutil
 import os
 import sys
 
+# returns filename from complete path
+# strips path and extension
+def get_file_name(file_path):
+    strSplit = file_path.split('/')
+    return (strSplit[len(strSplit) - 1]).split('.')[0]
+    
 # file_path: relative file path to .csv file
 # max: optional maximum number of bars
-# chart_title: header of the chart and filename of .png
 # bar_mode: 'overlay', 'stack', 'group'
-def drawBarChart(file_path, max, chart_title, bar_mode):
+def draw_bar_chart(file_path, max, bar_mode='stack'):
     data = []
     headers = []
+
     with open(file_path) as csv_file:
         dreader = csv.DictReader(csv_file)
         headers = dreader.fieldnames
@@ -41,7 +47,8 @@ def drawBarChart(file_path, max, chart_title, bar_mode):
                             y=(data[i])[:10],
                             name=headers[i]
                         ))
-    chartData = Data(bars)
+    chart_data = Data(bars)
+    chart_title = get_file_name(file_path)
     layout = Layout(
         title=chart_title,
         font=Font(
@@ -49,101 +56,13 @@ def drawBarChart(file_path, max, chart_title, bar_mode):
         ),
         barmode=bar_mode
     )
-    fig = Figure(data=chartData,layout=layout)
+    fig = Figure(data=chart_data,layout=layout)
     plot_url = py.plot(fig, chart_title)
-    downloadPng(plot_url, 'graphs/' + chart_title + '.png')      
+    download_png(plot_url, 'graphs/' + chart_title + '.png')      
 
-
-# DEPRECATED FUNCTION: DRAWISPALL
-def drawIspAll(fpath):
-    isp = []
-    dfc = []
-    phi = []
-    mal = []
-    bot = []
-    with open(fpath) as ispCsv:
-        reader = csv.DictReader(ispCsv)
-        rowCount = 0
-        for row in reader:
-            if (rowCount < 10):         # Only top 10
-                isp.append(row['ISP'])
-                dfc.append(row['Defacement Count'])
-                phi.append(row['Phishing Count'])
-                mal.append(row['Malware Count'])
-                bot.append(row['Botnet Count'])    
-                # row['Total Count']    Not used as bar chart stacks        
-                rowCount += 1
-            else:
-                break
-    dfcBar = Bar(
-        x=isp,  
-        y=dfc,
-        name='Defacement'
-    )
-    phiBar = Bar(
-        x=isp,
-        y=phi,
-        name='Phishing'
-    )
-    malBar = Bar(
-        x=isp,
-        y=mal,
-        name='Malware'
-    )
-    botBar = Bar(
-        x=isp,
-        y=bot,
-        name='Botnet'
-    )
-    data = Data([dfcBar,phiBar,malBar,botBar])
-    layout = Layout(barmode='stack')
-    fig = Figure(data=data, layout=layout)
-    plot_url = py.plot(fig, filename='ISP_Total')
-    print("ISP Total URL: " + plot_url)
-    downloadPng(plot_url, 'graphs/ISP_Total.png')
-    
-def drawTldPolar(fpath, gname, fields):
-    with open(fpath) as tldCsv:
-        reader = csv.DictReader(tldCsv)
-        tld = []
-        count = []
-        total = 0
-        for row in reader:
-            tld.append(row[fields[0]])
-            count.append(float(row[fields[1]]))
-            total += float(row[fields[1]])
-        wedges = []
-        for i in range(len(count)):
-            wedges.append(
-                Area(
-                    r=[0]*i + [math.log(count[i]+2)] + [0]*(len(count)-i-1),
-                    t=tld,
-                    name=tld[i] + ' - ' + str(int(count[i]/total*100)) + '%',
-                    marker=Marker(
-                        color='rgb(' + str(i*256/len(count)) + str((len(count)-i)*256/len(count)) + ',100)'
-                    )
-                ))
-        data = Data(wedges)
-        layout = Layout(
-            title=gname,
-            font=Font(
-                size=16
-            ),
-            legend=Legend(
-                font=Font(
-                    size=16
-                )
-            ),
-            orientation=270
-        )
-        fig = Figure(data=data, layout=layout)
-        plot_url = py.plot(fig, filename=gname)
-        print(gname + ': ' + plot_url)
-        downloadPng(plot_url, 'graphs/' + gname + '.png')
-  
 # url: html url to .png file
 # output: output relative file location        
-def downloadPng(url, output):
+def download_png(url, output):
     r = requests.get(url + '.png', stream=True)
     print_no_newline('Saving image: ' + output)
     if r.status_code == 200:
@@ -156,7 +75,7 @@ def downloadPng(url, output):
         print_done()   
 
 def print_no_newline(text):
-    sys.stdout.write(text + (' ' * (70 - len(text))))
+    sys.stdout.write(text + (' ' * (74 - len(text))))
     sys.stdout.flush()     
 
 def print_done():
@@ -164,18 +83,16 @@ def print_done():
         
 def main():
     csvDir = 'HKSWROutput/report/'    # Relative path to .csv data files
+    
     bar_chart_max_bars = 10           # Number of bars in bar chart  
-    bar_chart_fname = [('ISPAll.csv', 'Top 10 ISPs for all event types'),
-                       ('ISPServerAll.csv', 'Top 10 ISPs by Server related event types'),
-                       ('ISPBotnets.csv', 'Top 10 ISPs by Non-server event type')                       
-                      ]
-    for b in bar_chart_fname:
-        drawBarChart(csvDir + b[0], 
-                        bar_chart_max_bars, 
-                        b[1], 'stack')
-
+    bar_chart_dir = os.getcwd() + '/data/bar'
+    for file in os.listdir(bar_chart_dir):
+        draw_bar_chart(bar_chart_dir + '/' + file, bar_chart_max_bars)
+        
+    print_no_newline('Starting virtual display...')
     display = Display(visible=0, size=(1024, 768))
     display.start()
+    print_done()
     print_no_newline('Initializing Selenium webdriver...')        
     driver = webdriver.Firefox()
     print_done()
@@ -186,27 +103,6 @@ def main():
     while ("Done" not in driver.title):
         time.sleep(1);
     print_done()              
-    #drawTldPolar(csvDir + 'DefacementTld.csv', 'Defacement - ISP Distribution',
-    #                ['Top Level Domain', 'count'], 'stack')
-    #drawTldPolar(csvDir + 'MalwareTld.csv', 'Malware - ISP Distribution',
-    #                ['Top Level Domain', 'count'], 'stack')
-    #drawTldPolar(csvDir + 'PhishingTld.csv', 'Phishing - ISP Distribution',
-    #                ['Tld', 'Count'], 'stack')
 
-def test():
-    csvDir = 'HKSWROutput/report/'    # Relative path to .csv data files
-    bar_chart_max_bars = 10           # Number of bars in bar chart  
-    bar_chart_fname = [('ISPAll.csv', 'Top 10 ISPs for all event types'),
-                       ('ISPServerAll.csv', 'Top 10 ISPs by Server related event types'),
-                       ('ISPBotnets.csv', 'Top 10 ISPs by Non-server event type')                       
-                      ]
-    for b in bar_chart_fname:
-        fname = str(bar_chart_fname[0])
-        ctitle = str(bar_chart_fname[1])
-        drawBarChart(csvDir + fname, 
-                        bar_chart_max_bars, 
-                        ctitle, 'stack')
-    
 if __name__ == "__main__":    
-    main() 
-    #test()   
+    main()    
