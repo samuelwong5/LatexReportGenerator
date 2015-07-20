@@ -38,6 +38,10 @@ def draw_bar_chart(file_path, max, bar_mode='stack'):
                     
     # converting raw data to plotly 'Bar' class
     bars = []
+    for i in range(len(data[0])):
+        if (len(data[0][i]) > 15):
+            data[0][i] = data[0][i][:13] + '...'
+            
     for i in range(1,len(data)):
         if (max == -1):
             bars.append(Bar(
