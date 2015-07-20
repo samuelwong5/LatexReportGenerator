@@ -3,7 +3,6 @@ from plotly.graph_objs import *
 from selenium import webdriver
 from pyvirtualdisplay import Display
 import csv
-import math
 import requests
 import shutil
 import os
@@ -15,13 +14,16 @@ def get_file_name(file_path):
     strSplit = file_path.split('/')
     return (strSplit[len(strSplit) - 1]).split('.')[0]
     
+    
 # file_path: relative file path to .csv file
 # max: optional maximum number of bars
 # bar_mode: 'overlay', 'stack', 'group'
 def draw_bar_chart(file_path, max, bar_mode='stack'):
+    # method scoped variables assigned in 'with' scope
     data = []
     headers = []
-
+    
+    # reading from csv file
     with open(file_path) as csv_file:
         dreader = csv.DictReader(csv_file)
         headers = dreader.fieldnames
@@ -33,6 +35,8 @@ def draw_bar_chart(file_path, max, bar_mode='stack'):
                     data[0].append(row[headers[0]])
                 else:
                     data[i].append(float(row[headers[i]]))
+                    
+    # converting raw data to plotly 'Bar' class
     bars = []
     for i in range(1,len(data)):
         if (max == -1):
@@ -47,6 +51,8 @@ def draw_bar_chart(file_path, max, bar_mode='stack'):
                             y=(data[i])[:10],
                             name=headers[i]
                         ))
+                        
+    # misc. chart setup
     chart_data = Data(bars)
     chart_title = get_file_name(file_path)
     layout = Layout(
@@ -57,9 +63,12 @@ def draw_bar_chart(file_path, max, bar_mode='stack'):
         barmode=bar_mode
     )
     fig = Figure(data=chart_data,layout=layout)
+    
+    # plot and download chart
     plot_url = py.plot(fig, chart_title)
     download_png(plot_url, 'graphs/' + chart_title + '.png')      
 
+    
 # url: html url to .png file
 # output: output relative file location        
 def download_png(url, output):
@@ -74,21 +83,26 @@ def download_png(url, output):
                 f.write(chunk)
         print_done()   
 
+        
+# util function for printing to terminal without newline char 
 def print_no_newline(text):
     sys.stdout.write(text + (' ' * (74 - len(text))))
     sys.stdout.flush()     
-
+    
+    
+# util function for printing "[DONE]" 
 def print_done():
     print('[DONE]')    
         
+# main function        
 def main():
-    csvDir = 'HKSWROutput/report/'    # Relative path to .csv data files
-    
+    # bar charts
     bar_chart_max_bars = 10           # Number of bars in bar chart  
     bar_chart_dir = os.getcwd() + '/data/bar'
     for file in os.listdir(bar_chart_dir):
         draw_bar_chart(bar_chart_dir + '/' + file, bar_chart_max_bars)
         
+    # pie charts     
     print_no_newline('Starting virtual display...')
     display = Display(visible=0, size=(1024, 768))
     display.start()
