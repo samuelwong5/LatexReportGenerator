@@ -1,0 +1,153 @@
+import csv, os, requests
+import plotly.plotly as py
+from plotly.graph_objs import *
+    
+def main():
+    file_paths = ['HKSWROutput03/report/serverSummary.csv', 
+                  'HKSWROutput04/report/serverSummary.csv',
+                  'HKSWROutput/report/serverSummary.csv']
+    #create(file_paths)
+    bot_data = [['Mar15','Apr15','May15'],[]]   
+    ccfiles = ['HKSWROutput03/report/C&CServers.csv', 
+               'HKSWROutput04/report/C&CServers.csv',
+               'HKSWROutput/report/C&CServers.csv']    
+    for ccf in ccfiles:
+        with open(ccf) as csv_file:
+            dreader = csv.DictReader(csv_file)
+            hold = []
+            for row in dreader:
+                if row['ip'] not in hold:
+                   hold.append(row['ip'])        
+            bot_data[1].append(len(hold))
+    generate_chart(bot_data, ['Month', 'Botnet (C&Cs)'], 'BotCCDis', 'Botnet (C&Cs) security event distribution')
+    
+    bot_data = [['Mar15','Apr15','May15'],[]]   
+    bnfiles = ['HKSWROutput03/report/botnetDailyMax.csv', 
+               'HKSWROutput04/report/botnetDailyMax.csv',
+               'HKSWROutput/report/botnetDailyMax.csv']    
+    for bnf in bnfiles:
+        with open(bnf) as csv_file:
+            dreader = csv.DictReader(csv_file)
+            total_count = 0
+            for row in dreader:
+                if row['Count'] != '':
+                    total_count += int(row['Count'])
+            bot_data[1].append(total_count)
+    generate_chart(bot_data, ['Month', 'Botnet (Bots)'], 'BotBotsDis', 'Botnet (Bots) security event distribution')
+    
+    
+    
+def create(file_paths):
+    data = []
+    headers = []
+    for j in range(len(file_paths)):
+        data.append([])
+        with open(file_paths[j]) as csv_file:
+            dreader = csv.DictReader(csv_file)
+            headers = dreader.fieldnames
+            for row in dreader:
+                for i in range(len(headers)):
+                    if (len(data[j]) < len(headers)):
+                        data[j].append([])
+                    data[j][i].append(row[headers[i]])
+
+    server_dis_headers = ['Month','Defacement','Phishing','Malware']                
+    server_dis = [['Mar15','Apr15','May15']]
+    for i in range(3):
+        server_dis.append([])
+        for j in range(3):
+            server_dis[i+1].append(data[j][i+1][1])
+    generate_chart(server_dis, server_dis_headers, 'ServerRelated', 'Server Related security events distribution','stack')
+
+    gen_headers = ['Month','URL','Domain','IP']                
+    gen_data = [['Mar15','Apr15','May15'],[],[],[]]
+    for i in range(3):
+        gen_data[i+1] = []
+        for j in range(3):
+            gen_data[i+1].append(data[j][1][i+1])
+            
+    generate_chart(gen_data, gen_headers, 'DefacementGen', 'Defacement General Statistics')
+               
+    gen_data = [['Mar15','Apr15','May15'],[],[],[]]
+    for i in range(3):
+        gen_data[i+1] = []
+        for j in range(3):
+            gen_data[i+1].append(data[j][2][i+1])  
+    generate_chart(gen_data, gen_headers, 'PhishingGen', 'Phishing General Statistics')
+           
+    gen_data = [['Mar15','Apr15','May15'],[],[],[]]
+    for i in range(3):
+        gen_data[i+1] = []
+        for j in range(3):
+            gen_data[i+1].append(data[j][3][i+1])  
+    generate_chart(gen_data, gen_headers, 'MalwareGen', 'Malware General Statistics')
+    
+    url_ip_headers = ['Month', 'URL/IP Ratio']
+    gen_data = [['Mar15','Apr15','May15'],[]]
+    gen_data[1] = []
+    for j in range(3):
+        gen_data[1].append(round(float(data[j][1][1]) / float(data[j][1][3]),2))  
+    generate_chart(gen_data, gen_headers, 'DefacementURLIP', 'Defacement URL/IP Ratio')
+    
+    gen_data = [['Mar15','Apr15','May15'],[]]
+    gen_data[1] = []
+    for j in range(3):
+        gen_data[1].append(round(float(data[j][2][1]) / float(data[j][2][3]),2))  
+    generate_chart(gen_data, gen_headers, 'PhishingURLIP', 'Phishing URL/IP Ratio')  
+    
+    gen_data = [['Mar15','Apr15','May15'],[]]
+    gen_data[1] = []
+    for j in range(3):
+        gen_data[1].append(round(float(data[j][3][1]) / float(data[j][3][3]),2))  
+    generate_chart(gen_data, gen_headers, 'MalwareURLIP', 'Malware URL/IP Ratio')  
+ 
+    
+
+def generate_chart(data, headers, png_name, name, bar_mode='group'):
+    bars = []
+
+    for i in range(1,len(data)):
+        if (max == -1):
+            bars.append(Bar(
+                            x=data[0],
+                            y=data[i],
+                            name=headers[i]
+                        ))
+        else:
+            bars.append(Bar(
+                            x=(data[0])[:10],
+                            y=(data[i])[:10],
+                            name=headers[i]
+                        ))
+                        
+    # misc. chart setup
+    chart_data = Data(bars)
+    chart_title = name
+    layout = Layout(
+        title=chart_title,
+        font=Font(
+            size=16
+        ),
+        barmode=bar_mode
+    )
+    fig = Figure(data=chart_data,layout=layout)
+    
+    # plot and download chart
+    plot_url = py.plot(fig, chart_title)
+
+    download_png(plot_url, 'graphs/' + png_name + '.png')    
+    
+def download_png(url, output):
+    r = requests.get(url + '.png', stream=True)
+    if r.status_code == 200:
+        dir = os.path.dirname(output)
+        if not os.path.exists(dir): # Check that parent dir exists
+            os.makedirs(dir)
+        with open(output, 'w+b') as f:
+            for chunk in r.iter_content(1024):
+                f.write(chunk)
+    print('downloaded to: ' + output + '.png')  
+   
+if __name__ == "__main__":    
+    main()    
+ 
