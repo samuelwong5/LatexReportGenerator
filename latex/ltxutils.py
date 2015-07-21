@@ -83,8 +83,8 @@ def summary(title, file_name):
     ltx = ''
     ltx += ltx_section(ltx_sanitize(title))
     ltx += ltx_subsection('Summary')
-    ltx += ltx_figure('placeholder', title + ' - General Statistics', summ_param)
-    ltx += ltx_figure('placeholder', title + ' - URL/IP ratio', summ_param)
+    ltx += ltx_figure(title + 'gen', title + ' - General Statistics', summ_param)
+    ltx += ltx_figure(title + 'URLIP', title + ' - URL/IP ratio', summ_param)
     ltx += ltx_newpage()
     ltx += ltx_subsection("TLD Distribution")
     ltx += ltx_figure(file_name, file_name + " - TLD Distribution", pie_chart_trim_param)
