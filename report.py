@@ -131,7 +131,8 @@ def main():
                           'ISPMalware.csv',
                           'ISPPhishing.csv',
                           'MalwareTld.csv',
-                          'PhishingTld.csv']
+                          'PhishingTld.csv',
+                          'listOfBotnets.csv']
     for gc_file in google_chart_files:
         shutil.copyfile(file_paths[2] + gc_file, webserver + gc_file)
     print('Creating pie charts...')
@@ -156,7 +157,9 @@ def main():
     display.stop()
     print('Compiling LaTeX...')
     ltxutils.create_report(file_paths[2], ltx_output)
-        
+    print('Rendering .pdf')
+    os.chdir(os.getcwd() + os.sep + output_dir)
+    os.system('pdflatex SecurityWatchReport.tex')
     print('Report successfully compiled. Exiting now...')
         
     
