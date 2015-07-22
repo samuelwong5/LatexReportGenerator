@@ -1,4 +1,4 @@
-import csv, os
+import csv, os, sys, math
 
 def ltx_sanitize(str):
     return str.replace('&', '\\&').replace('#','')
@@ -33,10 +33,20 @@ def ltx_table(file_path, max_row=10):
     for i in range(len(headers) - 1):
         ltx += '\\bf ' + headers[i].replace('&', '\\&') + ' & '
     ltx += '\\bf ' + headers[len(headers) - 1].replace('&', '\\&') + '\\\\\\hline\n'
+    buffer = ''
+    max_len = 80
+    for i in range(len(headers)):
+        max_len -= len(headers[i])
+    
     for i in range(max_row):
         for j in range(len(data)-1):
-            ltx += ltx_sanitize((data[j][i])[:(70-7*len(headers))]) + '&'
+            hold = ltx_sanitize(data[j][i])
+            ltx += hold[:max_len] + '&'
+            for k in range(1,int(math.ceil(len(hold)/max_len))+1):
+                buffer += '&' + (hold[max_len*k:min(len(hold),max_len*(k+1))]) + ('&'*(len(data)-2)) + '\\\\\n'
         ltx += ltx_sanitize((data[len(data)-1][i])[:15]) + '\\\\\n'
+        ltx += buffer
+        buffer = '' 
     ltx += '\\hline\n\\end{tabular}\n\\end{table}\n'
     return ltx
     #with open(os.getcwd() + os.sep + 'output' + os.sep + file_name + '.txt', 'w+') as f:
@@ -83,7 +93,7 @@ def summary(title, file_name):
     ltx = ''
     ltx += ltx_section(ltx_sanitize(title))
     ltx += ltx_subsection('Summary')
-    ltx += ltx_figure(title + 'gen', title + ' - General Statistics', summ_param)
+    ltx += ltx_figure(title + 'Gen', title + ' - General Statistics', summ_param)
     ltx += ltx_figure(title + 'URLIP', title + ' - URL/IP ratio', summ_param)
     ltx += ltx_newpage()
     ltx += ltx_subsection("TLD Distribution")
@@ -91,17 +101,23 @@ def summary(title, file_name):
     ltx += ltx_table(input_dir + file_name + '.csv')
     return ltx
 
+# util function for printing to terminal without newline char 
+# util function for printing to terminal without newline char 
+def print_no_newline(text):
+    sys.stdout.write('  ' + text + (' ' * (71 - len(text))))
+    sys.stdout.flush()     
+    
 # input directory for .csv files
 input_dir = '' 
 
 # standard latex options for figures
-pie_chart_trim_param = 'trim={4cm 8cm 4cm 5.5cm},clip,height=9cm'
-summ_param = 'height=6cm'
-isp_param = 'height=10cm' 
+pie_chart_trim_param = 'trim={4cm 8cm 4cm 5.5cm},clip,height=12cm'
+summ_param = 'height=8.5cm'
+isp_param = 'height=13cm' 
        
-def main():
+def create_report(dir, output):
     global input_dir
-    input_dir = 'input' + os.sep
+    input_dir = dir
     
     #preamble
     #ltx = '\\documentclass[a4wide, 11pt]{article}\n\\usepackage{placeins}\n'
@@ -109,11 +125,23 @@ def main():
     #ltx += '\\graphicspath{ {graphs/} }\n\\begin{document}\n'
     
     #sections 1-3
+    print_no_newline('Section 1')
     ltx = summary('Defacement', 'DefacementTld')
+    ltx += ltx_newpage()
+    print('[DONE]')
+    print_no_newline('Section 2')
     ltx += summary('Phishing', 'PhishingTld')
+    ltx += ltx_newpage()
+    print('[DONE]')
+    print_no_newline('Section 3')
     ltx += summary('Malware', 'MalwareTld')
+    ltx += ltx_newpage()
+    print('[DONE]')
+    
     
     #section 4
+    print_no_newline('Section 4')
+    ltx += ltx_newpage()
     ltx += ltx_section('Botnet')
     ltx += ltx_subsection('Botnet - Bots')
     ltx += ltx_subsubsection('Major Botnet Families found on Hong Kong Network')
@@ -123,16 +151,20 @@ def main():
     ltx += ltx_subsection('Botnet - Command and Control Servers (C&Cs)')
     ltx += ltx_subsubsection('Botnet - C&C Servers by communication type')
     ltx += ltx_figure('placeholder', 'Botnet - C&C Servers by communication type')
+    print('[DONE]')
     
     #section 5
+    print_no_newline('Section 5')
     ltx += ltx_newpage()
     ltx += ltx_section('Internet Service Providers (ISP)')
     ltx += ltx_subsection('Top 10 ISPs hosting Defacement')
     ltx += ltx_figure('ISPDefacement', 'Defacement - Top ISPs', pie_chart_trim_param)
     ltx += ltx_table(input_dir + 'ISPDefacement.csv')
+    ltx += ltx_newpage()
     ltx += ltx_subsection('Top 10 ISPs hosting Phishing')
     ltx += ltx_figure('ISPPhishing', 'Phishing - Top ISPs', pie_chart_trim_param)
     ltx += ltx_table(input_dir + 'ISPPhishing.csv')
+    ltx += ltx_newpage()
     ltx += ltx_subsection('Top 10 ISPs hosting Malware')
     ltx += ltx_figure('ISPMalware', 'Malware Hosting - Top ISPs', pie_chart_trim_param)
     ltx += ltx_table(input_dir + 'ISPMalware.csv')
@@ -148,13 +180,17 @@ def main():
     ltx += ltx_subsection('Top 10 ISPs for server related security events')
     ltx += ltx_figure('ISPServerAll', 'Server Related Events - Top ISPs', isp_param)
     ltx += ltx_table(input_dir + 'ISPServerAll.csv')  
+    print('[DONE]')
     
     #end document
     #ltx += '\end{document}'
     
     #write to latex.ltx
-    with open(os.getcwd() + os.sep + 'output' + os.sep + 'latex.tex', 'w+') as f:
+    fpath = output + 'latex.tex'
+    print_no_newline('Writing file: ' + fpath)
+    with open(fpath, 'w+') as f:
        f.write(ltx)    
+    print('[DONE]')
     
 if __name__ == "__main__":    
-    main()    
+    create_report(os.sep + 'HKSWROutput' + os.sep + 'report' + os.sep, 'latex/')    

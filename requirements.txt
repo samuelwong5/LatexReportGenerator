@@ -1,0 +1,4 @@
+PyVirtualDisplay==0.1.5
+plotly==1.7.6
+requests==2.3.0
+selenium==2.46.0

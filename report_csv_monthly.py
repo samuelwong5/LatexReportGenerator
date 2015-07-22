@@ -1,16 +1,18 @@
-import csv, os, requests
+import csv, os, requests, sys
 import plotly.plotly as py
 from plotly.graph_objs import *
     
-def main():
-    file_paths = ['HKSWROutput03/report/serverSummary.csv', 
-                  'HKSWROutput04/report/serverSummary.csv',
-                  'HKSWROutput/report/serverSummary.csv']
-    #create(file_paths)
+def main(file_paths):
+    ssfile = 'serverSummary.csv'
+    ssfiles = [file_paths[0] + ssfile,
+               file_paths[1] + ssfile,
+               file_paths[2] + ssfile]
+    create(ssfiles)
     bot_data = [['Mar15','Apr15','May15'],[]]   
-    ccfiles = ['HKSWROutput03/report/C&CServers.csv', 
-               'HKSWROutput04/report/C&CServers.csv',
-               'HKSWROutput/report/C&CServers.csv']    
+    ccfile = 'C&CServers.csv'
+    ccfiles = [file_paths[0] + ccfile,
+               file_paths[1] + ccfile,
+               file_paths[2] + ccfile]
     for ccf in ccfiles:
         with open(ccf) as csv_file:
             dreader = csv.DictReader(csv_file)
@@ -22,9 +24,10 @@ def main():
     generate_chart(bot_data, ['Month', 'Botnet (C&Cs)'], 'BotCCDis', 'Botnet (C&Cs) security event distribution')
     
     bot_data = [['Mar15','Apr15','May15'],[]]   
-    bnfiles = ['HKSWROutput03/report/botnetDailyMax.csv', 
-               'HKSWROutput04/report/botnetDailyMax.csv',
-               'HKSWROutput/report/botnetDailyMax.csv']    
+    bnfile = 'botnetDailyMax.csv'
+    bnfiles = [file_paths[0] + bnfile,
+               file_paths[1] + bnfile,
+               file_paths[2] + bnfile]
     for bnf in bnfiles:
         with open(bnf) as csv_file:
             dreader = csv.DictReader(csv_file)
@@ -134,8 +137,13 @@ def generate_chart(data, headers, png_name, name, bar_mode='group'):
     
     # plot and download chart
     plot_url = py.plot(fig, chart_title)
-
-    download_png(plot_url, 'graphs/' + png_name + '.png')    
+    print_no_newline('  ' + png_name + '.png')
+    download_png(plot_url, 'latex/' + png_name + '.png')    
+    
+# util function for printing to terminal without newline char 
+def print_no_newline(text):
+    sys.stdout.write('  ' + text + (' ' * (71 - len(text))))
+    sys.stdout.flush()  
     
 def download_png(url, output):
     r = requests.get(url + '.png', stream=True)
@@ -146,7 +154,7 @@ def download_png(url, output):
         with open(output, 'w+b') as f:
             for chunk in r.iter_content(1024):
                 f.write(chunk)
-    print('downloaded to: ' + output + '.png')  
+    print('[DONE]') 
    
 if __name__ == "__main__":    
     main()    
