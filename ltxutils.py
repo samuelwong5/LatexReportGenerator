@@ -1,5 +1,22 @@
 import csv, os, sys, math
 
+def string_length_split(str, max):
+    str_split = str.split(' ')
+    count = 0
+    curr = max
+    result = ['']
+    for word in str_split:
+        if (len(word) < curr):
+            result[count] += word + ' '
+            curr -= (len(word) + 1)
+        else:
+            result.append('')
+            count += 1
+            curr = max
+            result[count] += word + ' '
+            curr -= (len(word) + 1)
+    return(result)
+
 def ltx_sanitize(str):
     return str.replace('&', '\\&').replace('#','')
 
@@ -40,10 +57,10 @@ def ltx_table(file_path, max_row=10):
     
     for i in range(max_row):
         for j in range(len(data)-1):
-            hold = ltx_sanitize(data[j][i])
-            ltx += hold[:max_len] + '&'
-            for k in range(1,int(math.ceil(len(hold)/max_len))+1):
-                buffer += '&' + (hold[max_len*k:min(len(hold),max_len*(k+1))]) + ('&'*(len(data)-2)) + '\\\\\n'
+            hold = string_length_split(data[j][i], max_len)
+            ltx += ltx_sanitize(hold[0]) + '&'
+            for k in range(1,len(hold)):
+                buffer += '&' + ltx_sanitize(hold[k]) + ('&'*(len(data)-2)) + '\\\\\n'
         ltx += ltx_sanitize((data[len(data)-1][i])[:15]) + '\\\\\n'
         ltx += buffer
         buffer = '' 
