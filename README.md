@@ -14,6 +14,7 @@ representation of the charts for the report.
 Utility class to generate report using latex
 
 **excel_editor**
+
 Deprecated due to no support for modifying .xlsx format
 spreadsheets. 
 
