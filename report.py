@@ -1,22 +1,30 @@
-import plotly.plotly as py
+import ConfigParser
+import csv
+import io
+import os 
+import requests
+import shutil
+import sys
+import stat
+
 from plotly.graph_objs import *
-from selenium import webdriver
+import plotly.plotly as py
 from pyvirtualdisplay import Display
-import csv, requests, shutil, os, sys, stat, Image
+from selenium import webdriver
+
 import ltxutils
 import report_csv_monthly
-import ConfigParser, io
 
 # returns filename from complete path
 # strips path and extension
 def get_file_name(file_path):
     strSplit = file_path.split('/')
-    return (strSplit[len(strSplit) - 1]).split('.')[0]
+    return (strSplit[len(strSplit)-1]).split('.')[0]
     
 # file_path: relative file path to .csv file
 # max: optional maximum number of bars
 # bar_mode: 'overlay', 'stack', 'group'
-def draw_bar_chart(file_path, max, bar_mode='stack'):
+def draw_bar_chart(file_path, max=10, bar_mode='stack'):
     # method scoped variables assigned in 'with' scope
     data = []
     headers = []
@@ -37,8 +45,8 @@ def draw_bar_chart(file_path, max, bar_mode='stack'):
     # converting raw data to plotly 'Bar' class
     bars = []
     for i in range(len(data[0])):
-        if (len(data[0][i]) > 15):
-            data[0][i] = data[0][i][:13] + '...'
+        if (len(data[0][i]) > 15): # Cut label length to not exceed boundaries
+            data[0][i] = data[0][i][:13] + '...' 
             
     for i in range(1,len(data)):
         if (max == -1):
@@ -78,21 +86,13 @@ def download_png(url, output):
     r = requests.get(url + '.png', stream=True)
     if r.status_code == 200:
         dir = os.path.dirname(output)
-        if not os.path.exists(dir): # Check that parent dir exists
+        if not os.path.exists(dir): 
             os.makedirs(dir)
         with open(output, 'w+b') as f:
             for chunk in r.iter_content(1024):
                 f.write(chunk)
         print_done()   
 
-        
-# trim excess white borders from png files
-def png_trim(file_name):
-    os.chmod(file_name, 0o777)
-    im = Image.open(file_name)
-    im2 = im.crop((150,90,660,580))
-    im2.save(file_name)
-        
         
 # util function for printing to terminal without newline char 
 def print_no_newline(text):
@@ -103,15 +103,18 @@ def print_no_newline(text):
 # util function for printing "[DONE]" 
 def print_done():
     print('[DONE]')    
-         
+   
+   
 output_dir = 'latex/'         
 # main function        
 def main():
+    # get configurations
     config = ConfigParser.ConfigParser(allow_no_value=True)
     config.read('config.cfg')
     file_paths = [config.get('input','fst-month'),  # 2 months ago
-                  config.get('input','snd-month'),  # 1 month ago
-                  config.get('input','thd-month')]  # current month
+        config.get('input','snd-month'),  # 1 month ago
+        config.get('input','thd-month')  # current month
+        ]
     ltx_output = config.get('output','latex')
     webserver = config.get('input','webserver')
     global output_dir
@@ -119,10 +122,9 @@ def main():
     # bar charts
     print('Creating bar charts...')
     print('  Downloading bar charts...')
-    bar_chart_max_bars = 10           # Number of bars in bar chart  
     bar_chart_dir = os.getcwd() + os.sep + file_paths[2]
     for file in ['ISPServerAll.csv', 'ISPBotnets.csv', 'ISPAll.csv']:
-        draw_bar_chart(bar_chart_dir + file, bar_chart_max_bars)
+        draw_bar_chart(bar_chart_dir + file)
     report_csv_monthly.main(file_paths)
     
     # pie charts     

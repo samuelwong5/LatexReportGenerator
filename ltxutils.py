@@ -1,6 +1,65 @@
-import csv, os, sys, math
+import csv
+import math
+import os
+import sys
 
+class LatexDocument():
+    def __init__(self):
+         self.ltx = ''
+
+    def section(self, title, fltbarrier=True):
+        if fltbarrier:
+            self.ltx += '\\FloatBarrier\n\\section{' + sanitize(title) + '}\n'
+        else:
+            self.ltx += '\\section{' + sanitize(title) + '}'
+
+    def subsection(self, title):
+        self.ltx += '\\subsection{' + sanitize(title) + '}\n'
+    
+    def subsubsection(self, title):
+        self.ltx += '\\subsubsection{' + sanitize(title) + '}\n'
+    
+    def figure(self, img, caption='Default Caption', param='width=\\textwidth'):
+        self.ltx += '\\begin{figure}[h]\n\\centerline{\\includegraphics['
+        self.ltx += param + ']{' 
+        self.ltx += img + '}}\n'
+        self.ltx += '\\caption{' + sanitize(caption) + '}\n\\end{figure}\n'
+    
+    def table(self, file_path, max_row=10):
+        data, headers = read_csv(file_path)
+        file_name = get_file_name(file_path)
+        self.ltx += '\\begin{table}[!htbp]\n\\centering\n\\caption{' + file_name + '}'
+        self.ltx += '\n\\begin{tabular}{' + (len(data) * 'l') + '} \\hline\n'
+        for i in range(len(headers) - 1):
+            self.ltx += '\\bf ' + headers[i].replace('&', '\\&') + ' & '
+        self.ltx += '\\bf ' + headers[len(headers) - 1].replace('&', '\\&') + '\\\\\\hline\n'
+        buffer = ''
+        max_len = 80
+        for i in range(len(headers)):
+            max_len -= len(headers[i])  
+        for i in range(max_row):
+            for j in range(len(data)-1):
+                hold = string_length_split(data[j][i], max_len)
+                self.ltx += sanitize(hold[0]) + '&'
+                for k in range(1,len(hold)):
+                    buffer += '&' + sanitize(hold[k]) + ('&'*(len(data)-2)) + '\\\\\n'
+            self.ltx += sanitize((data[len(data)-1][i])[:15]) + '\\\\\n'
+            self.ltx += buffer
+            buffer = '' 
+        self.ltx += '\\hline\n\\end{tabular}\n\\end{table}\n'
+
+    def newpage(self):
+        self.ltx += '\\FloatBarrier\n\\newpage\n'
+      
+    def write_to_file(self, fpath):
+        with open(fpath, 'w+') as f:
+            f.write(self.ltx)
+            
+### Utility Methods ###            
 def string_length_split(str, max):
+    '''Splits a string into an array where each
+       string is no longer than a given max length
+    '''
     str_split = str.split(' ')
     count = 0
     curr = max
@@ -17,61 +76,15 @@ def string_length_split(str, max):
             curr -= (len(word) + 1)
     return(result)
 
-def ltx_sanitize(str):
+def sanitize(str):
+    '''Escapes special characters in LaTeX'''
     return str.replace('&', '\\&').replace('#','')
 
 def get_file_name(file_path):
+    '''Gets the file name from absolute/relative file path'''
     strSplit = file_path.split(os.sep)
     return (strSplit[len(strSplit) - 1]).split('.')[0]
-
-def ltx_section(title, fltbarrier=True):
-    if fltbarrier:
-        return '\\FloatBarrier\n\\section{' + ltx_sanitize(title) + '}\n'
-    return '\\section{' + ltx_sanitize(title) + '}'
-
-def ltx_subsection(title):
-    return '\\subsection{' + ltx_sanitize(title) + '}\n'
-    
-def ltx_subsubsection(title):
-    return '\\subsubsection{' + ltx_sanitize(title) + '}\n'
-    
-def ltx_figure(img, caption='Default Caption', param='width=\\textwidth'):
-    str = '\\begin{figure}[h]\n\\centerline{\\includegraphics['
-    str += param + ']{' 
-    str += img + '}}\n'
-    str += '\\caption{' + ltx_sanitize(caption) + '}\n\\end{figure}\n'
-    return str
-    
-def ltx_table(file_path, max_row=10):
-    data, headers = read_csv(file_path)
-    file_name = get_file_name(file_path)
-    ltx = '\\begin{table}[!htbp]\n\\centering\n\\caption{' + file_name + '}'
-    ltx += '\n\\begin{tabular}{' + (len(data) * 'l') + '} \\hline\n'
-    for i in range(len(headers) - 1):
-        ltx += '\\bf ' + headers[i].replace('&', '\\&') + ' & '
-    ltx += '\\bf ' + headers[len(headers) - 1].replace('&', '\\&') + '\\\\\\hline\n'
-    buffer = ''
-    max_len = 80
-    for i in range(len(headers)):
-        max_len -= len(headers[i])
-    
-    for i in range(max_row):
-        for j in range(len(data)-1):
-            hold = string_length_split(data[j][i], max_len)
-            ltx += ltx_sanitize(hold[0]) + '&'
-            for k in range(1,len(hold)):
-                buffer += '&' + ltx_sanitize(hold[k]) + ('&'*(len(data)-2)) + '\\\\\n'
-        ltx += ltx_sanitize((data[len(data)-1][i])[:15]) + '\\\\\n'
-        ltx += buffer
-        buffer = '' 
-    ltx += '\\hline\n\\end{tabular}\n\\end{table}\n'
-    return ltx
-    #with open(os.getcwd() + os.sep + 'output' + os.sep + file_name + '.txt', 'w+') as f:
-    #   f.write(ltx)
-
-def ltx_newpage():
-    return '\\FloatBarrier\n\\newpage\n'
-
+            
 def read_csv(file_path):        
     # method scoped variables assigned in 'with' scope
     data = []
@@ -105,32 +118,33 @@ def read_csv(file_path):
     headers.append('\\%')
     return (data, headers)
 
-def summary(title, file_name):
-    title = ltx_sanitize(title)
-    ltx = ''
-    ltx += ltx_section(ltx_sanitize(title))
-    ltx += ltx_subsection('Summary')
-    ltx += ltx_figure(title + 'Gen', title + ' - General Statistics', summ_param)
-    ltx += ltx_figure(title + 'URLIP', title + ' - URL/IP ratio', summ_param)
-    ltx += ltx_newpage()
-    ltx += ltx_subsection("TLD Distribution")
-    ltx += ltx_figure(file_name, file_name + " - TLD Distribution", pie_chart_trim_param)
-    ltx += ltx_table(input_dir + file_name + '.csv')
-    return ltx
+    
+def summary(doc, title, file_name):
+    title = sanitize(title)
+    doc.section(sanitize(title))
+    doc.subsection('Summary')
+    doc.figure(title + 'Gen', title + ' - General Statistics', summ_param)
+    doc.figure(title + 'URLIP', title + ' - URL/IP ratio', summ_param)
+    doc.newpage()
+    doc.subsection("TLD Distribution")
+    doc.figure(file_name, file_name + " - TLD Distribution", pie_chart_trim_param)
+    doc.table(input_dir + file_name + '.csv')
 
+    
 # util function for printing to terminal without newline char 
 # util function for printing to terminal without newline char 
 def print_no_newline(text):
     sys.stdout.write('  ' + text + (' ' * (71 - len(text))))
     sys.stdout.flush()     
     
+    
 # input directory for .csv files
 input_dir = '' 
-
 # standard latex options for figures
 pie_chart_trim_param = 'trim={4cm 8cm 4cm 5.5cm},clip,height=12cm'
 summ_param = 'height=8.5cm'
 isp_param = 'height=13cm' 
+       
        
 def create_report(dir, output):
     global input_dir
@@ -141,62 +155,63 @@ def create_report(dir, output):
     #ltx += '\\usepackage[titletoc,toc,page]{appendix}\n\\usepackage{graphicx,hhline}\n'
     #ltx += '\\graphicspath{ {graphs/} }\n\\begin{document}\n'
     
+    report = LatexDocument()
     #sections 1-3
     print_no_newline('Section 1')
-    ltx = summary('Defacement', 'DefacementTld')
-    ltx += ltx_newpage()
+    summary(report, 'Defacement', 'DefacementTld')
+    report.newpage()
     print('[DONE]')
     print_no_newline('Section 2')
-    ltx += summary('Phishing', 'PhishingTld')
-    ltx += ltx_newpage()
+    summary(report, 'Phishing', 'PhishingTld')
+    report.newpage()
     print('[DONE]')
     print_no_newline('Section 3')
-    ltx += summary('Malware', 'MalwareTld')
-    ltx += ltx_newpage()
+    summary(report, 'Malware', 'MalwareTld')
+    report.newpage()
     print('[DONE]')
     
     
     #section 4
     print_no_newline('Section 4')
-    ltx += ltx_newpage()
-    ltx += ltx_section('Botnet')
-    ltx += ltx_subsection('Botnet - Bots')
-    ltx += ltx_subsubsection('Major Botnet Families found on Hong Kong Network')
-    ltx += ltx_figure('listOfBotnets', 'Botnet Unique IP (Monthly Max Count)', 'trim={4cm 8cm 4cm 5.5cm},clip,height=8cm')
-    ltx += ltx_table(input_dir + 'listOfBotnets.csv')
-    ltx += ltx_newpage()
-    ltx += ltx_subsection('Botnet - Command and Control Servers (C&Cs)')
-    ltx += ltx_subsubsection('Botnet - C&C Servers by communication type')
-    ltx += ltx_figure('placeholder', 'Botnet - C&C Servers by communication type')
+    report.newpage()
+    report.section('Botnet')
+    report.subsection('Botnet - Bots')
+    report.subsubsection('Major Botnet Families found on Hong Kong Network')
+    report.figure('listOfBotnets', 'Botnet Unique IP (Monthly Max Count)', 'trim={4cm 8cm 4cm 5.5cm},clip,height=8cm')
+    report.table(input_dir + 'listOfBotnets.csv')
+    report.newpage()
+    report.subsection('Botnet - Command and Control Servers (C&Cs)')
+    report.subsubsection('Botnet - C&C Servers by communication type')
+    report.figure('placeholder', 'Botnet - C&C Servers by communication type')
     print('[DONE]')
     
     #section 5
     print_no_newline('Section 5')
-    ltx += ltx_newpage()
-    ltx += ltx_section('Internet Service Providers (ISP)')
-    ltx += ltx_subsection('Top 10 ISPs hosting Defacement')
-    ltx += ltx_figure('ISPDefacement', 'Defacement - Top ISPs', pie_chart_trim_param)
-    ltx += ltx_table(input_dir + 'ISPDefacement.csv')
-    ltx += ltx_newpage()
-    ltx += ltx_subsection('Top 10 ISPs hosting Phishing')
-    ltx += ltx_figure('ISPPhishing', 'Phishing - Top ISPs', pie_chart_trim_param)
-    ltx += ltx_table(input_dir + 'ISPPhishing.csv')
-    ltx += ltx_newpage()
-    ltx += ltx_subsection('Top 10 ISPs hosting Malware')
-    ltx += ltx_figure('ISPMalware', 'Malware Hosting - Top ISPs', pie_chart_trim_param)
-    ltx += ltx_table(input_dir + 'ISPMalware.csv')
-    ltx += ltx_newpage()
-    ltx += ltx_subsection('Top 10 ISPs of unique botnets (Bots)')
-    ltx += ltx_figure('ISPBotnets', 'Botnet (Bots) - Top ISPs', isp_param)
-    ltx += ltx_table(input_dir + 'ISPBotnets.csv')
-    ltx += ltx_newpage()
-    ltx += ltx_subsection('Top 10 ISPs for all security events')
-    ltx += ltx_figure('ISPAll', 'All Events - Top ISPs', isp_param)
-    ltx += ltx_table(input_dir + 'ISPAll.csv')
-    ltx += ltx_newpage()
-    ltx += ltx_subsection('Top 10 ISPs for server related security events')
-    ltx += ltx_figure('ISPServerAll', 'Server Related Events - Top ISPs', isp_param)
-    ltx += ltx_table(input_dir + 'ISPServerAll.csv')  
+    report.newpage()
+    report.section('Internet Service Providers (ISP)')
+    report.subsection('Top 10 ISPs hosting Defacement')
+    report.figure('ISPDefacement', 'Defacement - Top ISPs', pie_chart_trim_param)
+    report.table(input_dir + 'ISPDefacement.csv')
+    report.newpage()
+    report.subsection('Top 10 ISPs hosting Phishing')
+    report.figure('ISPPhishing', 'Phishing - Top ISPs', pie_chart_trim_param)
+    report.table(input_dir + 'ISPPhishing.csv')
+    report.newpage()
+    report.subsection('Top 10 ISPs hosting Malware')
+    report.figure('ISPMalware', 'Malware Hosting - Top ISPs', pie_chart_trim_param)
+    report.table(input_dir + 'ISPMalware.csv')
+    report.newpage()
+    report.subsection('Top 10 ISPs of unique botnets (Bots)')
+    report.figure('ISPBotnets', 'Botnet (Bots) - Top ISPs', isp_param)
+    report.table(input_dir + 'ISPBotnets.csv')
+    report.newpage()
+    report.subsection('Top 10 ISPs for all security events')
+    report.figure('ISPAll', 'All Events - Top ISPs', isp_param)
+    report.table(input_dir + 'ISPAll.csv')
+    report.newpage()
+    report.subsection('Top 10 ISPs for server related security events')
+    report.figure('ISPServerAll', 'Server Related Events - Top ISPs', isp_param)
+    report.table(input_dir + 'ISPServerAll.csv')  
     print('[DONE]')
     
     #end document
@@ -205,9 +220,9 @@ def create_report(dir, output):
     #write to latex.ltx
     fpath = output + 'latex.tex'
     print_no_newline('Writing file: ' + fpath)
-    with open(fpath, 'w+') as f:
-       f.write(ltx)    
+    report.write_to_file(fpath)   
     print('[DONE]')
+    
     
 if __name__ == "__main__":    
     create_report(os.sep + 'HKSWROutput' + os.sep + 'report' + os.sep, 'latex/')    
