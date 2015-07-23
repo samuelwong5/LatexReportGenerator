@@ -23,6 +23,19 @@ def main(file_paths):
             bot_data[1].append(len(hold))
     generate_chart(bot_data, ['Month', 'Botnet (C&Cs)'], 'BotCCDis', 'Botnet (C&Cs) security event distribution')
     
+    cc_data = [['IRC','HTTP','P2P'],[0,0,0]]
+    with open(ccfiles[2]) as csv_file:
+        dreader = csv.DictReader(csv_file)
+        hold = []
+        for row in dreader:
+            if row['ip'] not in hold:
+                if row['channel'] == '-': #HTTP
+                    cc_data[1][1] += 1 
+                else:                     #IRC
+                    cc_data[1][0] += 1  
+                hold.append(row['ip'])                 
+    generate_chart(cc_data, ['Communication Type', 'Count'], 'BotCCType', 'Botnet (C&Cs) by communication type')
+   
     bot_data = [['Mar15','Apr15','May15'],[]]   
     bnfile = 'botnetDailyMax.csv'
     bnfiles = [file_paths[0] + bnfile,

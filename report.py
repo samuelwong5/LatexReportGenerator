@@ -103,7 +103,13 @@ def print_no_newline(text):
 # util function for printing "[DONE]" 
 def print_done():
     print('[DONE]')    
-   
+
+def format_month_str(x):
+    if x <= 0:
+        x += 12
+    if x < 10:
+        return '0' + str(x)    
+    return str(x)
    
 output_dir = 'latex/'         
 # main function        
@@ -111,9 +117,26 @@ def main():
     # get configurations
     config = ConfigParser.ConfigParser(allow_no_value=True)
     config.read('config.cfg')
-    file_paths = [config.get('input','fst-month'),  # 2 months ago
-        config.get('input','snd-month'),  # 1 month ago
-        config.get('input','thd-month')  # current month
+    data_folder = config.get('input','data')
+    if len(sys.argv) < 2:
+        print ('[FATAL] Error: Missing YYMM argument.')
+        sys.exit(1)
+    if len(sys.argv[1]) != 4:
+        print('[FATAL] Error: Argument should be in format YYMM (e.g. 1403 for 2014 March)')
+        sys.exit(1)
+    year = 0
+    month = 0
+    try:
+        year = int(sys.argv[1])
+        month = year % 100
+        year = (year-month) / 100
+    except:
+        print('Invalid argument. Expected format: YYMM.\nExample: March 2014 -> 1403')
+        sys.exit(1)
+        
+    file_paths = [data_folder + str(year) + format_month_str(month - 2) + '/report/',  
+        data_folder + str(year) + format_month_str(month - 1) + '/report/',  # 1 month ago
+        data_folder + str(year) + format_month_str(month) + '/report/'       # current month
         ]
     ltx_output = config.get('output','latex')
     webserver = config.get('input','webserver')

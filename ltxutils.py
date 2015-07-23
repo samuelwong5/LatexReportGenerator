@@ -48,6 +48,9 @@ class LatexDocument():
             buffer = '' 
         self.ltx += '\\hline\n\\end{tabular}\n\\end{table}\n'
 
+    def text(self, txt):
+        self.ltx += txt
+        
     def newpage(self):
         self.ltx += '\\FloatBarrier\n\\newpage\n'
       
@@ -86,7 +89,7 @@ def get_file_name(file_path):
     return (strSplit[len(strSplit) - 1]).split('.')[0]
             
 def read_csv(file_path):        
-    # method scoped variables assigned in 'with' scope
+    '''Reads a csv file and returns a tuple (headers, data)'''
     data = []
     headers = ['Rank']
     
@@ -182,7 +185,7 @@ def create_report(dir, output):
     report.newpage()
     report.subsection('Botnet - Command and Control Servers (C&Cs)')
     report.subsubsection('Botnet - C&C Servers by communication type')
-    report.figure('placeholder', 'Botnet - C&C Servers by communication type')
+    report.figure('BotCCType', 'Botnet - C&C Servers by communication type')
     print('[DONE]')
     
     #section 5
