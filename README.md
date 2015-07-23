@@ -1,4 +1,4 @@
-README
+ReportGrapher
 ======
 
 Generating full-fledged report from data.
