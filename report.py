@@ -61,7 +61,10 @@ def draw_bar_chart(file_path, max=10, bar_mode='stack'):
                             y=(data[i])[:10],
                             name=headers[i]
                         ))
-                        
+    total = data[1][:10]
+    for i in range(1, len(data)):
+        total = map(sum, zip(total, data[i][:10]))
+        
     # misc. chart setup
     chart_data = Data(bars)
     chart_title = get_file_name(file_path)
@@ -70,7 +73,16 @@ def draw_bar_chart(file_path, max=10, bar_mode='stack'):
         font=Font(
             size=16
         ),
-        barmode=bar_mode
+        barmode=bar_mode,
+        annotations=[
+        Annotation(
+            x=xi,
+            y=int(yi),
+            text=str(int(yi)),
+            xanchor='center',
+            yanchor='bottom',
+            showarrow=False,
+        ) for xi, yi in zip(data[0], total)]
     )
     fig = Figure(data=chart_data,layout=layout)
     
@@ -171,7 +183,7 @@ def main():
     print_no_newline('Rendering Google Charts...')
     driver.get("http://localhost/graph.html")
     print_done() 
-    print('Downloading Google Charts...')
+    print('  Downloading Google Charts...')
     while ("Done" not in driver.title):
         time.sleep(1);
     for file in os.listdir(webserver + 'graphs/'):
