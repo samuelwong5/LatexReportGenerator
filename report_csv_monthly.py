@@ -121,7 +121,6 @@ def create(file_paths):
 
 def generate_chart(data, headers, png_name, name, bar_mode='group'):
     bars = []
-
     for i in range(1,len(data)):
         if (max == -1):
             bars.append(Bar(
@@ -139,13 +138,37 @@ def generate_chart(data, headers, png_name, name, bar_mode='group'):
     # misc. chart setup
     chart_data = Data(bars)
     chart_title = name
-    layout = Layout(
-        title=chart_title,
-        font=Font(
-            size=16
-        ),
-        barmode=bar_mode
-    )
+    if (len(data)==2 or bar_mode=='stack'):
+        total_len = 10 if len(data[0]) > 10 else len(data[0])
+        total = map(lambda x: int(x) if (type(x) is str) else x, data[1][:total_len])
+        if bar_mode=='stack':
+            for i in range(2, len(data)):
+                total = map(sum, zip(total, map(int,data[i][:total_len])))
+        layout = Layout(
+            title=chart_title,
+            font=Font(
+                size=16
+            ),
+            barmode=bar_mode,
+            annotations=[
+                Annotation(
+                    x=xi,
+                    y=yi,
+                    text=str(yi),
+                    xanchor='center',
+                    yanchor='bottom',
+                    showarrow=False,
+                ) for xi, yi in zip(data[0], total)
+            ]
+        )
+    else:
+        layout = Layout(
+            title=chart_title,
+            font=Font(
+                size=16
+            ),
+            barmode=bar_mode
+        )
     fig = Figure(data=chart_data,layout=layout)
     
     # plot and download chart

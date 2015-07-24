@@ -35,7 +35,9 @@ def draw_bar_chart(file_path, max=10, bar_mode='stack'):
         headers = dreader.fieldnames
         for row in dreader:
             for i in range(len(headers)):
-                if (len(data) < len(headers)):
+                if (headers[i] == 'Total'):
+                    break
+                if (len(data) < i + 1):
                     data.append([])
                 if (i == 0):
                     data[0].append(row[headers[0]])
@@ -61,9 +63,10 @@ def draw_bar_chart(file_path, max=10, bar_mode='stack'):
                             y=(data[i])[:10],
                             name=headers[i]
                         ))
-    total = data[1][:10]
-    for i in range(1, len(data)):
-        total = map(sum, zip(total, data[i][:10]))
+    total_len = 10 if len(data[0]) > 10 else len(data[0])
+    total = data[1][:total_len]
+    for i in range(2, len(data)):
+        total = map(sum, zip(total, data[i][:total_len]))
         
     # misc. chart setup
     chart_data = Data(bars)
