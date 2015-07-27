@@ -77,7 +77,8 @@ def draw_bar_chart(file_path, max=10, bar_mode='stack'):
             while (i - j >= 0):
                 all_columns_height[i] += all_columns_height[i-j]
                 j += 10
-        for i in range(0, 10):
+
+        for i in range(0, 10 if 10 <= len(all_columns_height) else len(all_columns_height)):
             all_columns_height[i] /= 2
         all_columns += total[:10]
         all_columns_height += total[:10]
@@ -211,7 +212,7 @@ def main():
     driver.quit()
     display.stop()
     print('Compiling LaTeX...')
-    ltxutils.create_report(file_paths[2], ltx_output)
+    ltxutils.create_report(file_paths[2], file_paths[1], ltx_output)
     print('Rendering .pdf')
     os.chdir(os.getcwd() + os.sep + output_dir)
     os.system('pdflatex SecurityWatchReport.tex')

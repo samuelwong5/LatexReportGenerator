@@ -26,7 +26,15 @@ class LatexDocument():
         self.ltx += '\\caption{' + sanitize(caption) + '}\n\\end{figure}\n'
     
     def table(self, file_path, max_row=10):
-        data, headers = read_csv(file_path)
+        data, headers = read_csv(input_dir + file_path)
+        data_prev, headers_prev = read_csv(prev_dir + file_path)
+        for i in range(10):
+            if data[2][i] in data_prev[2][:i]:
+                data[1][i] = '\\Uparrow'
+            elif data[2][i] == data_prev[2][i]:
+                data[1][i] = '-'
+            elif data[2][i] in data_prev[2][i+1:]:
+                data[1][i] = '\\Downarrow'
         file_name = get_file_name(file_path)
         self.ltx += '\\begin{table}[!htbp]\n\\centering\n\\caption{' + file_name + '}'
         self.ltx += '\n\\begin{tabular}{' + (len(data) * 'l') + '} \\hline\n'
@@ -91,10 +99,10 @@ def get_file_name(file_path):
 def read_csv(file_path):        
     '''Reads a csv file and returns a tuple (headers, data)'''
     data = []
-    headers = ['Rank']
+    headers = ['Rank','+/-']
     
     # reading from csv file
-    with open(os.getcwd() + os.sep + file_path) as csv_file:
+    with open(file_path) as csv_file:
         dreader = csv.DictReader(csv_file)
         headers += dreader.fieldnames
         total_count = 0
@@ -106,6 +114,8 @@ def read_csv(file_path):
                 if (i == 0):
                     data[0].append(str(row_count))
                     row_count += 1
+                elif (i==1):
+                    data[1].append('NEW')
                 elif (i==len(headers)-1):
                     if row[headers[i]] == '':
                         data[i].append(0)
@@ -131,7 +141,7 @@ def summary(doc, title, file_name):
     doc.newpage()
     doc.subsection("TLD Distribution")
     doc.figure(file_name, file_name + " - TLD Distribution", pie_chart_trim_param)
-    doc.table(input_dir + file_name + '.csv')
+    doc.table(file_name + '.csv')
 
     
 # util function for printing to terminal without newline char 
@@ -143,16 +153,20 @@ def print_no_newline(text):
     
 # input directory for .csv files
 input_dir = '' 
+prev_dir = ''
 # standard latex options for figures
 pie_chart_trim_param = 'trim={4cm 8cm 4cm 5.5cm},clip,height=12cm'
 summ_param = 'height=8.5cm'
 isp_param = 'height=13cm' 
        
        
-def create_report(dir, output):
+def create_report(dir, prev_month_dir, output):
     global input_dir
     input_dir = dir
-    
+    global prev_dir
+    prev_dir = prev_month_dir
+    #print(input_dir)
+    #print(prev_dir)
     #preamble
     #ltx = '\\documentclass[a4wide, 11pt]{article}\n\\usepackage{placeins}\n'
     #ltx += '\\usepackage[titletoc,toc,page]{appendix}\n\\usepackage{graphicx,hhline}\n'
@@ -181,7 +195,7 @@ def create_report(dir, output):
     report.subsection('Botnet - Bots')
     report.subsubsection('Major Botnet Families found on Hong Kong Network')
     report.figure('listOfBotnets', 'Botnet Unique IP (Monthly Max Count)', 'trim={4cm 8cm 4cm 5.5cm},clip,height=8cm')
-    report.table(input_dir + 'listOfBotnets.csv')
+    report.table('listOfBotnets.csv')
     report.newpage()
     report.subsection('Botnet - Command and Control Servers (C&Cs)')
     report.subsubsection('Botnet - C&C Servers by communication type')
@@ -194,27 +208,27 @@ def create_report(dir, output):
     report.section('Internet Service Providers (ISP)')
     report.subsection('Top 10 ISPs hosting Defacement')
     report.figure('ISPDefacement', 'Defacement - Top ISPs', pie_chart_trim_param)
-    report.table(input_dir + 'ISPDefacement.csv')
+    report.table('ISPDefacement.csv')
     report.newpage()
     report.subsection('Top 10 ISPs hosting Phishing')
     report.figure('ISPPhishing', 'Phishing - Top ISPs', pie_chart_trim_param)
-    report.table(input_dir + 'ISPPhishing.csv')
+    report.table('ISPPhishing.csv')
     report.newpage()
     report.subsection('Top 10 ISPs hosting Malware')
     report.figure('ISPMalware', 'Malware Hosting - Top ISPs', pie_chart_trim_param)
-    report.table(input_dir + 'ISPMalware.csv')
+    report.table('ISPMalware.csv')
     report.newpage()
     report.subsection('Top 10 ISPs of unique botnets (Bots)')
     report.figure('ISPBotnets', 'Botnet (Bots) - Top ISPs', isp_param)
-    report.table(input_dir + 'ISPBotnets.csv')
+    report.table('ISPBotnets.csv')
     report.newpage()
     report.subsection('Top 10 ISPs for all security events')
     report.figure('ISPAll', 'All Events - Top ISPs', isp_param)
-    report.table(input_dir + 'ISPAll.csv')
+    report.table('ISPAll.csv')
     report.newpage()
     report.subsection('Top 10 ISPs for server related security events')
     report.figure('ISPServerAll', 'Server Related Events - Top ISPs', isp_param)
-    report.table(input_dir + 'ISPServerAll.csv')  
+    report.table('ISPServerAll.csv')  
     print('[DONE]')
     
     #end document
