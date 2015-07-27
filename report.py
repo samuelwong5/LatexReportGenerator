@@ -14,6 +14,7 @@ from selenium import webdriver
 
 import ltxutils
 import report_csv_monthly
+import gchart
 
 # returns filename from complete path
 # strips path and extension
@@ -166,32 +167,33 @@ def main():
     report_csv_monthly.main(file_paths)
     
     # pie charts     
-    google_chart_files = ['DefacementTld.csv',
-                          'ISPDefacement.csv',
-                          'ISPMalware.csv',
-                          'ISPPhishing.csv',
-                          'MalwareTld.csv',
-                          'PhishingTld.csv',
-                          'listOfBotnets.csv']
-    for gc_file in google_chart_files:
-        shutil.copyfile(file_paths[2] + gc_file, webserver + gc_file)
+    google_chart_files = ['DefacementTld',
+                          'ISPDefacement',
+                          'ISPMalware',
+                          'ISPPhishing',
+                          'MalwareTld',
+                          'PhishingTld',
+                          'listOfBotnets']
     print('Creating pie charts...')
     print_no_newline('Starting virtual display...')
     display = Display(visible=0, size=(1024, 768))
     display.start()
     print_done()
+    print_no_newline('Starting Flask webserver...')
+    gchart.set_input_dir(data_folder + str(year) + format_month_str(month) + '/report/')
+    gchart.start_flask_process()
+    print_done()
     print_no_newline('Initializing Selenium webdriver...')        
     driver = webdriver.Firefox()
     print_done()
-    print_no_newline('Rendering Google Charts...')
-    driver.get("http://localhost/graph.html")
-    print_done() 
-    print('  Downloading Google Charts...')
-    while ("Done" not in driver.title):
-        time.sleep(1);
-    for file in os.listdir(webserver + 'graphs/'):
-        print_no_newline('  ' + file)
-        shutil.copyfile(webserver + 'graphs/' + file, ltx_output + file)
+    for file in google_chart_files:
+        print_no_newline('  ' + file + '.png')
+        driver.get('http://localhost:5000/graph/' + file)
+        base = driver.find_element_by_id('png').text
+        with open(output_dir + file + '.png', 'w+b') as f:
+            f.write(base[22:].decode('base64'))
+        # print_no_newline('  ' + file)
+        # shutil.copyfile(webserver + 'graphs/' + file, ltx_output + file)
         print_done()           
     driver.quit()
     display.stop()
@@ -201,6 +203,7 @@ def main():
     os.chdir(os.getcwd() + os.sep + output_dir)
     os.system('pdflatex SecurityWatchReport.tex')
     print('Report successfully compiled. Exiting now...')
+    os.system('killall -I python')
         
     
 if __name__ == "__main__":    

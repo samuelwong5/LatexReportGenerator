@@ -1,9 +1,0 @@
-ip,as_name,channel,port,malware,feed,count
-103.13.232.232,KORNET-PS-AS,#MiamiWaters,6667,-,shadowserver,0
-103.13.232.232,KORNET-PS-AS,#mrlol,6667,-,shadowserver,0
-103.13.232.232,KORNET-PS-AS,#ownbnstest,6667,-,shadowserver,0
-114.112.255.81,TELE,&virtu,80,-,shadowserver,0
-114.112.255.81,TELE,&virtu3,80,-,shadowserver,0
-202.66.30.201,CITIC Telecom International CPC Limited,#MiamiWaters,6667,-,shadowserver,0
-202.66.30.201,CITIC Telecom International CPC Limited,#mrlol,6667,-,shadowserver,0
-202.66.30.201,CITIC Telecom International CPC Limited,#ownbnstest,6667,-,shadowserver,0
