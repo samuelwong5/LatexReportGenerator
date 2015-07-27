@@ -1,7 +1,11 @@
-import csv, os, requests, sys
+import csv
+import os
+import sys
+
 import plotly.plotly as py
 from plotly.graph_objs import *
-    
+import requests    
+
 def main(file_paths):
     ssfile = 'serverSummary.csv'
     ssfiles = [file_paths[0] + ssfile,

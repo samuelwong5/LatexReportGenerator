@@ -2,7 +2,6 @@ import ConfigParser
 import csv
 import io
 import os 
-import requests
 import shutil
 import sys
 import stat
@@ -10,11 +9,13 @@ import stat
 from plotly.graph_objs import *
 import plotly.plotly as py
 from pyvirtualdisplay import Display
+import requests
 from selenium import webdriver
 
+import gchart
 import ltxutils
 import report_csv_monthly
-import gchart
+
 
 # returns filename from complete path
 # strips path and extension
