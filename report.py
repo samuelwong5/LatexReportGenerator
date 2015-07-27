@@ -68,7 +68,22 @@ def draw_bar_chart(file_path, max=10, bar_mode='stack'):
     total = data[1][:total_len]
     for i in range(2, len(data)):
         total = map(sum, zip(total, data[i][:total_len]))
-        
+    if len(data) > 2:
+        all_columns =  sum([(data[x][:10]) for x in range(1,len(data))],[])
+        all_columns_height = list(all_columns)
+        for i in range(len(all_columns_height) - 1, 9, -1):
+            j = 10
+            all_columns_height[i] *= 0.4
+            while (i - j >= 0):
+                all_columns_height[i] += all_columns_height[i-j]
+                j += 10
+        for i in range(0, 10):
+            all_columns_height[i] /= 2
+        all_columns += total[:10]
+        all_columns_height += total[:10]
+    else:
+        all_columns = total[:10]
+        all_columns_height = total[:10] 
     # misc. chart setup
     chart_data = Data(bars)
     chart_title = get_file_name(file_path)
@@ -78,15 +93,14 @@ def draw_bar_chart(file_path, max=10, bar_mode='stack'):
             size=16
         ),
         barmode=bar_mode,
-        annotations=[
-        Annotation(
+        annotations=[Annotation(
             x=xi,
-            y=int(yi),
+            y=zi,
             text=str(int(yi)),
             xanchor='center',
             yanchor='bottom',
             showarrow=False,
-        ) for xi, yi in zip(data[0], total)]
+        ) for xi, yi, zi in filter(lambda x: x[1] > (total[0] / 8), zip(data[0][:10] * (len(data)), all_columns, all_columns_height))]
     )
     fig = Figure(data=chart_data,layout=layout)
     

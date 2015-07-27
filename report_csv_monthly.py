@@ -1,11 +1,7 @@
-import csv
-import os
-import sys
-
+import csv, os, requests, sys
 import plotly.plotly as py
 from plotly.graph_objs import *
-import requests    
-
+    
 def main(file_paths):
     ssfile = 'serverSummary.csv'
     ssfiles = [file_paths[0] + ssfile,
@@ -148,6 +144,47 @@ def generate_chart(data, headers, png_name, name, bar_mode='group'):
         if bar_mode=='stack':
             for i in range(2, len(data)):
                 total = map(sum, zip(total, map(int,data[i][:total_len])))
+        max_len = reduce(lambda x,y: x if x>y else y, total)
+        if len(data) > 2:
+            all_columns =  map(lambda x: int(x), sum([(data[x][:10]) for x in range(1,len(data))],[]))
+            all_columns_height = list(all_columns)
+            for i in range(len(all_columns_height) - 1, total_len, -1):
+                j = total_len
+                all_columns_height[i] *= 0.4
+                while (i - j >= 0):
+                    all_columns_height[i] += all_columns_height[i-j]
+                    j += total_len
+            for i in range(0, 10 if 10 <= total_len else total_len):
+                all_columns_height[i] /= 2
+            all_columns += total[:10]
+            all_columns_height += total[:10]
+        else:
+            all_columns = total[:10]
+            all_columns_height = total[:10] 
+
+        layout = Layout(
+            title=chart_title,
+            font=Font(
+                size=16
+            ),
+            barmode=bar_mode,
+            annotations=[Annotation(
+                x=xi,
+                y=zi,
+                text=str(int(yi)),
+                xanchor='center',
+                yanchor='bottom',
+                showarrow=False,
+                ) for xi, yi, zi in filter(lambda x: x[1] > (max_len / 8), 
+                                   zip(data[0][:10] * (len(data)),
+                                       all_columns, 
+                                       all_columns_height
+                                   ))]
+    )
+    else:
+        len_x = range(len(data[0]))
+        annotation_x = map(lambda x: x-0.25, len_x) + len_x + map(lambda x: x+0.25, len_x)
+        annotation_y = data[1] + data[2] + data[3]
         layout = Layout(
             title=chart_title,
             font=Font(
@@ -162,16 +199,8 @@ def generate_chart(data, headers, png_name, name, bar_mode='group'):
                     xanchor='center',
                     yanchor='bottom',
                     showarrow=False,
-                ) for xi, yi in zip(data[0], total)
+                ) for xi, yi in zip(annotation_x, annotation_y)
             ]
-        )
-    else:
-        layout = Layout(
-            title=chart_title,
-            font=Font(
-                size=16
-            ),
-            barmode=bar_mode
         )
     fig = Figure(data=chart_data,layout=layout)
     
