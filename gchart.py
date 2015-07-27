@@ -1,11 +1,10 @@
+import csv
+import os
+import sys
+
 from flask import Flask
 from flask import send_from_directory
 from multiprocessing import Process
-import requests
-import os
-import csv
-from pyvirtualdisplay import Display
-from selenium import webdriver
 
 app = Flask(__name__, static_url_path='')
 report = '/home/samuelwong/Report/HKSWROutput/1505/report'
@@ -65,12 +64,16 @@ google.setOnLoadCallback(drawChart);
         f.write(html)
     return(html)
 
+    
 def set_input_dir(dir):
     global report
     report = dir
-
+    
     
 def start_flask():
+    f = open(os.devnull, 'w')
+    sys.stdout = f
+    sys.stderr = f
     app.run('0.0.0.0')
      
 
@@ -82,4 +85,6 @@ def start_flask_process():
 
     
 if __name__ == '__main__':
+    if (len(sys.argv) > 1):
+        report = sys.argv[1]
     server.start()

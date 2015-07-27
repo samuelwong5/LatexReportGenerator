@@ -2,6 +2,7 @@ import ConfigParser
 import csv
 import io
 import os 
+import requests
 import shutil
 import sys
 import stat
@@ -9,13 +10,11 @@ import stat
 from plotly.graph_objs import *
 import plotly.plotly as py
 from pyvirtualdisplay import Display
-import requests
 from selenium import webdriver
 
-import gchart
 import ltxutils
 import report_csv_monthly
-
+import gchart
 
 # returns filename from complete path
 # strips path and extension
@@ -156,7 +155,6 @@ def main():
         data_folder + str(year) + format_month_str(month) + '/report/'       # current month
         ]
     ltx_output = config.get('output','latex')
-    webserver = config.get('input','webserver')
     global output_dir
     output_dir = ltx_output
     # bar charts
@@ -203,6 +201,8 @@ def main():
     print('Rendering .pdf')
     os.chdir(os.getcwd() + os.sep + output_dir)
     os.system('pdflatex SecurityWatchReport.tex')
+    os.rename('SecurityWatchReport.pdf', 
+              'SecurityWatchReport' + str(year) + format_month_str(month) + '.pdf')
     print('Report successfully compiled. Exiting now...')
     os.system('killall -I python')
         
