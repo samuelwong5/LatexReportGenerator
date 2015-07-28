@@ -30,17 +30,18 @@ class LatexDocument():
         data_prev, headers_prev = read_csv(prev_dir + file_path)
         for i in range(10):
             if data[2][i] in data_prev[2][:i]:
-                data[1][i] = '\\Uparrow'
+                data[1][i] = '$\\Uparrow$'
             elif data[2][i] == data_prev[2][i]:
-                data[1][i] = '-'
+                data[1][i] = '$\\rightarrow$'
             elif data[2][i] in data_prev[2][i+1:]:
-                data[1][i] = '\\Downarrow'
+                data[1][i] = '$\\Downarrow$'
         file_name = get_file_name(file_path)
-        self.ltx += '\\begin{table}[!htbp]\n\\centering\n\\caption{' + file_name + '}'
-        self.ltx += '\n\\begin{tabular}{' + (len(data) * 'l') + '} \\hline\n'
+        table_ltx = ''
+        table_ltx += '\\begin{table}[!htbp]\n\\centering\n\\caption{' + file_name + '}'
+        table_ltx += '\n\\begin{tabular}{' + (len(data) * 'l') + '} \\hline\n'
         for i in range(len(headers) - 1):
-            self.ltx += '\\bf ' + headers[i].replace('&', '\\&') + ' & '
-        self.ltx += '\\bf ' + headers[len(headers) - 1].replace('&', '\\&') + '\\\\\\hline\n'
+            table_ltx += '\\bf ' + headers[i].replace('&', '\\&') + ' & '
+        table_ltx += '\\bf ' + headers[len(headers) - 1].replace('&', '\\&') + '\\\\\\hline\n'
         buffer = ''
         max_len = 80
         for i in range(len(headers)):
@@ -48,13 +49,14 @@ class LatexDocument():
         for i in range(max_row):
             for j in range(len(data)-1):
                 hold = string_length_split(data[j][i], max_len)
-                self.ltx += sanitize(hold[0]) + '&'
+                table_ltx += sanitize(hold[0]) + '&'
                 for k in range(1,len(hold)):
                     buffer += '&' + sanitize(hold[k]) + ('&'*(len(data)-2)) + '\\\\\n'
-            self.ltx += sanitize((data[len(data)-1][i])[:15]) + '\\\\\n'
-            self.ltx += buffer
+            table_ltx += sanitize((data[len(data)-1][i])[:15]) + '\\\\\n'
+            table_ltx += buffer
             buffer = '' 
-        self.ltx += '\\hline\n\\end{tabular}\n\\end{table}\n'
+        table_ltx += '\\hline\n\\end{tabular}\n\\end{table}\n'
+        self.ltx += table_ltx.replace('+/-', '$\\Uparrow/\\Downarrow$')
 
     def text(self, txt):
         self.ltx += txt
@@ -149,6 +151,16 @@ def summary(doc, title, file_name):
 def print_no_newline(text):
     sys.stdout.write('  ' + text + (' ' * (71 - len(text))))
     sys.stdout.flush()     
+ 
+def process_header(text, yymm):
+    month_str = (['January','February','March',
+                 'April','May','June',
+                 'July','August','September',
+                 'October','November','December'])[(yymm % 100) - 1] + ' 20' + str(int(yymm/100))
+    latex_var = [('__MONTH__', month_str),('__UNIQUEEVENT__','placeholder')]
+    for v in latex_var:
+        text = text.replace(v[0], v[1])
+    return text        
     
     
 # input directory for .csv files
@@ -158,21 +170,22 @@ prev_dir = ''
 pie_chart_trim_param = 'trim={4cm 8cm 4cm 5.5cm},clip,height=12cm'
 summ_param = 'height=8.5cm'
 isp_param = 'height=13cm' 
+    
        
-       
-def create_report(dir, prev_month_dir, output):
+def create_report(dir, prev_month_dir, output, yymm):
     global input_dir
     input_dir = dir
     global prev_dir
     prev_dir = prev_month_dir
-    #print(input_dir)
-    #print(prev_dir)
-    #preamble
-    #ltx = '\\documentclass[a4wide, 11pt]{article}\n\\usepackage{placeins}\n'
-    #ltx += '\\usepackage[titletoc,toc,page]{appendix}\n\\usepackage{graphicx,hhline}\n'
-    #ltx += '\\graphicspath{ {graphs/} }\n\\begin{document}\n'
+    report = LatexDocument()    
     
-    report = LatexDocument()
+    #header
+    header = ''
+    with open(output + 'header.tex') as f:
+        header = f.read()
+     
+    report.text(process_header(header, yymm))
+
     #sections 1-3
     print_no_newline('Section 1')
     summary(report, 'Defacement', 'DefacementTld')
@@ -186,7 +199,6 @@ def create_report(dir, prev_month_dir, output):
     summary(report, 'Malware', 'MalwareTld')
     report.newpage()
     print('[DONE]')
-    
     
     #section 4
     print_no_newline('Section 4')
@@ -231,11 +243,13 @@ def create_report(dir, prev_month_dir, output):
     report.table('ISPServerAll.csv')  
     print('[DONE]')
     
-    #end document
-    #ltx += '\end{document}'
+    #appendix
+    with open(output + 'footer.tex') as f:
+        header = f.read()
+        report.text(header)
     
-    #write to latex.ltx
-    fpath = output + 'latex.tex'
+    #write to SecurityWatchReport.ltx
+    fpath = output + 'SecurityWatchReport.tex'
     print_no_newline('Writing file: ' + fpath)
     report.write_to_file(fpath)   
     print('[DONE]')

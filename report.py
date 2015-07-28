@@ -155,12 +155,13 @@ def main():
     if len(sys.argv[1]) != 4:
         print('[FATAL] Error: Argument should be in format YYMM (e.g. 1403 for 2014 March)')
         sys.exit(1)
+    yymm = 0
     year = 0
     month = 0
     try:
-        year = int(sys.argv[1])
-        month = year % 100
-        year = (year-month) / 100
+        yymm = int(sys.argv[1])
+        month = yymm % 100
+        year = (yymm-month) / 100
     except:
         print('Invalid argument. Expected format: YYMM.\nExample: March 2014 -> 1403')
         sys.exit(1)
@@ -212,7 +213,7 @@ def main():
     driver.quit()
     display.stop()
     print('Compiling LaTeX...')
-    ltxutils.create_report(file_paths[2], file_paths[1], ltx_output)
+    ltxutils.create_report(file_paths[2], file_paths[1], ltx_output, yymm)
     print('Rendering .pdf')
     os.chdir(os.getcwd() + os.sep + output_dir)
     os.system('pdflatex SecurityWatchReport.tex')
