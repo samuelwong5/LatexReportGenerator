@@ -80,8 +80,8 @@ def draw_bar_chart(file_path, max=10, bar_mode='stack'):
 
         for i in range(0, 10 if 10 <= len(all_columns_height) else len(all_columns_height)):
             all_columns_height[i] /= 2
-        all_columns += total[:10]
-        all_columns_height += total[:10]
+        #all_columns += total[:10]
+        #all_columns_height += total[:10]
     else:
         all_columns = total[:10]
         all_columns_height = total[:10] 
@@ -188,7 +188,7 @@ def main():
                           'ISPPhishing',
                           'MalwareTld',
                           'PhishingTld',
-                          'listOfBotnets']
+                          'botnetDailyMax']
     print('Creating pie charts...')
     print_no_newline('Starting virtual display...')
     display = Display(visible=0, size=(1024, 768))

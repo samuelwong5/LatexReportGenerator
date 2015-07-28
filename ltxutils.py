@@ -40,18 +40,23 @@ class LatexDocument():
 
     def table(self, data, headers, caption='', max_row=10):
         table_ltx = ''
-        table_ltx += '\\begin{table}[!htbp]\n\\centering\n\\caption{' + caption + '}'
+        table_ltx += '\\begin{table}[!htbp]\n\\centering\n'
+        if caption is not '':
+            table_ltx += '\\caption{' + sanitize(caption) + '}'
         table_ltx += '\n\\begin{tabular}{' + (len(data) * 'l') + '} \\hline\n'
         for i in range(len(headers) - 1):
-            table_ltx += '\\bf ' + headers[i].replace('&', '\\&') + ' & '
-        table_ltx += '\\bf ' + headers[len(headers) - 1].replace('&', '\\&') + '\\\\\\hline\n'
+            table_ltx += '\\bf ' + sanitize(headers[i]) + ' & '
+        table_ltx += '\\bf ' + sanitize(headers[len(headers) - 1]) + '\\\\\\hline\n'
         max_len = 80 # max width of table
         max_lengths = []
         for i in range(len(headers)):
             max_lengths.append(80-reduce(lambda x,y:x+y,map(lambda z:len(z), headers[:i] + headers[i+1:])))
-        for i in range(max_row):
+        #print(data[0])
+        #print(max_lengths)
+        for i in range(max_row if max_row < len(data[0]) else len(data[0])):
             buffer = []
-            for j in range(len(data)):
+            for j in range(len(headers)):
+                #print(str(len(data[j])) + '   i:' + str(i) +    '    j:' + str(j))
                 hold = string_length_split(data[j][i], max_lengths[j])
                 if j == len(data) - 1:
                     table_ltx += sanitize(hold[0]) + '\\\\\n'
@@ -139,11 +144,28 @@ def read_csv(file_path):
                         total_count += int(row[headers[i]])                    
                 else:
                     data[i].append(row[headers[i]])
+    percent_change = ['N/A'] * 10
     percentages = []
+    total_column_offset = 1
+    with open(file_path.replace(input_dir, prev_dir)) as csv_file:
+        dreader = csv.DictReader(csv_file)
+        hdr = dreader.fieldnames
+        if 'ISP' in hdr:
+            total_column_offset += 1
+            for row in dreader:
+                for i in range(10):
+                    if data[2][i] == row['ISP']:
+                        new = int(row[hdr[len(hdr)-1]])
+                        old = int(data[len(data)-1][i])
+                        percent_change[i] = str((new - old) * 100 / old)
+            #data.append(percent_change)
+            headers.append('Change\\%')
     for i in range(len(data[0])):
         percentages.append(str(int(data[len(data)-1][i]) * 100 / total_count))
+    if total_column_offset > 1:
+        data.append(percent_change)
     data.append(percentages)
-    headers.append('\\%')
+    headers.append('Total\\%')
     return (data, headers)
 
     
@@ -236,6 +258,17 @@ def create_report(dir, prev_month_dir, output, yymm):
     report.figure('ISPBotnets', 'Botnet (Bots) - Top ISPs', isp_param)
     report.rc_table('ISPBotnets.csv')
     report.newpage()
+    report.subsection('Top 10 ISPs of Botnet C&Cs')
+    with open(input_dir + 'C&CServers.csv') as f:
+        headers = ['ISP','Channel','Port']
+        data = [[],[],[]]
+        dreader = csv.DictReader(f)
+        fields = ['as_name','channel','port']
+        for row in dreader:
+            for i in range(3):
+                data[i].append(row[fields[i]])
+        report.table(data, headers, 'Botnet C&Cs')
+        report.newpage()
     report.subsection('Top 10 ISPs for all security events')
     report.figure('ISPAll', 'All Events - Top ISPs', isp_param)
     report.rc_table('ISPAll.csv')
