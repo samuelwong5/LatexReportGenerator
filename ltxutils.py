@@ -25,7 +25,7 @@ class LatexDocument():
         self.ltx += img + '}}\n'
         self.ltx += '\\caption{' + sanitize(caption) + '}\n\\end{figure}\n'
     
-    def table(self, file_path, max_row=10):
+    def rc_table(self, file_path, max_row=10):
         data, headers = read_csv(input_dir + file_path)
         data_prev, headers_prev = read_csv(prev_dir + file_path)
         for i in range(10):
@@ -36,37 +36,52 @@ class LatexDocument():
             elif data[2][i] in data_prev[2][i+1:]:
                 data[1][i] = '$\\Downarrow$'
         file_name = get_file_name(file_path)
+        self.table(data, headers, file_name)
+
+    def table(self, data, headers, caption='', max_row=10):
         table_ltx = ''
-        table_ltx += '\\begin{table}[!htbp]\n\\centering\n\\caption{' + file_name + '}'
+        table_ltx += '\\begin{table}[!htbp]\n\\centering\n\\caption{' + caption + '}'
         table_ltx += '\n\\begin{tabular}{' + (len(data) * 'l') + '} \\hline\n'
         for i in range(len(headers) - 1):
             table_ltx += '\\bf ' + headers[i].replace('&', '\\&') + ' & '
         table_ltx += '\\bf ' + headers[len(headers) - 1].replace('&', '\\&') + '\\\\\\hline\n'
-        buffer = ''
-        max_len = 80
+        max_len = 80 # max width of table
+        max_lengths = []
         for i in range(len(headers)):
-            max_len -= len(headers[i])  
+            max_lengths.append(80-reduce(lambda x,y:x+y,map(lambda z:len(z), headers[:i] + headers[i+1:])))
         for i in range(max_row):
-            for j in range(len(data)-1):
-                hold = string_length_split(data[j][i], max_len)
-                table_ltx += sanitize(hold[0]) + '&'
+            buffer = []
+            for j in range(len(data)):
+                hold = string_length_split(data[j][i], max_lengths[j])
+                if j == len(data) - 1:
+                    table_ltx += sanitize(hold[0]) + '\\\\\n'
+                else:
+                    table_ltx += sanitize(hold[0]) + '&'
                 for k in range(1,len(hold)):
+                    if k-1 <= len(buffer):
+                        buffer.append([''] * len(data))
+                    buffer[k-1][j] = sanitize(hold[k])
                     buffer += '&' + sanitize(hold[k]) + ('&'*(len(data)-2)) + '\\\\\n'
             table_ltx += sanitize((data[len(data)-1][i])[:15]) + '\\\\\n'
-            table_ltx += buffer
-            buffer = '' 
+            for b in buffer:
+                table_ltx += reduce(lambda x,y: x+'&'+y, b) + '\\\\\n'
         table_ltx += '\\hline\n\\end{tabular}\n\\end{table}\n'
-        self.ltx += table_ltx.replace('+/-', '$\\Uparrow/\\Downarrow$')
-
+        self.ltx += table_ltx
+        
     def text(self, txt):
         self.ltx += txt
         
     def newpage(self):
         self.ltx += '\\FloatBarrier\n\\newpage\n'
       
+    def replace(self, rep):
+        for r in rep:
+            self.ltx = self.ltx.replace(r[0], r[1])        
+     
     def write_to_file(self, fpath):
         with open(fpath, 'w+') as f:
             f.write(self.ltx)
+            
             
 ### Utility Methods ###            
 def string_length_split(str, max):
@@ -143,7 +158,7 @@ def summary(doc, title, file_name):
     doc.newpage()
     doc.subsection("TLD Distribution")
     doc.figure(file_name, file_name + " - TLD Distribution", pie_chart_trim_param)
-    doc.table(file_name + '.csv')
+    doc.rc_table(file_name + '.csv')
 
     
 # util function for printing to terminal without newline char 
@@ -151,16 +166,6 @@ def summary(doc, title, file_name):
 def print_no_newline(text):
     sys.stdout.write('  ' + text + (' ' * (71 - len(text))))
     sys.stdout.flush()     
- 
-def process_header(text, yymm):
-    month_str = (['January','February','March',
-                 'April','May','June',
-                 'July','August','September',
-                 'October','November','December'])[(yymm % 100) - 1] + ' 20' + str(int(yymm/100))
-    latex_var = [('__MONTH__', month_str),('__UNIQUEEVENT__','placeholder')]
-    for v in latex_var:
-        text = text.replace(v[0], v[1])
-    return text        
     
     
 # input directory for .csv files
@@ -183,8 +188,7 @@ def create_report(dir, prev_month_dir, output, yymm):
     header = ''
     with open(output + 'header.tex') as f:
         header = f.read()
-     
-    report.text(process_header(header, yymm))
+        report.text(header)
 
     #sections 1-3
     print_no_newline('Section 1')
@@ -207,7 +211,7 @@ def create_report(dir, prev_month_dir, output, yymm):
     report.subsection('Botnet - Bots')
     report.subsubsection('Major Botnet Families found on Hong Kong Network')
     report.figure('listOfBotnets', 'Botnet Unique IP (Monthly Max Count)', 'trim={4cm 8cm 4cm 5.5cm},clip,height=8cm')
-    report.table('listOfBotnets.csv')
+    report.rc_table('listOfBotnets.csv')
     report.newpage()
     report.subsection('Botnet - Command and Control Servers (C&Cs)')
     report.subsubsection('Botnet - C&C Servers by communication type')
@@ -220,33 +224,42 @@ def create_report(dir, prev_month_dir, output, yymm):
     report.section('Internet Service Providers (ISP)')
     report.subsection('Top 10 ISPs hosting Defacement')
     report.figure('ISPDefacement', 'Defacement - Top ISPs', pie_chart_trim_param)
-    report.table('ISPDefacement.csv')
+    report.rc_table('ISPDefacement.csv')
     report.newpage()
     report.subsection('Top 10 ISPs hosting Phishing')
     report.figure('ISPPhishing', 'Phishing - Top ISPs', pie_chart_trim_param)
-    report.table('ISPPhishing.csv')
+    report.rc_table('ISPPhishing.csv')
     report.newpage()
     report.subsection('Top 10 ISPs hosting Malware')
     report.figure('ISPMalware', 'Malware Hosting - Top ISPs', pie_chart_trim_param)
-    report.table('ISPMalware.csv')
+    report.rc_table('ISPMalware.csv')
     report.newpage()
     report.subsection('Top 10 ISPs of unique botnets (Bots)')
     report.figure('ISPBotnets', 'Botnet (Bots) - Top ISPs', isp_param)
-    report.table('ISPBotnets.csv')
+    report.rc_table('ISPBotnets.csv')
     report.newpage()
     report.subsection('Top 10 ISPs for all security events')
     report.figure('ISPAll', 'All Events - Top ISPs', isp_param)
-    report.table('ISPAll.csv')
+    report.rc_table('ISPAll.csv')
     report.newpage()
     report.subsection('Top 10 ISPs for server related security events')
     report.figure('ISPServerAll', 'Server Related Events - Top ISPs', isp_param)
-    report.table('ISPServerAll.csv')  
+    report.rc_table('ISPServerAll.csv')  
     print('[DONE]')
     
     #appendix
     with open(output + 'footer.tex') as f:
         header = f.read()
         report.text(header)
+        
+    month_str = (['January','February','March',
+                 'April','May','June',
+                 'July','August','September',
+                 'October','November','December'])[(yymm % 100) - 1] + ' 20' + str(int(yymm/100))
+    report.replace([('+/-', '$\\Uparrow/\\Downarrow$'),
+                    ('__MONTH__', month_str),
+                    ('__UNIQUEEVENT__','placeholder')])
+    
     
     #write to SecurityWatchReport.ltx
     fpath = output + 'SecurityWatchReport.tex'
