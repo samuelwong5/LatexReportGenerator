@@ -61,8 +61,6 @@ class LatexDocument():
                     if k-1 <= len(buffer):
                         buffer.append([''] * len(data))
                     buffer[k-1][j] = sanitize(hold[k])
-                    buffer += '&' + sanitize(hold[k]) + ('&'*(len(data)-2)) + '\\\\\n'
-            table_ltx += sanitize((data[len(data)-1][i])[:15]) + '\\\\\n'
             for b in buffer:
                 table_ltx += reduce(lambda x,y: x+'&'+y, b) + '\\\\\n'
         table_ltx += '\\hline\n\\end{tabular}\n\\end{table}\n'
