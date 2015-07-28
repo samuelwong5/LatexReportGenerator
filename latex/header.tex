@@ -1,0 +1,127 @@
+\documentclass[11pt]{article}
+\usepackage[margin=0.5in]{geometry}
+\usepackage[parfill]{parskip}
+\usepackage{booktabs}
+\newcommand{\tabitem}{~~\llap{\textbullet}~~}
+\usepackage{,booktabs,placeins}
+\newcommand\VRule[1][\arrayrulewidth]{\vrule width #1}
+\usepackage[titletoc,toc,page]{appendix}
+\usepackage{graphicx,hhline}
+\begin{document}
+
+\vspace{1cm}
+
+\includegraphics{HKCERT}
+
+\vspace{4cm}
+
+\centerline{\Huge Hong Kong Security Watch Report}
+
+\vspace{2.5cm}
+
+\centerline{\huge __MONTH__}
+\newpage
+
+\section*{Foreword}
+\subsection*{Better Security Decision with Situational Awareness}
+
+Nowadays, a lot of ''invisible'' compromised computers are controlled by attackers with the owner being unaware. The data on these computers may be mined and exposed every day, and the computers may be utilized in different kinds of abuse and criminal activities.
+The Hong Kong Security Watch Report aims to provide the public a better ''visibility'' of the situation of the compromised computers in Hong Kong so that they can make better decision in protecting their information security.
+
+The data in this report is about the activities of compromised computers in Hong Kong which suffer from, or participate in various forms of cyber attacks, including web defacement, phishing, malware hosting, botnet command and control centres (C\&C) or bots. Computers in Hong Kong are defined as those whose network geolocation is Hong Kong, or the top level domain of their host name is ''.hk''.
+
+\subsection*{Capitalizing on the Power of Global Intelligence}
+
+This report is the fruit of the collaboration of HKCERT and global security researchers. Many security researchers have the capability to detect attacks targeting their own or their customers’ networks. Some of them provide the information of IP addresses of attack source or web links of malicious activities to other information security organizations with an aim to collaboratively improve the overall security of the cyberspace. They have good practice in sanitizing personal identifiable data before sharing information.
+
+HKCERT collects and aggregates such valuable data about Hong Kong from multiple information sources for analysis with Information Feed Analysis System (IFAS), a system developed by HKCERT. The information sources (Appendix 1) are very distributed and reliable, providing a balanced reflection of the security status of Hong Kong.
+
+We remove duplicated events reported by multiple sources and use the following metrics for measurement to assure the quality of statistics.
+
+\begin{table}[b]
+\centering
+\caption{Types of Attack}
+\begin{tabular}{ll}
+\hline
+\textbf{ Type of Attack}              & \textbf{ Metric used}                                                                         \\\hhline{==}
+Defacement, Phishing,                 & security events on unique URLs within the             \\
+Malware Hosting                       & reporting period\\\hline
+Botnet (C\&Cs)                        & security events on unique IP addresses within    \\
+                                      & the reporting period \\\hline
+Botnet (Bots)                         & maximum daily count of security events on  \\
+                                      & unique IP addresses within the reporting period \\\hline
+\end{tabular}
+
+\end{table}
+
+\subsection*{Better information better service}
+
+We will continue to enhancing this report with more valuable information sources and more in-depth analysis. We will also explore how to use the data to enhance our services. \textit{Please send us your feedback via email (\textbf{hkcert@hkcert.org}).}
+
+\subsubsection*{Limitations}
+The data collected in this report is from multiple different sources with different collection method, collection period, presentation format and their own limitations. The numbers from the report should be used as a reference, and should neither be compared directly nor be regarded as a full picture of the reality. 
+
+\subsubsection*{Disclaimer}
+Data may be subject to update and correction without notice. We shall not have any liability, duty or obligation for or relating to the content and data contained herein, any errors, inaccuracies, omissions or delays in the content and data, or for any actions taken in reliance thereon.  In no event shall we be liable for any special, incidental or consequential damages, arising out of the use of the content and data.
+
+\subsubsection*{License}
+This report is on restricted circulation. Please do not distribute, transmit or adapt this work for public use
+
+\newpage
+\tableofcontents
+
+\newpage
+\addcontentsline{toc}{section}{Highlights of Report}
+\section*{Highlight of Report}
+This report is for __MONTH__.
+In __MONTH__, IFAS\footnote{IFAS - Information Feed Analysis System is a HKCERT developed system that collects global security intelligence relating to Hong Kong to provide a picture of the security status.} collected 144,431 security events related to Hong Kong from 19 data feed sources\footnote{Refer to Appendix 1 for the feed sources}. After data processing to remove duplications, there were __UNIQUEEVENT__ unique security events used for analysis in this report.
+The number of security events decreased significantly this month. However, the number of phishing events and malware hosting events remain high.
+
+\subsubsection*{Server related security events}
+The distribution of server related security events is summarized below.
+
+\begin{figure}[h!]
+\centerline{\includegraphics[width=\textwidth]{ServerRelated}}
+\caption{Distribution of Server related Security Events}
+\end{figure}
+
+The server related security events decreased significantly by 33\% or 2,174 events.
+
+Defacement events and phishing events decreased by 31\% and 56\% respectively while malware hosting events increased by 40\%.
+The 2062 malware hosting events were from single compromised sites, mass compromised sites and dedicated malware hosting sites.
+
+The most serious single case was the compromise of http://conservancy.org.hk/, which was the website of a Hong Kong NGO. Its website was compromised to host 290 malware hosting URLs. The most serious mass compromise case was from the IP 210.245.166.72, under which, 43 legitimate websites was hosted. They were compromised to host 230 malware hosting URLs. IP address 14.136.137.103 was believed to be hosting a dedicated malware hosting site, under which, all URLs are IP Only.
+
+Botnet related security events
+The distribution of botnet related security events are summarized below:
+Botnet Command and Control Servers
+There were two C\&C servers reported in this month, both were IRC bot C\&C server.
+
+\subsubsection*{Botnet related security events}
+The distribution of botnet related security events are summarized below:
+\begin{figure}[h!]
+\centerline{\includegraphics[height=10cm]{BotCCDis}}
+\caption{Distribution of Botnet (C\&Cs) related security events}
+\end{figure}
+
+Total number of botnet(bots) security events showed a decrease of 7\%. Conficker, Zeus and Virut were the top 3 of the chart.
+
+\begin{figure}[h!]
+\centerline{\includegraphics[height=10cm]{BotBotsDis}}
+\caption{Distribution of Botnet (Bots) related security events}
+\end{figure}
+
+This month, the positions of the top five botnets remain unchanged (Figure 14).
+The dropping trend of the top botnet, Conficker, was flattened. In the past three months, the number of Conficker events was roughly unchanged.
+The dropping trend of Zeus and ZeroAccess continued, they dropped for 8\% and 4\% respectively. On the other hand, the number of Virut event continued to rise. If the trend goes on, Virut will overtake Zeus as the second largest botnet next month.
+\FloatBarrier
+\subsubsection*{Top TLD and ISPs involved in security events}
+Among all Top Level Domains (TLDs), “.com” topped the TLD distribution of all security event types, which include defacement, phishing and malware hosting.
+“.hk” TLD related events contributions are: Defacement (7\%); Phishing (3\%); and malware hosting (1\%)
+
+AS number for New World Telephone Ltd was the top ISP in terms of total number of security events. For two consecutive months, an ISP other than PCCW Limited, which ranked 2 this month, topped the list.The number of events involving PCCW Limited kept decreasing, from over 1800 events at the beginning of 2015, to 1469 events this month.
+
+AS number for New World Telephone Ltd was the top ISP for server related security events including malware hosting(754 events), phishing (497 events) and defacement (153 events).
+Sun Network (Hong Kong) Limited ranked the second ISP for server related security events of this monthwith defacement (13 events), phishing (364 events)and malware hosting (202 events) reported.
+\pagebreak
+\FloatBarrier

@@ -249,14 +249,34 @@ def create_report(dir, prev_month_dir, output, yymm):
     with open(output + 'footer.tex') as f:
         header = f.read()
         report.text(header)
-        
+   
+    # replacing text (e.g. month) in latex file
     month_str = (['January','February','March',
                  'April','May','June',
                  'July','August','September',
                  'October','November','December'])[(yymm % 100) - 1] + ' 20' + str(int(yymm/100))
+    count = 0
+    with open(input_dir + 'serverSummary.csv') as f:
+        dreader = csv.DictReader(f)
+        for row in dreader:
+            if (count == 1):
+                count = int(row['Defacement Count']) + int(row['Phishing Count']) + int(row['Malware Count']) 
+                break
+            count += 1            
+    with open(input_dir + 'botnetDailyMax.csv') as f:
+        dreader = csv.DictReader(f)
+        for row in dreader:
+            count += (0 if row['Count'] == '' else int(row['Count']))         
+    with open(input_dir + 'C&CServers.csv') as f:
+        dreader = csv.DictReader(f)
+        unique = []
+        for row in dreader:
+            if row['ip'] not in unique:
+                unique.append(row['ip'])
+        count += len(unique)
     report.replace([('+/-', '$\\Uparrow/\\Downarrow$'),
                     ('__MONTH__', month_str),
-                    ('__UNIQUEEVENT__','placeholder')])
+                    ('__UNIQUEEVENT__',str(count))])
     
     
     #write to SecurityWatchReport.ltx

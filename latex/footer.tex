@@ -1,0 +1,115 @@
+
+\addcontentsline{toc}{section}{Appendix}
+\FloatBarrier
+\pagebreak
+\appendix
+\pagebreak
+\section{Sources of information in IFAS}
+The following information feeds are information sources of IFAS:
+\begin{table}[!htbp]
+\centering
+\caption{Methods of Geolocation Identification}
+\begin{tabular}{lll}
+\hline
+{\bf Event Type} & {\bf Source} & \bf First introduced \\\hhline{===}
+Defacement & Zone - H & 2013-04
+\\\hline
+Phishing & ArborNetwork: Atlas SRF-Phishing & 2013-04
+\\\hline
+Phishing & CleanMX - Phishing & 2013-04
+\\\hline
+Phishing & Millersmiles & 2013-04
+\\\hline
+Phishing & Phishtank & 2013-04
+\\\hline
+Malware Hosting & Abuse.ch: Zeus Tracker - Binary URL & 2013-04
+\\\hline
+Malware Hosting & Abuse.ch: SpyEye Tracker - Binary URL & 2013-04
+\\\hline
+Malware Hosting & CleanMX - Malware & 2013-04
+\\\hline
+Malware Hosting & Malc0de & 2013-04
+\\\hline
+Malware Hosting & MalwareDomainList & 2013-04
+\\\hline
+Malware Hosting & Savour.cn & 2013-04
+\\\hline
+Botnet (C\&Cs) & Abuse.ch: Zeus Tracker - C\&Cs & 2013-04
+\\\hline
+Botnet (C\&Cs) & Abuse.ch: SpyEye Tracker - C\&Cs & 2013-04
+\\\hline
+Botnet (C\&Cs) & Abuse.ch: Palevo Tracker - C\&Cs & 2013-04
+\\\hline
+Botnet (C\&Cs) & Shadowserver - C\&Cs & 2013-09
+\\\hline
+Botnet (Bots) & Arbor Network: Atlas SRF-Conficker & 2013-08
+\\\hline
+Botnet (Bots) & Shadowserver - botnet\_drone & 2013-08
+\\\hline
+Botnet (Bots) & Shadowserver - sinkhole\_http\_drone & 2013-08
+\\\hline
+Botnet (Bots) & Shadowserver - microsoft\_sinkhole & 2013-08
+\\\hline
+\end{tabular}
+\end{table}
+
+\FloatBarrier
+
+\section{Geolocation identification methods in IFAS}
+We use the following methods to identify if a network's geolocation is in Hong Kong:
+\begin{table}[!htbp]
+\centering
+\caption{IFAS Sources of Information}
+\begin{tabular}{lll}
+\hline
+{\bf Method} & {\bf First introduced} & \bf Last update                                                                         \\\hhline{===}
+
+Maxmind & 2013-04 & 2015-4-20
+\\\hline
+\end{tabular}
+\end{table}
+\newpage
+\section{Major Botnet Families}
+\begin{table}[!htbp]
+\centering
+\caption{Botnet Families}
+\begin{tabular}{lllll}
+\hline
+{\bf Botnet} & {\bf Alias} & \bf Nature & \bf Infection Method & \bf Attacks/Impacts
+\\\hhline{=====}
+BankPatch & \tabitem MultiBanker & Banking & \tabitem via adult websites & monitor specific \\
+& \tabitem Patcher & Trojan & \tabitem corrupt multimedia & banking websites and
+\\
+& \tabitem BankPatcher & & codecs & harvest user's \\
+&&& \tabitem spam e-mail & passwords, credit card \\
+&&& \tabitem chat and messaging & information and other \\
+&&& systems & sensitive financial data \\\hline
+BlackEnergy & Nil & DDos & \tabitem rootkit techniques to & launch DDos attacks \\
+&&Trojan&maintain persistence \\
+&&& \tabitem uses process injection \\
+&&& technique \\
+&&& \tabitem strong encryption and \\
+&&& modular architecture \\\hline
+Citadel & Nil & Banking & \tabitem avoid and disable & \tabitem steal banking \\
+&&Trojan & security tool & credentials and \\
+&&& detection & sensitive information \\
+&&&& \tabitem keystroke logging \\
+&&&& \tabitem screenshot capture \\
+&&&& \tabitem video capture \\
+&&&& \tabitem man-in-the- \\
+&&&& browser attack \\\hline
+Conficker & \tabitem Downadup & Worm & \tabitem domain generation & \tabitem epxloit the Windows \\
+& \tabitem Kido && algorithm (DGA) & Server Service \\
+&&& capability & vulnerability (MS08-067) \\
+&&& \tabitem communnicate via & \tabitem brute force attacks for \\
+&&& P2P network & admin credential to\\
+&&& \tabitem disable security & spread across network \\
+&&& software & \tabitem spread via removable \\
+&&&& drives using \textit{"autorun"} \\
+&&&& feature \\\hline
+
+
+\end{tabular}
+\end{table}
+
+\end{document}

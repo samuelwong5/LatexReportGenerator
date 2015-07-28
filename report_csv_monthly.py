@@ -1,6 +1,10 @@
-import csv, os, requests, sys
-import plotly.plotly as py
+import csv
+import os
+import requests
+import sys
+
 from plotly.graph_objs import *
+import plotly.plotly as py
     
 def main(file_paths):
     ssfile = 'serverSummary.csv'
@@ -183,7 +187,7 @@ def generate_chart(data, headers, png_name, name, bar_mode='group'):
     )
     else:
         len_x = range(len(data[0]))
-        annotation_x = map(lambda x: x-0.25, len_x) + len_x + map(lambda x: x+0.25, len_x)
+        annotation_x = map(lambda x: x-0.27, len_x) + len_x + map(lambda x: x+0.27, len_x)
         annotation_y = data[1] + data[2] + data[3]
         layout = Layout(
             title=chart_title,

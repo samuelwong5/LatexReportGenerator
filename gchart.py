@@ -60,8 +60,8 @@ google.setOnLoadCallback(drawChart);
   <div id="chart" style="width: 900px; height: 600px;"></div>
 </body>
 </html>'''
-    with open('debug.html', 'w+') as f:
-        f.write(html)
+    #with open('debug.html', 'w+') as f:
+    #    f.write(html)
     return(html)
 
     
