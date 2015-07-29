@@ -119,7 +119,7 @@ def get_file_name(file_path):
 def read_csv(file_path):        
     '''Reads a csv file and returns a tuple (headers, data)'''
     data = []
-    headers = ['Rank','+/-']
+    headers = ['Rank','+-']
     
     # reading from csv file
     with open(file_path) as csv_file:
@@ -159,7 +159,7 @@ def read_csv(file_path):
                         old = int(data[len(data)-1][i])
                         percent_change[i] = str((new - old) * 100 / old)
             #data.append(percent_change)
-            headers.append('Change\\%')
+            headers.append('+-\\%')
     for i in range(len(data[0])):
         percentages.append(str(int(data[len(data)-1][i]) * 100 / total_count))
     if total_column_offset > 1:
@@ -307,7 +307,7 @@ def create_report(dir, prev_month_dir, output, yymm):
             if row['ip'] not in unique:
                 unique.append(row['ip'])
         count += len(unique)
-    report.replace([('+/-', '$\\Uparrow/\\Downarrow$'),
+    report.replace([('+-', '$\\Uparrow\\Downarrow$'),
                     ('__MONTH__', month_str),
                     ('__UNIQUEEVENT__',str(count))])
     
