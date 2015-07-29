@@ -6,19 +6,13 @@ from flask import Flask
 from flask import send_from_directory
 from multiprocessing import Process
 
+# Global variables
 app = Flask(__name__, static_url_path='')
 report = '/home/samuelwong/Report/HKSWROutput/1505/report'
 
 @app.route("/graph/<fname>")
-def serve(fname):
-    print(os.path.join(report, fname +'.csv'))
-    html = '''<html><head>
-<script type="text/javascript" src="https://www.google.com/jsapi"></script>
-<script type="text/javascript">
-google.load("visualization", '1', {packages:['corechart']}); 
-google.setOnLoadCallback(drawChart); 
-  function drawChart() { 
-    var arr = ['''    
+def serve(fname): 
+    html = ''
     f_path = os.path.join(report, fname + '.csv')
     if not os.path.isfile(f_path):
         return 'File not found.'
@@ -39,29 +33,10 @@ google.setOnLoadCallback(drawChart);
             html += "['Other', " + str(other) + "]];\n"
     except:
         print "Unexpected error:", sys.exc_info()[0]
-    html += '''
-    var data = google.visualization.arrayToDataTable(arr);
-    var options = {
-      //is3D: true,
-      pieHole: 0.35,
-      offset: 0.1,
-      width: 800,
-      height: 800
-    };
-    var chart_div = document.getElementById('chart');
-    var chart = new google.visualization.PieChart(chart_div);
-    chart.draw(data, options);
-    document.getElementById("png").innerHTML = chart.getImageURI();
-  }
-  </script>
-  </head>
-<body>
-  <div id="png" class="png"></div>
-  <div id="chart" style="width: 900px; height: 600px;"></div>
-</body>
-</html>'''
-    with open('debug.html', 'w+') as f:
-        f.write(html)
+    
+    with open('gchart.html') as f:
+        html = f.read().replace('__DATA_ARRAY__',html)
+    
     return(html)
 
     
@@ -75,14 +50,13 @@ def start_flask():
     sys.stdout = f
     sys.stderr = f
     app.run('0.0.0.0')
-     
-
-server = Process(target=start_flask)   
- 
+  
  
 def start_flask_process():
     server.start()
 
+server = Process(target=start_flask) 
+    
     
 if __name__ == '__main__':
     if (len(sys.argv) > 1):

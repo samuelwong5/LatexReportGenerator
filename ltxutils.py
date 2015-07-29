@@ -207,6 +207,7 @@ def create_report(dir, prev_month_dir, output, yymm):
     global prev_dir
     prev_dir = prev_month_dir
     report = LatexDocument()    
+    print('Compiling LaTeX...')
     
     #header
     header = ''
@@ -353,6 +354,13 @@ def create_report(dir, prev_month_dir, output, yymm):
     report.write_to_file(fpath)   
     print('[DONE]')
     
+    # Compile SecurityWatchReport.ltx to .pdf
+    print('Rendering .pdf')
+    os.chdir(os.path.join(os.getcwd(), output_dir))
+    os.system('pdflatex SecurityWatchReport.tex')    
+    os.rename('SecurityWatchReport.pdf', 
+              'SecurityWatchReport' + str(yymm) + '.pdf')  
+    print('Report successfully compiled. Exiting now...')
     
 if __name__ == "__main__":    
     create_report(os.sep + 'HKSWROutput' + os.sep + 'report' + os.sep, 'latex/')    

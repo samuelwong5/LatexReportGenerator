@@ -6,7 +6,7 @@ import sys
 from plotly.graph_objs import *
 import plotly.plotly as py
     
-def main(file_paths):
+def create_monthly_bar(file_paths):
     ssfile = 'serverSummary.csv'
     ssfiles = [file_paths[0] + ssfile,
                file_paths[1] + ssfile,
@@ -230,5 +230,5 @@ def download_png(url, output):
     print('[DONE]') 
    
 if __name__ == "__main__":    
-    main()    
+    create_monthly_bar()
  
