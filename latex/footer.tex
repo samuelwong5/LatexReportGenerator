@@ -69,6 +69,8 @@ Maxmind & 2013-04 & 2015-4-20
 \end{tabular}
 \end{table}
 \newpage
+
+
 \section{Major Botnet Families}
 \begin{table}[!htbp]
 \centering
@@ -76,95 +78,161 @@ Maxmind & 2013-04 & 2015-4-20
 \begin{tabular}{lllll} \hline
 \bf Major Botnets & \bf Alias & \bf Nature & \bf Infection Method & \bf Attacks / Impacts\\\hline
 BankPatch &\tabitem MultiBanker &Banking Trojan &\tabitem via adult web sites &\tabitem monitor specific \\
-&&&&banking websites and \\
-&&&&harvest user's \\
-&&&&passwords, credit card \\
-&&&&information and other \\
-&&&&sensitive financial data \\
- &\tabitem Patcher & &\tabitem corrupt multimedia & \\
-&&&codecs &\\
- &\tabitem BankPatcher & &\tabitem spam e-mail & \\
- & & &\tabitem chat and messaging & \\
-&&&systems &\\
-BlackEnergy &Nil &DDoS Trojan &\tabitem rootkit techniques to &\tabitem launch DDoS attacks \\
+&\tabitem Patcher &   &\tabitem corrupt multimedia &banking websites and \\
+&\tabitem BankPatcher  &&codecs &harvest user's \\
+&&&\tabitem spam e-mail &passwords, credit card \\
+&&&\tabitem chat and messaging &information and other \\
+&&&systems &sensitive financial data \\
+
+
+
+BlackEnergy &Nil   &DDoS Trojan   &\tabitem rootkit techniques to &\tabitem launch DDoS attacks   \\
 &&&maintain persistence &\\
- & & &\tabitem uses process injection & \\
+&&&\tabitem uses process injection &\\
 &&&technique &\\
- & & &\tabitem strong encryption and & \\
+&&&\tabitem strong encryption and &\\
 &&&modular architecture &\\
-Citadel &Nil &Banking Trojan &\tabitem avoid and disable &\tabitem steal banking \\
-&&&security tool detection &credentials and \\
-&&&&sensitive information \\
- & & & &\tabitem keystroke logging \\
- & & & &\tabitem screenshot capture \\
- & & & &\tabitem video capture \\
- & & & &\tabitem man-in-the-browser \\
+
+
+Citadel &Nil      &Banking Trojan &\tabitem avoid and disable &\tabitem steal banking \\
+&&     &security tool detection  &credentials and \\
+&&&    &sensitive information \\
+&&&&\tabitem keystroke logging \\
+&&&&\tabitem screenshot capture \\
+&&&&\tabitem video capture \\
+&&&&\tabitem man-in-the-browser \\
 &&&&attack \\
- & & & &\tabitem ransomware \\
-Conficker &\tabitem Downadup &Worm &\tabitem domain generation &\tabitem exploit the Windows \\
-&&&algorithm (DGA) &Server Service \\
+&&&&\tabitem ransomware \\
+
+
+
+
+
+Conficker &\tabitem Downadup &Worm   &\tabitem domain generation &\tabitem exploit the Windows \\
+&\tabitem Kido  &&algorithm (DGA) &Server Service \\
 &&&capability &vulnerability (MS08-067) \\
- &\tabitem Kido & &\tabitem communicate via P2P &\tabitem brute force attacks \\
+&&&\tabitem communicate via P2P &\tabitem brute force attacks \\
 &&&network &for admin credential to \\
-&&&&spread across network \\
- & & &\tabitem disable security &\tabitem spread via removable \\
-&&&software &drives using "autorun" \\
+&&&\tabitem disable security &spread across network \\
+&&&software &\tabitem spread via removable \\
+&&&&drives using "autorun" \\
 &&&&feature \\
-Dyre & &Banking Trojan &\tabitem spam e-mail &\tabitem steal banking \\
+
+
+\hline
+\end{tabular}
+\end{table}
+\newpage\begin{table}[!htbp]
+\centering
+\caption{Botnet Families}
+\begin{tabular}{lllll} \hline
+\bf Major Botnets & \bf Alias & \bf Nature & \bf Infection Method & \bf Attacks / Impacts\\\hline
+Dyre &  &Banking Trojan &\tabitem spam e-mail  &\tabitem steal banking \\
 &&&&credential by tricking \\
 &&&&the victim to call an \\
 &&&&illegitimate number \\
- & & & &\tabitem send spams \\
-\hline
-\end{tabular}
-\end{table}
-\newpage\begin{table}[!htbp]
-\centering
-\caption{Botnet Families}
-\begin{tabular}{lllll} \hline
-\bf Major Botnets & \bf Alias & \bf Nature & \bf Infection Method & \bf Attacks / Impacts\\\hline
-Gamarue &l?? Andromeda &Downloader/ &\tabitem via exploit kit &\tabitem steal sensitive \\
-&&&&information \\
- & &Worm &\tabitem spam e-mail &\tabitem allow unauthorized \\
-&&&&access \\
- & & &\tabitem MS Word macro &\tabitem install other malware \\
- & & &\tabitem removable-drives & \\
+&&&&\tabitem send spams \\
+
+Gamarue &l?? Andromeda  &Downloader/ &\tabitem via exploit kit &\tabitem steal sensitive \\
+&  &Worm   &\tabitem spam e-mail &information \\
+&&&\tabitem MS Word macro &\tabitem allow unauthorized \\
+&&&\tabitem removable-drives &access \\
+&&&&\tabitem install other malware  \\
+
+
+
 Glupteba &Nil &Trojan &\tabitem drive-by download via &\tabitem push contextual \\
 &&&Blackhole Exploit Kit &advertising and \\
 &&&&clickjacking to victims \\
-IRC Botnet &Nil &Trojan &\tabitem communicate via IRC &\tabitem backdoor capabilities \\
-&&&network &that allow unauthorized \\
+IRC Botnet &Nil   &Trojan   &\tabitem communicate via IRC &\tabitem backdoor capabilities \\
+&&&network   &that allow unauthorized \\
 &&&&access \\
- & & & &\tabitem launch DDoS attack \\
- & & & &\tabitem send spams \\
-Palevo &\tabitem Rimecud &Worm &\tabitem spread via instant &\tabitem backdoor capabilities \\
-&&&messaging, P2P network &that allow unauthorized \\
-&&&and removable drives &access \\
- &\tabitem Butterfly & & &\tabitem steal login \\
-&bot &&&credentials and \\
-&&&&sensitive information \\
- &\tabitem Pilleuz & & &\tabitem steal money directly \\
+&&&&\tabitem launch DDoS attack \\
+&&&&\tabitem send spams \\
+
+
+Palevo &\tabitem Rimecud &Worm     &\tabitem spread via instant &\tabitem backdoor capabilities \\
+&\tabitem Butterfly &&messaging, P2P network &that allow unauthorized \\
+&bot &&and removable drives     &access \\
+&\tabitem Pilleuz &&&\tabitem steal login \\
+&\tabitem Mariposa &&&credentials and \\
+&Vaklik &&&sensitive information \\
+&&&&\tabitem steal money directly \\
 &&&&from banks using?money \\
-&&&&mules \\
- &\tabitem Mariposa & & & \\
- &Vaklik & & & \\
-Pushdo &\tabitem Cutwail &Downloader &\tabitem hiding its malicious &\tabitem download other banking \\
-&&&network traffic &malware (e.g. Zeus and \\
-&&&&Spyeye) \\
- &\tabitem Pandex & &\tabitem domain generation &\tabitem launch DDoS attacks \\
+&&&&mules   \\
+
+
+
+
+Pushdo &\tabitem Cutwail &Downloader    &\tabitem hiding its malicious &\tabitem download other banking \\
+&\tabitem Pandex   &&network traffic &malware (e.g. Zeus and \\
+&&&\tabitem domain generation &Spyeye) \\
+&&&algorithm (DGA) &\tabitem launch DDoS attacks \\
+&&&capability &\tabitem send spams  \\
+&&&\tabitem distribute via drive &\\
+&&&by download &\\
+&&&\tabitem exploit browser and &\\
+&&&plugins' vulnerabilities &\\
+
+
+
+\hline
+\end{tabular}
+\end{table}
+\newpage\begin{table}[!htbp]
+\centering
+\caption{Botnet Families}
+\begin{tabular}{lllll} \hline
+\bf Major Botnets & \bf Alias & \bf Nature & \bf Infection Method & \bf Attacks / Impacts\\\hline
+Ramnit &Nil   &Worm   &\tabitem file infection &\tabitem backdoor capabilities \\
+&&&\tabitem via exploit kits &that allow unauthorized \\
+&&&\tabitem public FTP servers &access \\
+&&&&\tabitem steal login \\
+&&&&credentials and \\
+&&&&sensitive information  \\
+
+
+Sality &Nil     &Trojan     &\tabitem rootkit techniques to &\tabitem send spams \\
+&&&maintain persistence &\tabitem proxying of \\
+&&&\tabitem communicate via P2P &communications \\
+&&&network &\tabitem steal sensitive \\
+&&&\tabitem spread via removable &information \\
+&&&drives and shares &\tabitem compromise web servers \\
+&&&\tabitem disable security &and/or coordinating \\
+&&&software &distributed computing \\
+&&&\tabitem use polymorphic and &tasks for the purpose of \\
+&&&entry point obscuring &processing intensive \\
+&&&(EPO) techniques to &tasks (e.g. password \\
+&&&infect files &cracking) \\
+&&&&\tabitem install other malware \\
+
+
+
+
+Slenfbot &Nil    &Worm    &\tabitem spread via removable &\tabitem backdoor capabilities \\
+&&&drives and shares    &that allow unauthorized \\
+&&&&access \\
+&&&&\tabitem download financial \\
+&&&&malware \\
+&&&&\tabitem sending spam \\
+&&&&\tabitem launch DDoS attacks \\
+
+
+
+Tinba &\tabitem TinyBanker &Banking Trojan &\tabitem via exploit kit &\tabitem steal banking \\
+&\tabitem Zusy &&\tabitem Spam e-mail &credential and sensitive \\
+&&&&information  \\
+
+Torpig &\tabitem Sinowal &Trojan   &\tabitem rootkit techniques to &\tabitem steal sensitive \\
+&\tabitem Anserin  &&maintain persistence &information \\
+&&&(Mebroot rootkit) &\tabitem man in the browser \\
+&&&\tabitem domain generation &attack  \\
 &&&algorithm (DGA) &\\
 &&&capability &\\
- & & &\tabitem distribute via drive &\tabitem send spams \\
+&&&\tabitem distribute via drive &\\
 &&&by download &\\
- & & &\tabitem exploit browser and & \\
-&&&plugins' vulnerabilities &\\
-Ramnit &Nil &Worm &\tabitem file infection &\tabitem backdoor capabilities \\
-&&&&that allow unauthorized \\
-&&&&access \\
- & & &\tabitem via exploit kits &\tabitem steal login \\
-&&&&credentials and \\
-&&&&sensitive information \\
- & & &\tabitem public FTP servers & \\
+
+
 \hline
 \end{tabular}
 \end{table}
@@ -173,89 +241,56 @@ Ramnit &Nil &Worm &\tabitem file infection &\tabitem backdoor capabilities \\
 \caption{Botnet Families}
 \begin{tabular}{lllll} \hline
 \bf Major Botnets & \bf Alias & \bf Nature & \bf Infection Method & \bf Attacks / Impacts\\\hline
-Sality &Nil &Trojan &\tabitem rootkit techniques to &\tabitem send spams \\
-&&&maintain persistence &\\
- & & &\tabitem communicate via P2P &\tabitem proxying of \\
-&&&network &communications \\
- & & &\tabitem spread via removable &\tabitem steal sensitive \\
-&&&drives and shares &information \\
- & & &\tabitem disable security &\tabitem compromise web servers \\
-&&&software &and/or coordinating \\
-&&&&distributed computing \\
-&&&&tasks for the purpose of \\
-&&&&processing intensive \\
-&&&&tasks (e.g. password \\
-&&&&cracking) \\
- & & &\tabitem use polymorphic and &\tabitem install other malware \\
-&&&entry point obscuring &\\
-&&&(EPO) techniques to &\\
-&&&infect files &\\
-Slenfbot &Nil &Worm &\tabitem spread via removable &\tabitem backdoor capabilities \\
-&&&drives and shares &that allow unauthorized \\
-&&&&access \\
- & & & &\tabitem download financial \\
-&&&&malware \\
- & & & &\tabitem sending spam \\
- & & & &\tabitem launch DDoS attacks \\
-Tinba &\tabitem TinyBanker &Banking Trojan &\tabitem via exploit kit &\tabitem steal banking \\
-&&&&credential and sensitive \\
-&&&&information \\
- &\tabitem Zusy & &\tabitem Spam e-mail & \\
-Torpig &\tabitem Sinowal &Trojan &\tabitem rootkit techniques to &\tabitem steal sensitive \\
-&&&maintain persistence &information \\
-&&&(Mebroot rootkit) &\\
- &\tabitem Anserin & &\tabitem domain generation &\tabitem man in the browser \\
-&&&algorithm (DGA) &attack \\
-&&&capability &\\
- & & &\tabitem distribute via drive & \\
-&&&by download &\\
-Virut  &Nil &Trojan &\tabitem spread via removable &\tabitem send spams \\
-&&&drives and shares &\\
- & & & &\tabitem launch DDoS attacks \\
- & & & &\tabitem fraud \\
- & & & &\tabitem data theft \\
-\hline
-\end{tabular}
-\end{table}
-\newpage\begin{table}[!htbp]
-\centering
-\caption{Botnet Families}
-\begin{tabular}{lllll} \hline
-\bf Major Botnets & \bf Alias & \bf Nature & \bf Infection Method & \bf Attacks / Impacts\\\hline
-Wapomi &Nil &Worm &\tabitem spread via removable &\tabitem backdoor capabilities \\
-&&&drives and shares &\\
- & & &\tabitem infects executable &\tabitem download and drop \\
-&&&files &additional destructive \\
-&&&&payloads \\
- & & & &\tabitem alter important files \\
+Virut  &Nil    &Trojan    &\tabitem spread via removable &\tabitem send spams \\
+&&&drives and shares    &\tabitem launch DDoS attacks \\
+&&&&\tabitem fraud \\
+&&&&\tabitem data theft \\
+
+
+
+Wapomi &Nil    &Worm    &\tabitem spread via removable &\tabitem backdoor capabilities \\
+&&&drives and shares &\tabitem download and drop \\
+&&&\tabitem infects executable &additional destructive \\
+&&&files   &payloads \\
+&&&&\tabitem alter important files \\
 &&&&causing unreliable \\
 &&&&system performance \\
- & & & &\tabitem gather computer \\
+&&&&\tabitem gather computer \\
 &&&&activity, transmit \\
 &&&&private data and cause \\
 &&&&sluggish computer \\
-ZeroAccess &\tabitem max++ &Trojan &\tabitem rootkit techniques to &\tabitem download other malware \\
-&&&maintain persistence &\\
- &\tabitem Sirefef & &\tabitem communicate via P2P &\tabitem bitcoin mining and \\
-&&&network &click fraud \\
- & & &\tabitem distribute via drive & \\
+
+
+
+ZeroAccess &\tabitem max++ &Trojan    &\tabitem rootkit techniques to &\tabitem download other malware \\
+&\tabitem Sirefef   &&maintain persistence &\tabitem bitcoin mining and \\
+&&&\tabitem communicate via P2P &click fraud   \\
+&&&network &\\
+&&&\tabitem distribute via drive &\\
 &&&by download &\\
- & & &\tabitem distribute via & \\
+&&&\tabitem distribute via &\\
 &&&disguise as legitimate &\\
 &&&file (eg. media files, &\\
 &&&keygen) &\\
-Zeus &\tabitem Gameover &Banking Trojan &\tabitem stealthy techniques to &\tabitem steal banking \\
-&&&maintain persistence &credential and sensitive \\
-&&&&information \\
- & & &\tabitem distribute via drive &\tabitem man in the browser \\
-&&&by download &attack \\
- & & &\tabitem communicate via P2P &\tabitem keystroke logging \\
-&&&network &\\
- & & & &\tabitem download other malware \\
+
+
+
+Zeus &\tabitem Gameover     &Banking Trojan &\tabitem stealthy techniques to &\tabitem steal banking \\
+&&    &maintain persistence &credential and sensitive \\
+&&&\tabitem distribute via drive &information \\
+&&&by download &\tabitem man in the browser \\
+&&&\tabitem communicate via P2P &attack \\
+&&&network   &\tabitem keystroke logging \\
+&&&&\tabitem download other malware \\
 &&&&(eg. Cryptolocker) \\
- & & & &\tabitem launch DDoS attacks \\
+&&&&\tabitem launch DDoS attacks \\
+
+
+
+
 \hline
 \end{tabular}
 \end{table}
+
 
 \end{document}

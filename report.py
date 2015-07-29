@@ -177,7 +177,8 @@ def main():
     print('Creating bar charts...')
     print('  Downloading bar charts...')
     bar_chart_dir = os.getcwd() + os.sep + file_paths[2]
-    for file in ['ISPServerAll.csv', 'ISPBotnets.csv', 'ISPAll.csv']:
+    for file in ['ISPServerAll.csv', 'ISPAll.csv', 'ISPBotnets.csv']:
+        shutil.copyfile(bar_chart_dir + file, bar_chart_dir + file.split('.')[0] + 'Pie.csv')
         draw_bar_chart(bar_chart_dir + file)
     report_csv_monthly.main(file_paths)
     
@@ -188,7 +189,10 @@ def main():
                           'ISPPhishing',
                           'MalwareTld',
                           'PhishingTld',
-                          'botnetDailyMax']
+                          'botnetDailyMax',
+                          'ISPBotnetsPie',
+                          'ISPServerAllPie',
+                          'ISPAllPie']
     print('Creating pie charts...')
     print_no_newline('Starting virtual display...')
     display = Display(visible=0, size=(1024, 768))

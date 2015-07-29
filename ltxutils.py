@@ -30,11 +30,11 @@ class LatexDocument():
         data_prev, headers_prev = read_csv(prev_dir + file_path)
         for i in range(10):
             if data[2][i] in data_prev[2][:i]:
-                data[1][i] = '$\\Uparrow$'
+                data[1][i] = '$\\Downarrow$'
             elif data[2][i] == data_prev[2][i]:
                 data[1][i] = '$\\rightarrow$'
             elif data[2][i] in data_prev[2][i+1:]:
-                data[1][i] = '$\\Downarrow$'
+                data[1][i] = '$\\Uparrow$'
         file_name = get_file_name(file_path)
         self.table(data, headers, file_name)
 
@@ -155,8 +155,8 @@ def read_csv(file_path):
             for row in dreader:
                 for i in range(10):
                     if data[2][i] == row['ISP']:
-                        new = int(row[hdr[len(hdr)-1]])
-                        old = int(data[len(data)-1][i])
+                        old = int(row[hdr[len(hdr)-1]])
+                        new = int(data[len(data)-1][i])
                         percent_change[i] = str((new - old) * 100 / old)
             #data.append(percent_change)
             headers.append('+-\\%')
@@ -173,10 +173,14 @@ def summary(doc, title, file_name):
     title = sanitize(title)
     doc.section(sanitize(title))
     doc.subsection('Summary')
-    doc.figure(title + 'Gen', title + ' - General Statistics', summ_param)
+    if title == 'Defacement':
+        doc.figure(title + 'Gen', title + 
+                   ' - General Statistics{\\protect\\footnote{The data was adjusted to exlude non-confirmed defacement.}}', summ_param)
+    else:
+        doc.figure(title + 'Gen', title + ' - General Statistics', summ_param)
     doc.figure(title + 'URLIP', title + ' - URL/IP ratio', summ_param)
     doc.newpage()
-    doc.subsection("TLD Distribution")
+    doc.subsection("TLD Distribution{\\protect\\footnote{TLD Distribution - Top Level Domain Distribution of compromised machines which serve systems registered with a .hk top level domain, or whose network geolocation is Hong Kong.}}")
     doc.figure(file_name, file_name + " - TLD Distribution", pie_chart_trim_param)
     doc.rc_table(file_name + '.csv')
 
@@ -229,7 +233,7 @@ def create_report(dir, prev_month_dir, output, yymm):
     report.newpage()
     report.section('Botnet')
     report.subsection('Botnet - Bots')
-    report.subsubsection('Major Botnet Families found on Hong Kong Network')
+    report.subsubsection('Major Botnet Families{\\protect\\footnote{Major Botnet Families are botnet families with security events report more than total of 20 counts monthly.}} found on Hong Kong Network')
     report.figure('listOfBotnets', 'Botnet Unique IP (Monthly Max Count)', 'trim={4cm 8cm 4cm 5.5cm},clip,height=8cm')
     report.rc_table('listOfBotnets.csv')
     report.newpage()
@@ -255,7 +259,7 @@ def create_report(dir, prev_month_dir, output, yymm):
     report.rc_table('ISPMalware.csv')
     report.newpage()
     report.subsection('Top 10 ISPs of unique botnets (Bots)')
-    report.figure('ISPBotnets', 'Botnet (Bots) - Top ISPs', isp_param)
+    report.figure('ISPBotnetsPie', 'Botnet (Bots) - Top ISPs', pie_chart_trim_param)
     report.rc_table('ISPBotnets.csv')
     report.newpage()
     report.subsection('Top 10 ISPs of Botnet C&Cs')
@@ -270,12 +274,27 @@ def create_report(dir, prev_month_dir, output, yymm):
         report.table(data, headers, 'Botnet C&Cs')
         report.newpage()
     report.subsection('Top 10 ISPs for all security events')
-    report.figure('ISPAll', 'All Events - Top ISPs', isp_param)
-    report.rc_table('ISPAll.csv')
+    report.figure('ISPAllPie', 'All Events - Top ISPs', pie_chart_trim_param)
+    isp_all_data, isp_all_hdr = read_csv(input_dir + 'ISPAll.csv')
+    report.table(isp_all_data[:3] + isp_all_data[len(isp_all_data)-3:len(isp_all_data)-1],
+                  isp_all_hdr[:3] + isp_all_hdr[len(isp_all_data)-3:len(isp_all_data)-1], 'Top 10 ISPs for all security events')
     report.newpage()
     report.subsection('Top 10 ISPs for server related security events')
-    report.figure('ISPServerAll', 'Server Related Events - Top ISPs', isp_param)
-    report.rc_table('ISPServerAll.csv')  
+    report.figure('ISPServerAllPie', 'Server Related Events - Top ISPs', pie_chart_trim_param)
+    isp_all_data, isp_all_hdr = read_csv(input_dir + 'ISPServerAll.csv')
+    report.table(isp_all_data[:3] + isp_all_data[len(isp_all_data)-3:len(isp_all_data)-1],
+                 isp_all_hdr[:3] + isp_all_hdr[len(isp_all_data)-3:len(isp_all_data)-1], 'Top 10 ISPs for Server related security events')
+    report.newpage()
+    report.subsection('Top 10 ISPs by event types')
+    report.subsubsection('Non-server related event types')
+    report.figure('ISPBotnets', 'Top 10 ISPs by non-server event type', isp_param)
+    bot_data, bot_hdr = read_csv(input_dir + 'ISPBotnets.csv')
+    report.table(bot_data[2:4], bot_hdr[2:4])
+    report.newpage()
+    report.subsubsection('Server related event types')
+    report.figure('ISPServerAll', 'Top 10 ISPs by server related event types', isp_param)
+    report.table(isp_all_data[2:7], isp_all_hdr[2:7])
+    report.newpage()
     print('[DONE]')
     
     #appendix
