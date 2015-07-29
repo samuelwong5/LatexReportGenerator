@@ -276,12 +276,28 @@ def create_report(dir, prev_month_dir, output, yymm):
     report.subsection('Top 10 ISPs for all security events')
     report.figure('ISPAllPie', 'All Events - Top ISPs', pie_chart_trim_param)
     isp_all_data, isp_all_hdr = read_csv(input_dir + 'ISPAll.csv')
+    data_prev, headers_prev = read_csv(prev_dir + 'ISPAll.csv')
+    for i in range(10):
+        if isp_all_data[2][i] in data_prev[2][:i]:
+            isp_all_data[1][i] = '$\\Downarrow$'
+        elif isp_all_data[2][i] == data_prev[2][i]:
+            isp_all_data[1][i] = '$\\rightarrow$'
+        elif isp_all_data[2][i] in data_prev[2][i+1:]:
+            isp_all_data[1][i] = '$\\Uparrow$'
     report.table(isp_all_data[:3] + isp_all_data[len(isp_all_data)-3:len(isp_all_data)-1],
                   isp_all_hdr[:3] + isp_all_hdr[len(isp_all_data)-3:len(isp_all_data)-1], 'Top 10 ISPs for all security events')
     report.newpage()
     report.subsection('Top 10 ISPs for server related security events')
     report.figure('ISPServerAllPie', 'Server Related Events - Top ISPs', pie_chart_trim_param)
     isp_all_data, isp_all_hdr = read_csv(input_dir + 'ISPServerAll.csv')
+    data_prev, headers_prev = read_csv(prev_dir + 'ISPServerAll.csv')
+    for i in range(10):
+        if isp_all_data[2][i] in data_prev[2][:i]:
+            isp_all_data[1][i] = '$\\Downarrow$'
+        elif isp_all_data[2][i] == data_prev[2][i]:
+            isp_all_data[1][i] = '$\\rightarrow$'
+        elif isp_all_data[2][i] in data_prev[2][i+1:]:
+            isp_all_data[1][i] = '$\\Uparrow$'
     report.table(isp_all_data[:3] + isp_all_data[len(isp_all_data)-3:len(isp_all_data)-1],
                  isp_all_hdr[:3] + isp_all_hdr[len(isp_all_data)-3:len(isp_all_data)-1], 'Top 10 ISPs for Server related security events')
     report.newpage()

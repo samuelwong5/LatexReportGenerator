@@ -28,12 +28,12 @@ google.setOnLoadCallback(drawChart);
             header = dreader.fieldnames
             count = 0 
             other = 0
-            html += "['" + header[0] + "', '" + header[1] + "'],\n      "
+            html += "['" + header[0] + "', '" + header[len(header)-1] + "'],\n      "
             for row in dreader:
                 if count > 9:
-                    other += int(row[header[1]])
+                    other += int(row[header[len(header)-1]])
                 else: 
-                    html += "['" + row[header[0]].replace("'", "") + "', " + row[header[1]] + "],\n      "
+                    html += "['" + row[header[0]].replace("'", "") + "', " + row[header[len(header)-1]] + "],\n      "
                 count += 1
     
             html += "['Other', " + str(other) + "]];\n"
@@ -60,8 +60,8 @@ google.setOnLoadCallback(drawChart);
   <div id="chart" style="width: 900px; height: 600px;"></div>
 </body>
 </html>'''
-    #with open('debug.html', 'w+') as f:
-    #    f.write(html)
+    with open('debug.html', 'w+') as f:
+        f.write(html)
     return(html)
 
     
