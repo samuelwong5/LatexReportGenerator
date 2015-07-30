@@ -183,14 +183,14 @@ def create_bar_charts():
     report_csv_monthly.create_monthly_bar(config['file_paths'])
  
  
-def create_pie_chart():
+def create_pie_charts():
     print('Creating pie charts...')
     print_no_newline('Starting virtual display...')
     display = Display(visible=0, size=(1024, 768))
     display.start()
     print_done()
     print_no_newline('Starting Flask webserver...')
-    gchart.set_input_dir(data_folder + str(year) + format_month_str(month) + '/report/')
+    gchart.set_input_dir(config['file_paths'][2])
     gchart.start_flask_process()
     print_done()
     print_no_newline('Initializing Selenium webdriver...')        
@@ -222,7 +222,7 @@ def main():
     parse_config()
     create_bar_charts()
     create_pie_charts()
-    ltxutils.create_report(config["file_paths"][2], config["file_paths"][1], ltx_output, config["yymm"])
+    ltxutils.create_report(config["file_paths"][2], config["file_paths"][1], config['output_dir'], config["yymm"])
     os.system('killall -I python')
         
     

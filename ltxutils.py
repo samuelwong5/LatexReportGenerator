@@ -356,7 +356,7 @@ def create_report(dir, prev_month_dir, output, yymm):
     
     # Compile SecurityWatchReport.ltx to .pdf
     print('Rendering .pdf')
-    os.chdir(os.path.join(os.getcwd(), output_dir))
+    os.chdir(os.path.join(os.getcwd(), output))
     os.system('pdflatex SecurityWatchReport.tex')    
     os.rename('SecurityWatchReport.pdf', 
               'SecurityWatchReport' + str(yymm) + '.pdf')  
