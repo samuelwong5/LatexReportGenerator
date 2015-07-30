@@ -7,16 +7,11 @@ from plotly.graph_objs import *
 import plotly.plotly as py
     
 def create_monthly_bar(file_paths):
-    ssfile = 'serverSummary.csv'
-    ssfiles = [file_paths[0] + ssfile,
-               file_paths[1] + ssfile,
-               file_paths[2] + ssfile]
+    ssfiles = map(lambda x: x + 'serverSummary.csv', file_paths)
     create(ssfiles)
+    
     bot_data = [['Mar15','Apr15','May15'],[]]   
-    ccfile = 'C&CServers.csv'
-    ccfiles = [file_paths[0] + ccfile,
-               file_paths[1] + ccfile,
-               file_paths[2] + ccfile]
+    ccfiles = map(lambda x: x + 'C&CServers.csv', file_paths)
     for ccf in ccfiles:
         with open(ccf) as csv_file:
             dreader = csv.DictReader(csv_file)
@@ -41,10 +36,7 @@ def create_monthly_bar(file_paths):
     generate_chart(cc_data, ['Communication Type', 'Count'], 'BotCCType', 'Botnet (C&Cs) by communication type')
    
     bot_data = [['Mar15','Apr15','May15'],[]]   
-    bnfile = 'botnetDailyMax.csv'
-    bnfiles = [file_paths[0] + bnfile,
-               file_paths[1] + bnfile,
-               file_paths[2] + bnfile]
+    bnfiles = map(lambda x: x + 'botnetDailyMax.csv', file_paths)
     for bnf in bnfiles:
         with open(bnf) as csv_file:
             dreader = csv.DictReader(csv_file)
@@ -54,8 +46,7 @@ def create_monthly_bar(file_paths):
                     total_count += int(row['Count'])
             bot_data[1].append(total_count)
     generate_chart(bot_data, ['Month', 'Botnet (Bots)'], 'BotBotsDis', 'Botnet (Bots) security event distribution')
-    
-    
+      
     
 def create(file_paths):
     data = []
@@ -72,54 +63,31 @@ def create(file_paths):
                     data[j][i].append(row[headers[i]])
 
     server_dis_headers = ['Month','Defacement','Phishing','Malware']                
-    server_dis = [['Mar15','Apr15','May15']]
+    server_dis = [['Mar15','Apr15','May15'],[],[],[]]
     for i in range(3):
-        server_dis.append([])
         for j in range(3):
             server_dis[i+1].append(data[j][i+1][1])
     generate_chart(server_dis, server_dis_headers, 'ServerRelated', 'Server Related security events distribution','stack')
 
+    gen = [(1,'Defacement'),(2,'Phishing'),(3,'Malware')]
     gen_headers = ['Month','URL','Domain','IP']                
     gen_data = [['Mar15','Apr15','May15'],[],[],[]]
-    for i in range(3):
-        gen_data[i+1] = []
-        for j in range(3):
-            gen_data[i+1].append(data[j][1][i+1])
-            
-    generate_chart(gen_data, gen_headers, 'DefacementGen', 'Defacement General Statistics')
-               
-    gen_data = [['Mar15','Apr15','May15'],[],[],[]]
-    for i in range(3):
-        gen_data[i+1] = []
-        for j in range(3):
-            gen_data[i+1].append(data[j][2][i+1])  
-    generate_chart(gen_data, gen_headers, 'PhishingGen', 'Phishing General Statistics')
-           
-    gen_data = [['Mar15','Apr15','May15'],[],[],[]]
-    for i in range(3):
-        gen_data[i+1] = []
-        for j in range(3):
-            gen_data[i+1].append(data[j][3][i+1])  
-    generate_chart(gen_data, gen_headers, 'MalwareGen', 'Malware General Statistics')
+    for g in gen:
+        index, type = g
+        for i in range(3):
+            gen_data[i+1] = []
+            for j in range(3):
+                gen_data[i+1].append(data[j][index][i+1])    
+        generate_chart(gen_data, gen_headers, type + 'Gen', type + ' General Statistics')
     
     url_ip_headers = ['Month', 'URL/IP Ratio']
-    gen_data = [['Mar15','Apr15','May15'],[]]
-    gen_data[1] = []
-    for j in range(3):
-        gen_data[1].append(round(float(data[j][1][1]) / float(data[j][1][3]),2))  
-    generate_chart(gen_data, gen_headers, 'DefacementURLIP', 'Defacement URL/IP Ratio')
-    
-    gen_data = [['Mar15','Apr15','May15'],[]]
-    gen_data[1] = []
-    for j in range(3):
-        gen_data[1].append(round(float(data[j][2][1]) / float(data[j][2][3]),2))  
-    generate_chart(gen_data, gen_headers, 'PhishingURLIP', 'Phishing URL/IP Ratio')  
-    
-    gen_data = [['Mar15','Apr15','May15'],[]]
-    gen_data[1] = []
-    for j in range(3):
-        gen_data[1].append(round(float(data[j][3][1]) / float(data[j][3][3]),2))  
-    generate_chart(gen_data, gen_headers, 'MalwareURLIP', 'Malware URL/IP Ratio')  
+    url_data = [['Mar15','Apr15','May15'],[]]
+    for g in gen:
+        index, type = g
+        url_data[1] = []
+        for j in range(3):
+            url_data[1].append(round(float(data[j][index][1]) / float(data[j][index][3]),2))  
+        generate_chart(url_data, url_ip_headers, type + 'URLIP', type + ' URL/IP Ratio')
  
     
 
@@ -165,14 +133,7 @@ def generate_chart(data, headers, png_name, name, bar_mode='group'):
         else:
             all_columns = total[:10]
             all_columns_height = total[:10] 
-
-        layout = Layout(
-            title=chart_title,
-            font=Font(
-                size=16
-            ),
-            barmode=bar_mode,
-            annotations=[Annotation(
+        annt = [Annotation(
                 x=xi,
                 y=zi,
                 text=str(int(yi)),
@@ -184,28 +145,28 @@ def generate_chart(data, headers, png_name, name, bar_mode='group'):
                                        all_columns, 
                                        all_columns_height
                                    ))]
-    )
+
     else:
         len_x = range(len(data[0]))
         annotation_x = map(lambda x: x-0.27, len_x) + len_x + map(lambda x: x+0.27, len_x)
         annotation_y = data[1] + data[2] + data[3]
-        layout = Layout(
-            title=chart_title,
-            font=Font(
-                size=16
-            ),
-            barmode=bar_mode,
-            annotations=[
-                Annotation(
+        annt=[Annotation(
                     x=xi,
                     y=yi,
                     text=str(yi),
                     xanchor='center',
                     yanchor='bottom',
                     showarrow=False,
-                ) for xi, yi in zip(annotation_x, annotation_y)
-            ]
-        )
+                ) for xi, yi in zip(annotation_x, annotation_y)]
+        
+    layout = Layout(
+        title=chart_title,
+        font=Font(
+            size=16
+            ),
+        barmode=bar_mode,
+        annotations=annt
+        )    
     fig = Figure(data=chart_data,layout=layout)
     
     # plot and download chart
