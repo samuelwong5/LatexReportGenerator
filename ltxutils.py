@@ -25,6 +25,7 @@ class LatexDocument():
         self.ltx += img + '}}\n'
         self.ltx += '\\caption{' + sanitize(caption) + '}\n\\end{figure}\n'
     
+    # table with ranks and change
     def rc_table(self, file_path, max_row=10):
         data, headers = read_csv(input_dir + file_path)
         data_prev, headers_prev = read_csv(prev_dir + file_path)
@@ -38,6 +39,7 @@ class LatexDocument():
         file_name = get_file_name(file_path)
         self.table(data, headers, file_name)
 
+    #default table
     def table(self, data, headers, caption='', max_row=10):
         table_ltx = ''
         table_ltx += '\\begin{table}[!htbp]\n\\centering\n'
@@ -51,12 +53,9 @@ class LatexDocument():
         max_lengths = []
         for i in range(len(headers)):
             max_lengths.append(80-reduce(lambda x,y:x+y,map(lambda z:len(z), headers[:i] + headers[i+1:])))
-        #print(data[0])
-        #print(max_lengths)
         for i in range(max_row if max_row < len(data[0]) else len(data[0])):
             buffer = []
             for j in range(len(headers)):
-                #print(str(len(data[j])) + '   i:' + str(i) +    '    j:' + str(j))
                 hold = string_length_split(data[j][i], max_lengths[j])
                 if j == len(data) - 1:
                     table_ltx += sanitize(hold[0]) + '\\\\\n'
@@ -185,7 +184,6 @@ def summary(doc, title, file_name):
     doc.rc_table(file_name + '.csv')
 
     
-# util function for printing to terminal without newline char 
 # util function for printing to terminal without newline char 
 def print_no_newline(text):
     sys.stdout.write('  ' + text + (' ' * (71 - len(text))))
@@ -361,6 +359,7 @@ def create_report(dir, prev_month_dir, output, yymm):
     os.rename('SecurityWatchReport.pdf', 
               'SecurityWatchReport' + str(yymm) + '.pdf')  
     print('Report successfully compiled. Exiting now...')
-    
+   
+   
 if __name__ == "__main__":    
     create_report(os.sep + 'HKSWROutput' + os.sep + 'report' + os.sep, 'latex/')    
