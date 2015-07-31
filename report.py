@@ -156,7 +156,7 @@ def parse_config():
         month = yymm % 100
         year = (yymm-month) / 100
     except:
-        print('Invalid argument. Expected format: YYMM.\nExample: March 2014 -> 1403')
+        print('Invalid argument. Expected format: YYMM (e.g. 1403 for 2014 March')
         sys.exit(1)
     file_paths = [data_folder + str(year) + format_month_str(month - 2) + '/report/',  
         data_folder + str(year) + format_month_str(month - 1) + '/report/',  # 1 month ago

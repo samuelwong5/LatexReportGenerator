@@ -26,9 +26,10 @@ class LatexDocument():
         self.ltx += '\\caption{' + sanitize(caption) + '}\n\\end{figure}\n'
     
     # table with ranks and change
-    def rc_table(self, file_path, max_row=10):
-        data, headers = read_csv(input_dir + file_path)
-        data_prev, headers_prev = read_csv(prev_dir + file_path)
+    def rc_table(self, file_path, dir, max_row=10):
+        input_dir, prev_dir = dir
+        data, headers = read_csv(input_dir + file_path, dir)
+        data_prev, headers_prev = read_csv(prev_dir + file_path, dir)
         for i in range(10):
             if data[2][i] in data_prev[2][:i]:
                 data[1][i] = '$\\Downarrow$'
@@ -115,8 +116,9 @@ def get_file_name(file_path):
     strSplit = file_path.split(os.sep)
     return (strSplit[len(strSplit) - 1]).split('.')[0]
             
-def read_csv(file_path):        
+def read_csv(file_path, dir):        
     '''Reads a csv file and returns a tuple (headers, data)'''
+    input_dir, prev_dir = dir
     data = []
     headers = ['Rank','+-']
     
@@ -168,7 +170,9 @@ def read_csv(file_path):
     return (data, headers)
 
     
-def summary(doc, title, file_name):
+def summary(doc, title, file_name, dir_t):
+    summ_param = 'height=8.5cm'
+    pie_chart_trim_param = 'trim={4cm 8cm 4cm 5.5cm},clip,height=12cm'
     title = sanitize(title)
     doc.section(sanitize(title))
     doc.subsection('Summary')
@@ -181,7 +185,7 @@ def summary(doc, title, file_name):
     doc.newpage()
     doc.subsection("TLD Distribution{\\protect\\footnote{TLD Distribution - Top Level Domain Distribution of compromised machines which serve systems registered with a .hk top level domain, or whose network geolocation is Hong Kong.}}")
     doc.figure(file_name, file_name + " - TLD Distribution", pie_chart_trim_param)
-    doc.rc_table(file_name + '.csv')
+    doc.rc_table(file_name + '.csv', dir_t)
 
     
 # util function for printing to terminal without newline char 
@@ -189,21 +193,13 @@ def print_no_newline(text):
     sys.stdout.write('  ' + text + (' ' * (71 - len(text))))
     sys.stdout.flush()     
     
-    
-# input directory for .csv files
-input_dir = '' 
-prev_dir = ''
-# standard latex options for figures
-pie_chart_trim_param = 'trim={4cm 8cm 4cm 5.5cm},clip,height=12cm'
-summ_param = 'height=8.5cm'
-isp_param = 'height=13cm' 
-    
-       
+ 
 def create_report(dir, prev_month_dir, output, yymm):
-    global input_dir
+    isp_param = 'height=13cm' 
+    pie_chart_trim_param = 'trim={4cm 8cm 4cm 5.5cm},clip,height=12cm'
     input_dir = dir
-    global prev_dir
     prev_dir = prev_month_dir
+    dir_t = (input_dir, prev_dir)
     report = LatexDocument()    
     print('Compiling LaTeX...')
     
@@ -215,15 +211,15 @@ def create_report(dir, prev_month_dir, output, yymm):
 
     #sections 1-3
     print_no_newline('Section 1')
-    summary(report, 'Defacement', 'DefacementTld')
+    summary(report, 'Defacement', 'DefacementTld', dir_t)
     report.newpage()
     print('[DONE]')
     print_no_newline('Section 2')
-    summary(report, 'Phishing', 'PhishingTld')
+    summary(report, 'Phishing', 'PhishingTld', dir_t)
     report.newpage()
     print('[DONE]')
     print_no_newline('Section 3')
-    summary(report, 'Malware', 'MalwareTld')
+    summary(report, 'Malware', 'MalwareTld', dir_t)
     report.newpage()
     print('[DONE]')
     
@@ -234,7 +230,7 @@ def create_report(dir, prev_month_dir, output, yymm):
     report.subsection('Botnet - Bots')
     report.subsubsection('Major Botnet Families{\\protect\\footnote{Major Botnet Families are botnet families with security events report more than total of 20 counts monthly.}} found on Hong Kong Network')
     report.figure('listOfBotnets', 'Botnet Unique IP (Monthly Max Count)', 'trim={4cm 8cm 4cm 5.5cm},clip,height=8cm')
-    report.rc_table('listOfBotnets.csv')
+    report.rc_table('listOfBotnets.csv', dir_t)
     report.newpage()
     report.subsection('Botnet - Command and Control Servers (C&Cs)')
     report.subsubsection('Botnet - C&C Servers by communication type')
@@ -244,22 +240,18 @@ def create_report(dir, prev_month_dir, output, yymm):
     #section 5
     print_no_newline('Section 5')
     report.newpage()
-    report.section('Internet Service Providers (ISP)')
-    report.subsection('Top 10 ISPs hosting Defacement')
-    report.figure('ISPDefacement', 'Defacement - Top ISPs', pie_chart_trim_param)
-    report.rc_table('ISPDefacement.csv')
-    report.newpage()
-    report.subsection('Top 10 ISPs hosting Phishing')
-    report.figure('ISPPhishing', 'Phishing - Top ISPs', pie_chart_trim_param)
-    report.rc_table('ISPPhishing.csv')
-    report.newpage()
-    report.subsection('Top 10 ISPs hosting Malware')
-    report.figure('ISPMalware', 'Malware Hosting - Top ISPs', pie_chart_trim_param)
-    report.rc_table('ISPMalware.csv')
-    report.newpage()
+    report.section('Internet Service Providers (ISP)')  
+    
+    isp = ['Defacement', 'Phishing', 'Malware']
+    for i in isp:
+        report.subsection('Top 10 ISPs hosting ' + i)
+        report.figure('ISP' + i, i + ' - Top ISPs', pie_chart_trim_param)
+        report.rc_table('ISP' + i + '.csv', dir_t)
+        report.newpage()
+    
     report.subsection('Top 10 ISPs of unique botnets (Bots)')
     report.figure('ISPBotnetsPie', 'Botnet (Bots) - Top ISPs', pie_chart_trim_param)
-    report.rc_table('ISPBotnets.csv')
+    report.rc_table('ISPBotnets.csv', dir_t)
     report.newpage()
     report.subsection('Top 10 ISPs of Botnet C&Cs')
     with open(input_dir + 'C&CServers.csv') as f:
@@ -272,38 +264,30 @@ def create_report(dir, prev_month_dir, output, yymm):
                 data[i].append(row[fields[i]])
         report.table(data, headers, 'Botnet C&Cs')
         report.newpage()
-    report.subsection('Top 10 ISPs for all security events')
-    report.figure('ISPAllPie', 'All Events - Top ISPs', pie_chart_trim_param)
-    isp_all_data, isp_all_hdr = read_csv(input_dir + 'ISPAll.csv')
-    data_prev, headers_prev = read_csv(prev_dir + 'ISPAll.csv')
-    for i in range(10):
-        if isp_all_data[2][i] in data_prev[2][:i]:
-            isp_all_data[1][i] = '$\\Downarrow$'
-        elif isp_all_data[2][i] == data_prev[2][i]:
-            isp_all_data[1][i] = '$\\rightarrow$'
-        elif isp_all_data[2][i] in data_prev[2][i+1:]:
-            isp_all_data[1][i] = '$\\Uparrow$'
-    report.table(isp_all_data[:3] + isp_all_data[len(isp_all_data)-3:len(isp_all_data)-1],
-                  isp_all_hdr[:3] + isp_all_hdr[len(isp_all_data)-3:len(isp_all_data)-1], 'Top 10 ISPs for all security events')
-    report.newpage()
-    report.subsection('Top 10 ISPs for server related security events')
-    report.figure('ISPServerAllPie', 'Server Related Events - Top ISPs', pie_chart_trim_param)
-    isp_all_data, isp_all_hdr = read_csv(input_dir + 'ISPServerAll.csv')
-    data_prev, headers_prev = read_csv(prev_dir + 'ISPServerAll.csv')
-    for i in range(10):
-        if isp_all_data[2][i] in data_prev[2][:i]:
-            isp_all_data[1][i] = '$\\Downarrow$'
-        elif isp_all_data[2][i] == data_prev[2][i]:
-            isp_all_data[1][i] = '$\\rightarrow$'
-        elif isp_all_data[2][i] in data_prev[2][i+1:]:
-            isp_all_data[1][i] = '$\\Uparrow$'
-    report.table(isp_all_data[:3] + isp_all_data[len(isp_all_data)-3:len(isp_all_data)-1],
-                 isp_all_hdr[:3] + isp_all_hdr[len(isp_all_data)-3:len(isp_all_data)-1], 'Top 10 ISPs for Server related security events')
-    report.newpage()
+    
+    isp_info = [('all security events', 'All Events', 'ISPAll')
+               ,('server related security events', 'Server Related Events', 'ISPServerAll')]
+    for i in isp_info:
+        title = i[0]
+        report.subsection('Top 10 ISPs for ' + i[0])
+        report.figure(i[2] + 'Pie', i[1] + ' - Top ISPs', pie_chart_trim_param)
+        isp_all_data, isp_all_hdr = read_csv(input_dir + i[2] + '.csv', (input_dir, prev_dir))
+        data_prev, headers_prev = read_csv(prev_dir + i[2] + '.csv',  (input_dir, prev_dir))
+        for i in range(10):
+            if isp_all_data[2][i] in data_prev[2][:i]:
+                isp_all_data[1][i] = '$\\Downarrow$'
+            elif isp_all_data[2][i] == data_prev[2][i]:
+                isp_all_data[1][i] = '$\\rightarrow$'
+            elif isp_all_data[2][i] in data_prev[2][i+1:]:
+                isp_all_data[1][i] = '$\\Uparrow$'
+        report.table(isp_all_data[:3] + isp_all_data[len(isp_all_data)-3:len(isp_all_data)-1],
+                     isp_all_hdr[:3] + isp_all_hdr[len(isp_all_data)-3:len(isp_all_data)-1], 'Top 10 ISPs for ' + title)
+        report.newpage()
+    
     report.subsection('Top 10 ISPs by event types')
     report.subsubsection('Non-server related event types')
     report.figure('ISPBotnets', 'Top 10 ISPs by non-server event type', isp_param)
-    bot_data, bot_hdr = read_csv(input_dir + 'ISPBotnets.csv')
+    bot_data, bot_hdr = read_csv(input_dir + 'ISPBotnets.csv', (input_dir, prev_dir))
     report.table(bot_data[2:4], bot_hdr[2:4])
     report.newpage()
     report.subsubsection('Server related event types')
@@ -318,10 +302,13 @@ def create_report(dir, prev_month_dir, output, yymm):
         report.text(header)
    
     # replacing text (e.g. month) in latex file
+    # parsing yymm into proper month year
     month_str = (['January','February','March',
                  'April','May','June',
                  'July','August','September',
                  'October','November','December'])[(yymm % 100) - 1] + ' 20' + str(int(yymm/100))
+                 
+    # calculating total unique event count
     count = 0
     with open(input_dir + 'serverSummary.csv') as f:
         dreader = csv.DictReader(f)
@@ -346,7 +333,7 @@ def create_report(dir, prev_month_dir, output, yymm):
                     ('__UNIQUEEVENT__',str(count))])
     
     
-    #write to SecurityWatchReport.ltx
+    # write to SecurityWatchReport.ltx
     fpath = output + 'SecurityWatchReport.tex'
     print_no_newline('Writing file: ' + fpath)
     report.write_to_file(fpath)   
