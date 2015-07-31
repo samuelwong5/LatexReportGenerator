@@ -1,0 +1,739 @@
+\documentclass[12pt]{article}
+\usepackage[margin=0.5in]{geometry}
+\usepackage[parfill]{parskip}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{multirow}
+\newcommand{\tabitem}{~~\llap{\textbullet}~~}
+\usepackage{,booktabs,placeins}
+\newcommand\VRule[1][\arrayrulewidth]{\vrule width #1}
+\usepackage[titletoc,toc,page]{appendix}
+\usepackage{graphicx,hhline}
+\begin{document}
+
+\vspace{1cm}
+
+\includegraphics{HKCERT}
+
+\vspace{4cm}
+
+\centerline{\Huge Hong Kong Security Watch Report}
+
+\vspace{2.5cm}
+
+\centerline{\huge QUARTER}
+\newpage
+
+\section*{Foreword}
+\subsection*{Better Security Decision with Situational Awareness}
+
+Nowadays, a lot of ''invisible'' compromised computers are controlled by attackers with the owner being unaware. The data on these computers may be mined and exposed every day, and the computers may be utilized in different kinds of abuse and criminal activities.
+The Hong Kong Security Watch Report aims to provide the public a better ''visibility'' of the situation of the compromised computers in Hong Kong so that they can make better decision in protecting their information security.
+
+The data in this report is about the activities of compromised computers in Hong Kong which suffer from, or participate in various forms of cyber attacks, including web defacement, phishing, malware hosting, botnet command and control centres (C\&C) or bots. Computers in Hong Kong are defined as those whose network geolocation is Hong Kong, or the top level domain of their host name is ''.hk''.
+
+\subsection*{Capitalizing on the Power of Global Intelligence}
+
+This report is the fruit of the collaboration of HKCERT and global security researchers. Many security researchers have the capability to detect attacks targeting their own or their customers’ networks. Some of them provide the information of IP addresses of attack source or web links of malicious activities to other information security organizations with an aim to collaboratively improve the overall security of the cyberspace. They have good practice in sanitizing personal identifiable data before sharing information.
+
+HKCERT collects and aggregates such valuable data about Hong Kong from multiple information sources for analysis with Information Feed Analysis System (IFAS), a system developed by HKCERT. The information sources (Appendix 1) are very distributed and reliable, providing a balanced reflection of the security status of Hong Kong.
+
+We remove duplicated events reported by multiple sources and use the following metrics for measurement to assure the quality of statistics.
+
+\begin{table}[b]
+\centering
+\caption{Types of Attack}
+\begin{tabular}{ll}
+\hline
+\textbf{ Type of Attack}              & \textbf{ Metric used}                                                                         \\\hhline{==}
+Defacement, Phishing,                 & security events on unique URLs within the             \\
+Malware Hosting                       & reporting period\\\hline
+Botnet (C\&Cs)                        & security events on unique IP addresses within    \\
+                                      & the reporting period \\\hline
+Botnet (Bots)                         & maximum daily count of security events on  \\
+                                      & unique IP addresses within the reporting period \\\hline
+\end{tabular}
+
+\end{table}
+
+\subsection*{Better information better service}
+
+We will continue to enhancing this report with more valuable information sources and more in-depth analysis. We will also explore how to use the data to enhance our services. \textit{Please send us your feedback via email (\textbf{hkcert@hkcert.org}).}
+
+\subsubsection*{Limitations}
+The data collected in this report is from multiple different sources with different collection method, collection period, presentation format and their own limitations. The numbers from the report should be used as a reference, and should neither be compared directly nor be regarded as a full picture of the reality. 
+
+\subsubsection*{Disclaimer}
+Data may be subject to update and correction without notice. We shall not have any liability, duty or obligation for or relating to the content and data contained herein, any errors, inaccuracies, omissions or delays in the content and data, or for any actions taken in reliance thereon.  In no event shall we be liable for any special, incidental or consequential damages, arising out of the use of the content and data.
+
+\subsubsection*{License}
+The content of this report is provided under Creative Commons Attributino 4.0 International License. You may share and adopt the content for any purpose, provided that you attribute the work to HKCERT.
+
+http://creativecommons.org/licenses/by/4.0
+
+\newpage
+\tableofcontents
+
+\newpage
+\addcontentsline{toc}{section}{Highlights of Report}
+\section*{Highlight of Report}
+
+This report is for QUARTER.
+
+In QUARTER2, there were UNIQUEEVENTS uique security events related to Hong Kong used for analysis in this report. The informatoin is collected with IFAS\footnote{IFAS - Information Feed Analysis System is a HKCERT developed system that collects global security intelligence relating to Hong Kong to provide a picture of the security status.} from 19 sources of information.\footnote{Refer to Appendix 1 for the sources of information} They are not from the incidents reports received by HKCERT.
+
+\begin{figure}[h!]
+\centerline{\includegraphics[height=10cm]{TotalEventBar}}
+\caption{Trend of security events{\protect\footnote{The numbers were adjusted to eclude the unconfirmed defacement events}}}
+\end{figure}
+
+The total number of security events in QUARTER2 increased dramatically by 99\% or 10 851 events, reached a record high since Q2 2013. The increase was due to server events.
+
+\subsection*{Server related security events}
+
+Server related security events include malware hosting, phishing and defacement. Their trends and distributions are summarized below:
+
+\begin{figure}[h!]
+\centerline{\includegraphics[height=10cm]{ServerDisBar}}
+\caption{Trend and distribution of server related security events{\protect\footnote{The numbers were adjusted to eclude the unconfirmed defacement events}}}
+\end{figure}
+
+The number of server related security events increased dramatically from 5,867 to 16,338 
+(increased by 178\%) in Q2 2015. The number of server related security events, phishing events 
+and malware hosting events all reached a record high. 
+In this quarter, the number of defacement events increased slightly by 5\% but the number of 
+phishing  events  and  malware  hosting  events  increased  dramatically  by  168\%  and  412\% 
+respectively. 
+The increase of phishing events was contributed by a few phishing campaigns. In this quarter, 
+the top phishing target was a Japanese gaming site hiroba.dqx.jp. This campaign utilized more 
+than 10 IP addresses and 3200 URLs, which equals more than 40\% of all phishing events. The 
+second and third phishing targets were both Chinese online merchants, namely taobao.com 
+and xzhjia.com, more than 1600 and 1200 URLs were targeting them respectively. As of the 
+time of writing, most of these phishing URLs were no longer accessible. 
+Among the malware hosting events, about 41\% or 2828 events were hosting 
+HTML/Drop.Agent.AB malware. It was found that this malware was related to the Ramnit 
+botnet.
+
+\begin{table}[h!]
+     \begin{center}
+     \begin{tabular}{ c p{14cm} }
+     \toprule
+     & \textit{HKCERT urges system and application administrators to protect the servers} \\
+     \cmidrule(l){2-2}
+     \raisebox{-\totalheight}{\includegraphics[width=0.1\textwidth]{warning}}
+      & 
+      \begin{itemize}[topsep=0pt]
+      \item patch server up-to-date to avoid the known vulnerabilities being exploited
+      \item update web application and plugins to the latest version
+      \item follow best practice on user account and password management
+      \item implement validation check for user input and system output
+      \item provide strong authentication e.g. two factor authentiation, administrative control interface
+      \item acquire information security knowledge to prevent social engineering
+      \end{itemize}
+      \\\bottomrule
+      \end{tabular}
+      \end{center}
+\end{table}
+     
+\clearpage
+\subsection*{Botnet related security events}
+
+Botnet related security events can be classified into two categories:
+\begin{itemize}
+\item Botnet Command and Control Centers (C\&C) security events - involving small number of powerful computers, mostly servers, which give commands to bots
+\item Botnet security events - involving large number of computers, mostly home computers which receive commands from C\&Cs.
+\end{itemize}
+
+\underline{Botnet Command and Control Servers}
+
+The trend of botnet C\&C security events is summarized below:
+\begin{figure}[h!]
+\centerline{\includegraphics[height=10cm]{BotnetCCBar}}
+\caption{Trend of Botnet (C\&Cs) security events}
+\end{figure}
+The number of botnet Command and Control Servers remain unchanged this quarter.
+There were 4 C\&C servers reported in this quarter. One of the reported servers was identified as Zeus C\&C server, while the other three were identified as IRC bot C\&C servers.
+
+\underline{Botnet Bots}
+
+The trend of botnet (bots) security events is summarized below:
+\begin{figure}[h!]
+\centerline{\includegraphics[height=10cm]{BotnetBotsBar}}
+\caption{Trend of Botnet (Bots) security events}
+\end{figure}
+\FloatBarrier
+Number of Botnet (bots) on Hong Kong network slightly increased in this quarter, stopping 
+the dropping trend since Q3 2014. 
+In Q2 2015, the number of botnet infections in Hong Kong increased by 8\%. The Virut botnet 
+increased significantly by 87\%. It took over Zeus to become the second largest botnet in Hong 
+Kong.
+Other than Virut, three botnets, namely Ramnit, Tinba and Dyre, entered the top 10 the first 
+time. 
+
+\textbf{Ramnit} 
+
+Ramnit is a fully-featured worm. It can steal various types of sensitive information including 
+web credentials, FTP credentials, browser cookies and files, etc. It can allow the attackers to 
+access  the  victim’s  file  system  and  take  control  of  the  computer.  It  can  also  download 
+additional malwares. 
+
+Ramnit first appeared in 2010 and spreaded quickly. Now it has infected more than 3.2 million 
+computers  worldwide.  On  25  Feb,  an  operation  driven  by  law  enforcement\footnote{http://www.symantec.com/connect/blogs/ramnit-cybercrime-group-hit-major-law-enforcement-operation} ,  led  by  the 
+Europol and assisted by industry partners Symantec, Microsoft, and others, seized the servers 
+and other infrastructure owned by the cybercrime group behind the Ramnit botnet. A large 
+amount of victims were identified that it became the 6th botnet this quarter. 
+
+Ramnit spreads through file infection, exploit kits hosted on websites and social media, public FTP servers and bundle with other software.
+
+\textbf{Tinba} 
+
+Tinba is a banking Trojan that can perform Man in the Browser (MiTB) attack to steal banking 
+credentials. Tinba was first identified in 2012. It first targeted the users in Turkey and then 
+users in Czech. But now it targets a large scope of banks worldwide\footnote{https://blog.avast.com/2014/09/15/tiny-banker-trojan-targets-customers-of-major-banks-worldwide/}. 
+
+Tinba employed  some  interesting anti-sandboxing  tricks  to evade analysis\footnote{https://www.f-secure.com/weblog/archives/00002810.html}.  First  it detects 
+user interactions by checking the mouse movement and the active window. If Tinba is running 
+inside a sandbox, the mouse location and the active window will always be the same, it will 
+not execute the main routine until some user interaction is detected. Moreover, it will detect 
+the disk capacity. If the disk is too small, it is likely to be a sandbox environment. Tinba will 
+just quit in this case. Tinba spreads through exploit kits and spam emails. 
+
+\textbf{Dyre} 
+
+Dyre  is  a  banking  Trojan  that  successfully  stole millions  in  2015\footnote{http://securityintelligence.com/dyre-wolf/ }.  It monitors  the website 
+visited by the victims. Once a victim logins to one of the targeted banks websites, Dyre will 
+display  a  fake  screen  claiming  the  site  is  experiencing  issues  and  asks  the  victim  to  call  a 
+number. In the phone call, the criminals would try to social engineer critical information from 
+the victim. With this information, the criminal will transfer money from the victim’s account 
+to offshore accounts. To make things worse, the criminals will immediately launch a DDoS 
+against the victim for distraction. 
+
+Like Tinba, Dyre also employed anti-sandboxing trick\footnote{http://www.seculert.com/blog/2015/04/new-dyre-version-evades-sandboxes.html }. But instead of using a few tricks, Dyre 
+use only one – by checking how many processor cores the system has. If the machine has only 
+one core, it will terminate. As most sandboxes were configured with only one core and most 
+modern  computers  have  multicores,  this  simple  trick  was  proven  to  be  highly  effective. 
+Researchers  tested  a Dyre  sample with  eight  sandboxes,  all  of  them  failed  to  analyze  the 
+malware. Dyre spreads through spam emails. 
+ 
+\begin{table}[h!]
+     \begin{center}
+     \begin{tabular}{ c p{14cm} }
+     \toprule
+     & \textit{HKCERT urges users to protect computers so as not to become part of the botnets} \\
+     \cmidrule(l){2-2}
+     \raisebox{-\totalheight}{\includegraphics[width=0.1\textwidth]{warning}}
+      & 
+      \begin{itemize}[topsep=0pt]
+      \item patch their computers
+      \item install a working ocpy of the security software and scan for malware on their machines
+      \item set strong passwords to avoic credential based attack
+      \item do not use Windows, media files and software that have no proper licenses
+      \item do not use Windows and software that have no security updates
+      \item do not open files from unreliable sources
+      \end{itemize}
+      \\\bottomrule
+      \end{tabular}
+      \end{center}
+      \end{table}
+      
+HKCERT has been following up the security events received and proactively engaged local 
+ISPs for the botnet clean up since June 2013. Currently, botnet cleanup operations against 
+major botnet family W Pushdo, Citadel, ZeroAccess and GameOver Zeus are still in action. 
+
+HKCERT urges general users to join the cleanup acts. Ensure your computers are not being 
+infected and controlled by malicious software.    
+ 
+Protect yourself and keep the cyberspace clean. 
+
+
+\begin{table}[h!]
+     \begin{center}
+     \begin{tabular}{ c p{14cm} }
+     \toprule
+     & \textit{Users can use the HKCERT guideline to detect and clean up botnets} \\
+     \cmidrule(l){2-2}
+     \raisebox{-\totalheight}{\includegraphics[width=0.1\textwidth]{warning}}
+      & 
+      \begin{itemize}[topsep=0pt]
+      \item Botnet Detection and Cleanup Guideline 
+      \item https://www.hkcert.org/botnet
+      \end{itemize}
+      \\\bottomrule
+      \end{tabular}
+      \end{center}
+\end{table}
+\newpage
+
+
+\clearpage
+\addcontentsline{toc}{section}{Report Details}
+\section*{Report Details}
+\section{Defacement}
+\subsection{Summary}
+\begin{figure}[h!]
+\centerline{\includegraphics[height=12cm]{DefacementUniqueBar}}
+\caption{Trend of Defacement security events{\protect\footnote{The numbers were adjusted to eclude the unconfirmed defacement events}}}
+\end{figure}
+
+\begin{table}[h!]
+     \begin{center}
+     \begin{tabular}{ c p{14cm} }
+     \toprule
+     \multirow{4}{*}{\raisebox{-\totalheight}{\includegraphics[width=0.1\textwidth ,height=3cm]{warning}}} & What is defacement? \\\cline{2-2} 
+                            & \begin{itemize}[topsep=0pt]
+                                  \item Defacement is the unauthorized alteration of the content of a legitimate website using hacking method.
+                              \end{itemize} \\\cline{2-2}
+                            & What are the potential impacts? \\\cline{2-2} 
+                            & \begin{itemize}[topsep=0pt]
+                                  \item The integrity of the website content is damaged.
+                                  \item Original content might be inaccessible
+                                  \item Reputation of the website owner might be damaged
+                                  \item Other information stored/processed on the server mightbe further compromised by the hack to performed other attacks.
+                             \end{itemize} \\
+      \\\bottomrule
+      \end{tabular}
+      \end{center}    
+\end{table}
+
+\begin{figure}[h!]
+\centerline{\includegraphics[height=15cm]{DefacementRatioBar}}
+\caption{URL/IP ratio of defacement security events}
+\end{figure}
+
+\begin{table}[h!]
+     \begin{center}
+     \begin{tabular}{ c p{14cm} }
+     \toprule
+     \multirow{4}{*}{\raisebox{-\totalheight}{\includegraphics[width=0.1\textwidth ,height=3cm]{warning}}} & What is URL/IP ratio? \\\cline{2-2} 
+                            & \begin{itemize}[topsep=0pt]
+                                  \item It is the number of security events count in unique URL divided by the number of security events coun tin unique IP addresses
+                              \end{itemize} \\\cline{2-2}
+                            & What can this ratio indicate? \\\cline{2-2} 
+                            & \begin{itemize}[topsep=0pt]
+                                  \item Number of events counted in unique URL canot reflect the number of compromised servers, since one server may contain many URL
+                                  \item Number of events counted in unique IP address can better related to the number of compromised servers
+                                  \item The higher the ratio is, the more mass compromise happened
+                             \end{itemize} \\
+      \\\bottomrule
+      \end{tabular}
+      \end{center}    
+\end{table}
+
+
+\clearpage
+\section{Phishing}
+\subsection{Summary}
+\begin{figure}[h!]
+\centerline{\includegraphics[height=12cm]{PhishingUniqueBar}}
+\caption{Trend of Defacement security events{\protect\footnote{The numbers were adjusted to eclude the unconfirmed defacement events}}}
+\end{figure}
+
+\begin{table}[h!]
+     \begin{center}
+     \begin{tabular}{ c p{14cm} }
+     \toprule
+     \multirow{4}{*}{\raisebox{-\totalheight}{\includegraphics[width=0.1\textwidth ,height=3cm]{warning}}} & What is Phishing? \\\cline{2-2} 
+                            & \begin{itemize}[topsep=0pt]
+                                  \item Phishing is the spoofing of a legitimate website for fraudulent purposes
+                              \end{itemize} \\\cline{2-2}
+                            & What are the potential impacts? \\\cline{2-2} 
+                            & \begin{itemize}[topsep=0pt]
+                                  \item Personal information or accout credentials of visitors might be stolen, leading to financial loss.
+                                  \item Original content might be inaccessible
+                                  \item Reputation of the website owner might tbe damaged
+                                  \item Server might be further compromised to perform other attacks
+                             \end{itemize} \\
+      \\\bottomrule
+      \end{tabular}
+      \end{center}    
+\end{table}
+
+\newpage
+\FloatBarrier
+
+\begin{figure}[h!]
+\centerline{\includegraphics[height=15cm]{PhishingRatioBar}}
+\caption{URL/IP ratio of Phishing security events}
+\end{figure}
+
+\begin{table}[h!]
+     \begin{center}
+     \begin{tabular}{ c p{14cm} }
+     \toprule
+     \multirow{4}{*}{\raisebox{-\totalheight}{\includegraphics[width=0.1\textwidth ,height=3cm]{warning}}} & What is URL/IP ratio? \\\cline{2-2} 
+                            & \begin{itemize}[topsep=0pt]
+                                  \item It is the number of security events count in unique URL divided by the number of security events coun tin unique IP addresses
+                              \end{itemize} \\\cline{2-2}
+                            & What can this ratio indicate? \\\cline{2-2} 
+                            & \begin{itemize}[topsep=0pt]
+                                  \item Number of events counted in unique URL canot reflect the number of compromised servers, since one server may contain many URL
+                                  \item Number of events counted in unique IP address can better related to the number of compromised servers
+                                  \item The higher the ratio is, the more mass compromise happened
+                             \end{itemize} \\
+      \\\bottomrule
+      \end{tabular}
+      \end{center}    
+\end{table}
+
+\clearpage
+\section{Malware Hosting}
+\subsection{Summary}
+\begin{figure}[h!]
+\centerline{\includegraphics[height=12cm]{MalwareUniqueBar}}
+\caption{Trend of Malware Hosting security events}
+\end{figure}
+
+\begin{table}[h!]
+     \begin{center}
+     \begin{tabular}{ c p{14cm} }
+     \toprule
+     \multirow{4}{*}{\raisebox{-\totalheight}{\includegraphics[width=0.1\textwidth ,height=3cm]{warning}}} & What is Malware Hosting? \\\cline{2-2} 
+                            & \begin{itemize}[topsep=0pt]
+                                  \item Malware Hosting is the dispatching of malware on a website
+                              \end{itemize} \\\cline{2-2}
+                            & What are the potential impacts? \\\cline{2-2} 
+                            & \begin{itemize}[topsep=0pt]
+                                  \item Visitors might download and install the malware, or execute the malicious script to get compromised
+                                  \item Original content might be inaccessible
+                                  \item Reputation of the website owner might tbe damaged
+                                  \item Server might be further compromised to perform other criminal activities
+                             \end{itemize} \\
+      \\\bottomrule
+      \end{tabular}
+      \end{center}    
+\end{table}
+
+\newpage
+\FloatBarrier
+
+\begin{figure}[h!]
+\centerline{\includegraphics[height=15cm]{MalwareRatioBar}}
+\caption{URL/IP ratio of Malware Hosting security events}
+\end{figure}
+
+\begin{table}[h!]
+     \begin{center}
+     \begin{tabular}{ c p{14cm} }
+     \toprule
+     \multirow{4}{*}{\raisebox{-\totalheight}{\includegraphics[width=0.1\textwidth ,height=3cm]{warning}}} & What is URL/IP ratio? \\\cline{2-2} 
+                            & \begin{itemize}[topsep=0pt]
+                                  \item It is the number of security events count in unique URL divided by the number of security events coun tin unique IP addresses
+                              \end{itemize} \\\cline{2-2}
+                            & What can this ratio indicate? \\\cline{2-2} 
+                            & \begin{itemize}[topsep=0pt]
+                                  \item Number of events counted in unique URL canot reflect the number of compromised servers, since one server may contain many URL
+                                  \item Number of events counted in unique IP address can better related to the number of compromised servers
+                                  \item The higher the ratio is, the more mass compromise happened
+                             \end{itemize} \\
+      \\\bottomrule
+      \end{tabular}
+      \end{center}    
+\end{table}
+
+\clearpage
+\section{Botnet}
+\subsection{Botnets - Command \& Control Servers}
+\begin{figure}[h!]
+\centerline{\includegraphics[height=12cm]{BotnetCCDisBar}}
+\caption{Trend and Distribution of Botnet (C\&Cs) security events}
+\end{figure}
+
+\begin{table}[h!]
+     \begin{center}
+     \begin{tabular}{ c p{14cm} }
+     \toprule
+     \multirow{4}{*}{\raisebox{-\totalheight}{\includegraphics[width=0.1\textwidth ,height=3cm]{warning}}} & What is a Botnet Command \& Control Center? \\\cline{2-2} 
+                            & \begin{itemize}[topsep=0pt]
+                                  \item A Botnet Command \& Control Center is a server used by cybercriminals to control the bots, which are compromised computers, by sending them commands to perform malicious activities, e.g. stealing personal financial information or launching DDoS attacks
+                              \end{itemize} \\\cline{2-2}
+                            & What are the potential impacts? \\\cline{2-2} 
+                            & \begin{itemize}[topsep=0pt]
+                                  \item Server might be heavily loaded when many bots connect to it
+                                  \item Server might contain large amount of personal and financial data stolen by other bots
+                             \end{itemize} \\
+      \\\bottomrule
+      \end{tabular}
+      \end{center}    
+\end{table}
+
+\subsection{Botnets - Bots}
+\subsubsection{Major Botnet Families{\protect\footnote{Major Botnet Families are selected botnet families with considerable amount of security events reported from the information sources constantl across the reporting period.}}}
+
+Individual botnet's size is calculated from the maximum of the daily counts of unique IP address attempting to connect to the botnet in the report period. In other words, the real botnet size shold be larger becaues not all bots are powered on the same day. 
+\begin{figure}[h!]
+\centerline{\includegraphics[height=12cm]{placeholder}}
+\caption{Major Botnet Families in Hong Kong Networks}
+\end{figure}
+
+\clearpage
+\begin{figure}[h!]
+\centerline{\includegraphics[height=12cm]{BotnetFamTopLine}}
+\caption{Trend of Top 5 Botnet Famliies in Hong Kong Network}
+\end{figure}
+
+\begin{table}[h!]
+     \begin{center}
+     \begin{tabular}{ c p{14cm} }
+     \toprule
+     \multirow{4}{*}{\raisebox{-\totalheight}{\includegraphics[width=0.1\textwidth ,height=3cm]{warning}}} & What is a Botnet - Bot? \\\cline{2-2} 
+                            & \begin{itemize}[topsep=0pt]
+                                  \item A bot is usually a personal computer that is infected by malicious software to become part of a botnet. Once infected, the malicious software usually hides itself, and stealthily connects to the Command \& Control Server to get instructions from hackers.
+                              \end{itemize} \\\cline{2-2}
+                            & What are the potential impacts? \\\cline{2-2} 
+                            & \begin{itemize}[topsep=0pt]
+                                  \item Computer owner's personal and financial data might be stolen which may lead to financial loss.
+                                  \item Computers might be commanded to perform other criminal activities.
+                             \end{itemize} \\
+      \\\bottomrule
+      \end{tabular}
+      \end{center}    
+\end{table}
+
+
+\addcontentsline{toc}{section}{Appendix}
+\FloatBarrier
+\pagebreak
+\appendix
+\pagebreak
+\section{Sources of information in IFAS}
+The following information feeds are information sources of IFAS:
+\begin{table}[!htbp]
+\centering
+\caption{Methods of Geolocation Identification}
+\begin{tabular}{lll}
+\hline
+{\bf Event Type} & {\bf Source} & \bf First introduced \\\hhline{===}
+Defacement & Zone - H & 2013-04
+\\\hline
+Phishing & ArborNetwork: Atlas SRF-Phishing & 2013-04
+\\\hline
+Phishing & CleanMX - Phishing & 2013-04
+\\\hline
+Phishing & Millersmiles & 2013-04
+\\\hline
+Phishing & Phishtank & 2013-04
+\\\hline
+Malware Hosting & Abuse.ch: Zeus Tracker - Binary URL & 2013-04
+\\\hline
+Malware Hosting & Abuse.ch: SpyEye Tracker - Binary URL & 2013-04
+\\\hline
+Malware Hosting & CleanMX - Malware & 2013-04
+\\\hline
+Malware Hosting & Malc0de & 2013-04
+\\\hline
+Malware Hosting & MalwareDomainList & 2013-04
+\\\hline
+Malware Hosting & Savour.cn & 2013-04
+\\\hline
+Botnet (C\&Cs) & Abuse.ch: Zeus Tracker - C\&Cs & 2013-04
+\\\hline
+Botnet (C\&Cs) & Abuse.ch: SpyEye Tracker - C\&Cs & 2013-04
+\\\hline
+Botnet (C\&Cs) & Abuse.ch: Palevo Tracker - C\&Cs & 2013-04
+\\\hline
+Botnet (C\&Cs) & Shadowserver - C\&Cs & 2013-09
+\\\hline
+Botnet (Bots) & Arbor Network: Atlas SRF-Conficker & 2013-08
+\\\hline
+Botnet (Bots) & Shadowserver - botnet\_drone & 2013-08
+\\\hline
+Botnet (Bots) & Shadowserver - sinkhole\_http\_drone & 2013-08
+\\\hline
+Botnet (Bots) & Shadowserver - microsoft\_sinkhole & 2013-08
+\\\hline
+\end{tabular}
+\end{table}
+
+\FloatBarrier
+
+\section{Geolocation identification methods in IFAS}
+We use the following methods to identify if a network's geolocation is in Hong Kong:
+\begin{table}[!htbp]
+\centering
+\caption{IFAS Sources of Information}
+\begin{tabular}{lll}
+\hline
+{\bf Method} & {\bf First introduced} & \bf Last update                                                                         \\\hhline{===}
+
+Maxmind & 2013-04 & 2015-4-20
+\\\hline
+\end{tabular}
+\end{table}
+\newpage
+
+
+\section{Major Botnet Families}
+
+\begin{table}[!htbp]
+\centering
+\caption{Botnet Families}
+\begin{tabular}{lllll} \hline
+\bf Major Botnets & \bf Alias & \bf Nature & \bf Infection Method & \bf Attacks / Impacts\\\hline
+BankPatch &\tabitem MultiBanker &Banking Trojan &\tabitem via adult web sites &\tabitem monitor specific \\
+&\tabitem Patcher &   &\tabitem corrupt multimedia &banking websites and \\
+&\tabitem BankPatcher  &&codecs &harvest user's \\
+&&&\tabitem spam e-mail &passwords, credit card \\
+&&&\tabitem chat and messaging &information and other \\
+&&&systems &sensitive financial data \\
+BlackEnergy &Nil   &DDoS Trojan   &\tabitem rootkit techniques to &\tabitem launch DDoS attacks   \\
+&&&maintain persistence &\\
+&&&\tabitem uses process injection &\\
+&&&technique &\\
+&&&\tabitem strong encryption and &\\
+&&&modular architecture &\\
+Citadel &Nil      &Banking Trojan &\tabitem avoid and disable &\tabitem steal banking \\
+&&     &security tool detection  &credentials and \\
+&&&    &sensitive information \\
+&&&&\tabitem keystroke logging \\
+&&&&\tabitem screenshot capture \\
+&&&&\tabitem video capture \\
+&&&&\tabitem man-in-the-browser \\
+&&&&attack \\
+&&&&\tabitem ransomware \\
+Conficker &\tabitem Downadup &Worm   &\tabitem domain generation &\tabitem exploit the Windows \\
+&\tabitem Kido  &&algorithm (DGA) &Server Service \\
+&&&capability &vulnerability (MS08-067) \\
+&&&\tabitem communicate via P2P &\tabitem brute force attacks \\
+&&&network &for admin credential to \\
+&&&\tabitem disable security &spread across network \\
+&&&software &\tabitem spread via removable \\
+&&&&drives using "autorun" \\
+&&&&feature \\
+Dyre &  &Banking Trojan &\tabitem spam e-mail  &\tabitem steal banking \\
+&&&&credential by tricking \\
+&&&&the victim to call an \\
+&&&&illegitimate number \\
+&&&&\tabitem send spams \\
+Gamarue &l?? Andromeda  &Downloader/ &\tabitem via exploit kit &\tabitem steal sensitive \\
+&  &Worm   &\tabitem spam e-mail &information \\
+&&&\tabitem MS Word macro &\tabitem allow unauthorized \\
+&&&\tabitem removable-drives &access \\
+&&&&\tabitem install other malware  \\
+\hline
+\end{tabular}
+\end{table}
+\newpage\begin{table}[!htbp]
+\centering
+\caption{Botnet Families (cont.)}
+\begin{tabular}{lllll} \hline
+\bf Major Botnets & \bf Alias & \bf Nature & \bf Infection Method & \bf Attacks / Impacts\\\hline
+Glupteba &Nil &Trojan &\tabitem drive-by download via &\tabitem push contextual \\
+&&&Blackhole Exploit Kit &advertising and \\
+&&&&clickjacking to victims \\
+IRC Botnet &Nil   &Trojan   &\tabitem communicate via IRC &\tabitem backdoor capabilities \\
+&&&network   &that allow unauthorized \\
+&&&&access \\
+&&&&\tabitem launch DDoS attack \\
+&&&&\tabitem send spams \\
+Palevo &\tabitem Rimecud &Worm     &\tabitem spread via instant &\tabitem backdoor capabilities \\
+&\tabitem Butterfly &&messaging, P2P network &that allow unauthorized \\
+&bot &&and removable drives     &access \\
+&\tabitem Pilleuz &&&\tabitem steal login \\
+&\tabitem Mariposa &&&credentials and \\
+&Vaklik &&&sensitive information \\
+&&&&\tabitem steal money directly \\
+&&&&from banks using?money \\
+&&&&mules   \\
+Pushdo &\tabitem Cutwail &Downloader    &\tabitem hiding its malicious &\tabitem download other banking \\
+&\tabitem Pandex   &&network traffic &malware (e.g. Zeus and \\
+&&&\tabitem domain generation &Spyeye) \\
+&&&algorithm (DGA) &\tabitem launch DDoS attacks \\
+&&&capability &\tabitem send spams  \\
+&&&\tabitem distribute via drive &\\
+&&&by download &\\
+&&&\tabitem exploit browser and &\\
+&&&plugins' vulnerabilities &\\
+Ramnit &Nil   &Worm   &\tabitem file infection &\tabitem backdoor capabilities \\
+&&&\tabitem via exploit kits &that allow unauthorized \\
+&&&\tabitem public FTP servers &access \\
+&&&&\tabitem steal login \\
+&&&&credentials and \\
+&&&&sensitive information  \\
+Sality &Nil     &Trojan     &\tabitem rootkit techniques to &\tabitem send spams \\
+&&&maintain persistence &\tabitem proxying of \\
+&&&\tabitem communicate via P2P &communications \\
+&&&network &\tabitem steal sensitive \\
+&&&\tabitem spread via removable &information \\
+&&&drives and shares &\tabitem compromise web servers \\
+&&&\tabitem disable security &and/or coordinating \\
+&&&software &distributed computing \\
+&&&\tabitem use polymorphic and &tasks for the purpose of \\
+&&&entry point obscuring &processing intensive \\
+&&&(EPO) techniques to &tasks (e.g. password \\
+&&&infect files &cracking) \\
+&&&&\tabitem install other malware \\
+\hline
+\end{tabular}
+\end{table}
+\newpage\begin{table}[!htbp]
+\centering
+\caption{Botnet Families (cont.)}
+\begin{tabular}{lllll} \hline
+\bf Major Botnets & \bf Alias & \bf Nature & \bf Infection Method & \bf Attacks / Impacts\\\hline
+Slenfbot &Nil    &Worm    &\tabitem spread via removable &\tabitem backdoor capabilities \\
+&&&drives and shares    &that allow unauthorized \\
+&&&&access \\
+&&&&\tabitem download financial \\
+&&&&malware \\
+&&&&\tabitem sending spam \\
+&&&&\tabitem launch DDoS attacks \\
+Tinba &\tabitem TinyBanker &Banking Trojan &\tabitem via exploit kit &\tabitem steal banking \\
+&\tabitem Zusy &&\tabitem Spam e-mail &credential and sensitive \\
+&&&&information  \\
+Torpig &\tabitem Sinowal &Trojan   &\tabitem rootkit techniques to &\tabitem steal sensitive \\
+&\tabitem Anserin  &&maintain persistence &information \\
+&&&(Mebroot rootkit) &\tabitem man in the browser \\
+&&&\tabitem domain generation &attack  \\
+&&&algorithm (DGA) &\\
+&&&capability &\\
+&&&\tabitem distribute via drive &\\
+&&&by download &\\
+Virut  &Nil    &Trojan    &\tabitem spread via removable &\tabitem send spams \\
+&&&drives and shares    &\tabitem launch DDoS attacks \\
+&&&&\tabitem fraud \\
+&&&&\tabitem data theft \\
+Wapomi &Nil    &Worm    &\tabitem spread via removable &\tabitem backdoor capabilities \\
+&&&drives and shares &\tabitem download and drop \\
+&&&\tabitem infects executable &additional destructive \\
+&&&files   &payloads \\
+&&&&\tabitem alter important files \\
+&&&&causing unreliable \\
+&&&&system performance \\
+&&&&\tabitem gather computer \\
+&&&&activity, transmit \\
+&&&&private data and cause \\
+&&&&sluggish computer \\
+ZeroAccess &\tabitem max++ &Trojan    &\tabitem rootkit techniques to &\tabitem download other malware \\
+&\tabitem Sirefef   &&maintain persistence &\tabitem bitcoin mining and \\
+&&&\tabitem communicate via P2P &click fraud   \\
+&&&network &\\
+&&&\tabitem distribute via drive &\\
+&&&by download &\\
+&&&\tabitem distribute via &\\
+&&&disguise as legitimate &\\
+&&&file (eg. media files, &\\
+&&&keygen) &\\
+\hline
+\end{tabular}
+\end{table}
+\newpage\begin{table}[!htbp]
+\centering
+\caption{Botnet Families (cont.)}
+\begin{tabular}{lllll} \hline
+\bf Major Botnets & \bf Alias & \bf Nature & \bf Infection Method & \bf Attacks / Impacts\\\hline
+Zeus &\tabitem Gameover     &Banking Trojan &\tabitem stealthy techniques to &\tabitem steal banking \\
+&&    &maintain persistence &credential and sensitive \\
+&&&\tabitem distribute via drive &information \\
+&&&by download &\tabitem man in the browser \\
+&&&\tabitem communicate via P2P &attack \\
+&&&network   &\tabitem keystroke logging \\
+&&&&\tabitem download other malware \\
+&&&&(eg. Cryptolocker) \\
+&&&&\tabitem launch DDoS attacks \\
+\hline
+\end{tabular}
+\end{table}
+
+
+\end{document}
+
