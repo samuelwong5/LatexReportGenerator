@@ -64,6 +64,8 @@ def plot_line_chart(x_label, data, chart_title=''):
     
 
 def sum_array(a, b):
+    print(a)
+    print(b)
     return map(lambda x:str(int(x[0])+int(x[1])), zip(a, b))   
     
     
@@ -86,9 +88,12 @@ def plot_bar_chart(x_label, data, chart_title='', bar_mode='group', annotations=
         y_height = []
         anno_text = []
         for i in range(len(data)):
-            y_height += reduce(lambda x,y:sum_array(x,y), map(lambda z:z[0], data[:i]), [])
+            y_height += reduce(lambda x,y:sum_array(x,y), map(lambda z:z[0], data[:i]), [0] * len(data[0][0]))
             anno_text += data[i][0]
+        #print(y_height)
+        #print(anno_text)
         anno_data = zip(range(len(data[0][0])) * len(data), y_height, anno_text)        
+        #print(anno_data)
     bars = [Bar(x=x_label,y=data_array,name=data_name) for data_array, data_name in data]
     chart_data = Data(bars) 
     layout = Layout(
@@ -122,6 +127,10 @@ def create_qrtr_graphs():
     data_paths = map(lambda x: data_dir + x + '/report/', qrtr_label)
     qrtr_label = map(lambda x: '20' + str(int(x)/100) + ' Q' + str(int(x)%100),
                      qrtr_label)
+    
+    print('Generating Security Watch Report for ' + qrtr_label[4])
+    
+    print('Creating charts:')
     
     # Defacement, Phishing and Malware
     # Trend, URL/IP
@@ -234,24 +243,66 @@ def create_qrtr_graphs():
                    'Trend of Security events')      
     plotly_download_png(plot_url, output_dir + 'TotalEventBar.png')   
 
-
-def test():
-    data_dir = 'QOutput/'
-    output_dir = os.path.join(os.getcwd(), 'latex/')
-    yymm = int(sys.argv[1])
-    print('start drive')
+    # Botnet Family Pie Chart (Google Charts)
     gchart.set_input_dir('QOutput/' + str(yymm) + '/report/')
+    gchart.start_flask_process()
     display = Display(visible=0, size=(1024, 768))
     display.start()
     driver = webdriver.Firefox()
     driver.get('http://localhost:5000/graph/botnetDailyMax')
-    print('Getting website...')
-    print(driver.page_source)
+    with open('selenium_debug.html','w+') as f:
+        f.write(driver.page_source.encode('utf-8'))
     base = driver.find_element_by_id('png').text
     with open(output_dir + 'BotnetFamPie.png', 'w+b') as f:
         f.write(base[22:].decode('base64'))
-  
     
+    headers, data = read_csv(data_paths[4] + 'botnetDailyMax.csv', [0,1])
+    _, prev_data = read_csv(data_paths[3] + 'botnetDailyMax.csv', [0,1])
+    rank_change = []
+    pct_change = ['NA'] * 10
+    for i in range(10):
+        if data[0][i] == prev_data[0][i]:
+            rank_change.append('$\\rightarrow$')        
+        elif data[0][i] in prev_data[0][:i]:
+            rank_change.append('$\\Downarrow$')
+        elif data[0][i] in prev_data[0][i+1:]:
+            rank_change.append('$\\Uparrow$')
+        else:
+            rank_change.append('NEW')
+    for i in range(len(prev_data[0])):
+        for j in range(10):
+            if prev_data[0][i] == data[0][j]:
+                new = float(data[1][j])
+                old = float(prev_data[1][i])
+                pct_change[j] = str(round((new - old) * 100 / old, 1)) + '\%'           
+    headers = ['Rank', '$\\Uparrow\\Downarrow$', 'Concerned Bots', 'Number of Unique', 'Changes with']
+    table_ltx = ''
+    table_ltx += '\\begin{table}[!htbp]\n\\centering\n'
+    table_ltx += '\\caption{Major Botnet Families in Hong Kong Networks}'
+    table_ltx += '\n\\begin{tabular}{lllll} \\hline\n'
+    for i in range(len(headers) - 1):
+        table_ltx += '\\bf ' + headers[i] + ' & '
+    table_ltx += '\\bf ' + headers[len(headers) - 1] + '\\\\\n'
+    table_ltx += '&&& \\bf IP addresses & \\bf previous period\\\\\hline\n'
+    for i in range(len(data[0]) if len(data[0]) < 10 else 10):
+        table_ltx += '&'.join([str(i), rank_change[i], data[0][i], data[1][i], pct_change[i]]) + '\\\\\n'      
+    table_ltx += '\\hline\n\\end{tabular}\n\\end{table}\n'            
+    ltx_temp = ''
+    with open(output_dir + 'report_quarterly_temp.tex') as f:
+        ltx_temp = f.read()
+    ltx_temp = ltx_temp.replace('botnet\\_table', table_ltx)
+    ltx_temp = ltx_temp.replace('QUARTER', qrtr_label[4])
+    ltx_temp = ltx_temp.replace('QUARTER2', qrtr_label[4])
+    with open(output_dir + 'SecurityWatchReport.tex', 'w+') as f:
+        f.write(ltx_temp.replace('botnet\\_table', table_ltx))
+    
+    print('Rendering PDF')
+    os.chdir(output_dir)
+    os.system('pdflatex SecurityWatchReport.tex')    
+    os.rename('SecurityWatchReport.pdf', 
+              'SecurityWatchReport' + qrtr_label[4] + '.pdf')  
+    print('Report successfully compiled. Exiting now...')   
+    os.system('killall -I python')
+        
 if __name__ == '__main__':    
-    #create_qrtr_graphs()
-    test()
+    create_qrtr_graphs()
