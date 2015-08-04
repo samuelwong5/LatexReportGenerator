@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*- 
+import codecs
 import csv
 import os
 import sys
@@ -336,7 +337,7 @@ def create_qrtr_graphs():
     table_ltx_hdr_chi = u'\\bf 排名 & \\bf $\\Uparrow\\Downarrow$ & \\bf 殭屍網絡名稱 & \\bf 唯一IP地址 & \\bf 變化 \\\\\\hline\n'
     table_eng = table_ltx.replace('__HEADERS__', table_ltx_hdr_eng)
     table_chi = table_ltx.replace('__HEADERS__', table_ltx_hdr_chi)
-    
+    print(table_chi)
     # Output Latex
     with open(output_dir + 'report_quarterly_temp.tex') as f:
         ltx_temp = f.read()
@@ -347,14 +348,16 @@ def create_qrtr_graphs():
     with open(output_dir + 'SecurityWatchReport.tex', 'w+') as f:
         f.write(ltx_temp)
         
-    with open(output_dir + 'report_quarterly_temp_chi.tex') as f:
+    with codecs.open(output_dir + 'report_quarterly_temp_chi.tex', encoding='utf-8', errors='replace') as f:
         ltx_temp = f.read()
-    ltx_temp = ltx_temp.replace('botnet\\_table', table_chi)
-    ltx_temp = ltx_temp.replace('QUARTER', u'20' + str(year) + u'第' + [u'一',u'二',u'三',u'四'][qrtr-1] + u'季度')
+    ltx_temp = ltx_temp.replace(unicode('QUARTER','utf-8'), u'20' + unicode('str(year)','utf-8') + u'第' + [u'一',u'二',u'三',u'四'][qrtr-1] + u'季度')
     ltx_temp = ltx_temp.replace('UNIQUEEVENTS', serv_events[4])
     ltx_temp = ltx_temp.replace('table\\_top\\_bot', table_top_bot)
-    with open(output_dir + 'SecurityWatchReportChi.tex', 'w+') as f:
+    with codecs.open(output_dir + 'SecurityWatchReportChi.tex', mode='w+', encoding='utf-8-sig') as f:
         f.write(ltx_temp)
+    
+    with codecs.open(output_dir + 'botnetchitable.tex', mode='w+', encoding='utf-8-sig') as f:
+        f.write(table_chi)
         
     print('Rendering PDF')
     os.chdir(output_dir)
@@ -362,7 +365,7 @@ def create_qrtr_graphs():
     os.rename('SecurityWatchReport.pdf', 
               'SecurityWatchReport' + qrtr_label[4] + '.pdf')  
     print('Report successfully compiled. Exiting now...')   
-    os.system('pdflatex SecurityWatchReportChi.tex')    
+    os.system('xetex SecurityWatchReportChi.tex')    
     os.rename('SecurityWatchReportChi.pdf', 
               'SecurityWatchReportChi' + qrtr_label[4] + '.pdf')  
     print('Report successfully compiled. Exiting now...')   

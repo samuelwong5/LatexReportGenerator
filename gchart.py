@@ -25,7 +25,8 @@ def serve(fname):
             html += "['" + header[0] + "', '" + header[len(header)-1] + "'],\n      "
             for row in dreader:
                 if count > 9:
-                    other += int(row[header[len(header)-1]])
+                    if row[header[len(header)-1]] != '':
+                        other += int(row[header[len(header)-1]])
                 else: 
                     html += "['" + row[header[0]].replace("'", "") + "', " + row[header[len(header)-1]] + "],\n      "
                 count += 1
