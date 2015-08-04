@@ -131,12 +131,22 @@ def print_no_newline(text):
 def print_done():
     print('[DONE]')    
 
-def format_month_str(x):
+def fms2(y, x):
     if x <= 0:
         x += 12
+        y -= 1
+    y_str = str(y) if y >= 10 else '0' + str(y)
+    return ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][x-1] + y_str
+    
+    
+def format_month_str(y, x):
+    if x <= 0:
+        x += 12
+        y -= 1
+    y_str = str(y) if y >= 10 else '0' + str(y)
     if x < 10:
-        return '0' + str(x)    
-    return str(x)
+        return y_str + '0' + str(x)    
+    return y_str + str(x)
 
     
 def parse_config():
@@ -159,9 +169,9 @@ def parse_config():
     except:
         print('Invalid argument. Expected format: YYMM (e.g. 1403 for 2014 March')
         sys.exit(1)
-    file_paths = [data_folder + str(year) + format_month_str(month - 2) + '/report/',  
-        data_folder + str(year) + format_month_str(month - 1) + '/report/',  # 1 month ago
-        data_folder + str(year) + format_month_str(month) + '/report/'       # current month
+    file_paths = [data_folder + format_month_str(year, month - 2) + '/report/',  
+        data_folder + format_month_str(year, month - 1) + '/report/',  # 1 month ago
+        data_folder + format_month_str(year, month) + '/report/'       # current month
         ]
     ltx_output = cfg.get('output','latex')
     plotly_cred = (cfg.get('plotly','username'), cfg.get('plotly','api_key'))
@@ -180,9 +190,11 @@ def create_bar_charts():
     for file in bar_chart_csv:
         shutil.copyfile(bar_chart_dir + file + '.csv', bar_chart_dir + file + 'Pie.csv')
         draw_bar_chart(bar_chart_dir + file + '.csv')
-        
+    
+    year = config['year']
+    month = config['month']    
     # Create bar charts that use data from multiple months
-    report_csv_monthly.create_monthly_bar(config['file_paths'])
+    report_csv_monthly.create_monthly_bar(config['file_paths'], [fms2(year, month-2), fms2(year, month-1), fms2(year, month)])
  
  
 def create_pie_charts():
@@ -224,7 +236,7 @@ def plotly_setup():
     usr, pwd = config['plotly_cred']
     plotly.tools.set_credentials_file(username=usr, api_key=pwd)
     
-def main():
+def main():    
     parse_config()
     plotly_setup()
     create_bar_charts()

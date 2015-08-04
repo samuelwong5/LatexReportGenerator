@@ -109,15 +109,24 @@ def plot_bar_chart(x_label, data, chart_title='', bar_mode='group', annotations=
         ) for xi, yi, zi in anno_data]
     )
     fig = Figure(data=chart_data,layout=layout)
-    plot_url = py.plot(fig, chart_title, filename=chart_title, auto_open=False)
+    plot_url = py.plot(fig, chart_title, auto_open=False)
     return plot_url
 
     
 def create_qrtr_graphs():
     data_dir = 'QOutput/'
     output_dir = os.path.join(os.getcwd(), 'latex/')
+    if len(sys.argv) < 2:
+        print('Missing parameter: YYQQ (Y=Year / Q=Quarter)')
+        return -1
     yymm = int(sys.argv[1])
+    if yymm < 1000:
+        print('Invalid input. Expected format: YYQQ')
+        return -1
     qrtr = yymm % 10
+    if qrtr <= 0 or qrtr > 4:
+        print('Invalid quarter. Accepted range: 0 < QQ <= 4')
+        return -1
     year = (yymm - qrtr) / 100
     qrtr_label = map(lambda x: prev_qrtr(year, qrtr, x),
                      range(4,-1,-1))
@@ -184,13 +193,18 @@ def create_qrtr_graphs():
                     zip(cc_data[0:2], ['IRC','HTTP']),
                    'Trend and Distribution of Botnet (C&Cs) security events',
                    'stack')
-    plotly_download_png(plot_url, output_dir + 'BotnetCCDisBar.png')   
-    plot_title = ['Trend of Botnet (C&C) security events'
-                 ,u'殭屍網絡控制中心(C&C)安全事件趨勢']
-                           
+    plotly_download_png(plot_url, output_dir + 'BotnetCCDisBar.png')                   
+    plot_url = plot_bar_chart(qrtr_label,
+                    zip(cc_data[0:2], ['IRC','HTTP']),
+                   u'殭屍網絡控制中心安全事件的趨勢和分佈',
+                   'stack')
+    plotly_download_png(plot_url, output_dir + 'BotnetCCDisBarChi.png')  
     plot_url = qrtr_bar([(cc_data[2], 'Botnet C&Cs')],
                    'Trend of Botnet (C&C) security events')  
-    plotly_download_png(plot_url, output_dir + 'BotnetCCBar.png')
+    plotly_download_png(plot_url, output_dir + 'BotnetCCBar.png')   
+    plot_url = qrtr_bar([(cc_data[2], u'殭屍網絡控制中心(C&C)')],
+                   u'殭屍網絡控制中心(C&C)安全事件趨勢')  
+    plotly_download_png(plot_url, output_dir + 'BotnetCCBarChi.png')
     
     # Unique Botnet (Bots) Trend
     bn_data = []
@@ -204,6 +218,9 @@ def create_qrtr_graphs():
     plot_url = qrtr_bar([(bn_data,'Botnet (Bots)')],
                    'Trend of Botnet (Bots) security events')
     plotly_download_png(plot_url, output_dir + 'BotnetBotsBar.png')   
+    plot_url = qrtr_bar([(bn_data,u'殭屍電腦')],
+                   u'殭屍網絡(殭屍電腦)安全事件趨勢')
+    plotly_download_png(plot_url, output_dir + 'BotnetBotsBarChi.png')          
            
     # Top 5 Botnets 
     top_bn_data = [[],[],[],[],[]]
@@ -232,6 +249,10 @@ def create_qrtr_graphs():
                    zip(top_bn_data, top_bn_name),
                    'Trend of 5 Botnet Families in Hong Kong Network')      
     plotly_download_png(plot_url, output_dir + 'BotnetFamTopLine.png')   
+    plot_url = plot_line_chart(qrtr_label,
+                   zip(top_bn_data, top_bn_name),
+                   u'五大主要殭屍網絡趨勢')      
+    plotly_download_png(plot_url, output_dir + 'BotnetFamTopLineChi.png')   
     table_hdr = ['Name'] + qrtr_label
     table_top_bot = ''
     table_top_bot += '\\begin{table}[!htbp]\n\\centering\n'
@@ -249,7 +270,12 @@ def create_qrtr_graphs():
                    'Trend and Distribution of server related security events',
                    'stack')
     plotly_download_png(plot_url, output_dir + 'ServerDisBar.png')   
-    
+    plot_url = plot_bar_chart(qrtr_label,
+                   zip(url_data, [u'網頁塗改',u'釣魚網站',u'惡意程式寄存']),
+                   u'與伺服器有關的安全事件的趨勢和分佈',
+                   'stack')
+    plotly_download_png(plot_url, output_dir + 'ServerDisBarChi.png')   
+
     # Total Events
     url_data.append(bn_data)
     url_data.append(cc_data[2])
@@ -257,7 +283,11 @@ def create_qrtr_graphs():
     plot_url = qrtr_bar([(serv_events, 'Unique security events')],
                    'Trend of Security events')      
     plotly_download_png(plot_url, output_dir + 'TotalEventBar.png')   
-
+    plot_url = qrtr_bar([(serv_events, u'唯一安全事件')],
+                   u'安全事件趨勢')      
+    plotly_download_png(plot_url, output_dir + 'TotalEventBarChi.png')   
+    
+    
     # Botnet Family Pie Chart (Google Charts)
     gchart.set_input_dir('QOutput/' + str(yymm) + '/report/')
     gchart.start_flask_process()
@@ -294,29 +324,47 @@ def create_qrtr_graphs():
     table_ltx = ''
     table_ltx += '\\begin{table}[!htbp]\n\\centering\n'
     table_ltx += '\\caption{Major Botnet Families in Hong Kong Networks}'
-    table_ltx += '\n\\begin{tabular}{lllll} \\hline\n'
-    for i in range(len(headers) - 1):
-        table_ltx += '\\bf ' + headers[i] + ' & '
-    table_ltx += '\\bf ' + headers[len(headers) - 1] + '\\\\\n'
-    table_ltx += '&&& \\bf IP addresses & \\bf previous period\\\\\hline\n'
+    table_ltx += '\n\\begin{tabular}{lllll} \\hline\n__HEADERS__\\\\\\hline\n'
+
+    
     for i in range(len(data[0]) if len(data[0]) < 10 else 10):
         table_ltx += '&'.join([str(i), rank_change[i], data[0][i], data[1][i], pct_change[i]]) + '\\\\\n'      
     table_ltx += '\\hline\n\\end{tabular}\n\\end{table}\n'            
     ltx_temp = ''
+    
+    table_ltx_hdr_eng = '&'.join(map(lambda x:'\\bf ' + x,headers)) + '\\\\\n&&& \\bf IP addresses & \\bf previous period\\\\\hline\n'
+    table_ltx_hdr_chi = u'\\bf 排名 & \\bf $\\Uparrow\\Downarrow$ & \\bf 殭屍網絡名稱 & \\bf 唯一IP地址 & \\bf 變化 \\\\\\hline\n'
+    table_eng = table_ltx.replace('__HEADERS__', table_ltx_hdr_eng)
+    table_chi = table_ltx.replace('__HEADERS__', table_ltx_hdr_chi)
+    
+    # Output Latex
     with open(output_dir + 'report_quarterly_temp.tex') as f:
         ltx_temp = f.read()
-    ltx_temp = ltx_temp.replace('botnet\\_table', table_ltx)
+    ltx_temp = ltx_temp.replace('botnet\\_table', table_eng)
     ltx_temp = ltx_temp.replace('QUARTER', qrtr_label[4])
     ltx_temp = ltx_temp.replace('UNIQUEEVENTS', serv_events[4])
     ltx_temp = ltx_temp.replace('table\\_top\\_bot', table_top_bot)
     with open(output_dir + 'SecurityWatchReport.tex', 'w+') as f:
         f.write(ltx_temp)
-    
+        
+    with open(output_dir + 'report_quarterly_temp_chi.tex') as f:
+        ltx_temp = f.read()
+    ltx_temp = ltx_temp.replace('botnet\\_table', table_chi)
+    ltx_temp = ltx_temp.replace('QUARTER', u'20' + str(year) + u'第' + [u'一',u'二',u'三',u'四'][qrtr-1] + u'季度')
+    ltx_temp = ltx_temp.replace('UNIQUEEVENTS', serv_events[4])
+    ltx_temp = ltx_temp.replace('table\\_top\\_bot', table_top_bot)
+    with open(output_dir + 'SecurityWatchReportChi.tex', 'w+') as f:
+        f.write(ltx_temp)
+        
     print('Rendering PDF')
     os.chdir(output_dir)
     os.system('pdflatex SecurityWatchReport.tex')    
     os.rename('SecurityWatchReport.pdf', 
               'SecurityWatchReport' + qrtr_label[4] + '.pdf')  
+    print('Report successfully compiled. Exiting now...')   
+    os.system('pdflatex SecurityWatchReportChi.tex')    
+    os.rename('SecurityWatchReportChi.pdf', 
+              'SecurityWatchReportChi' + qrtr_label[4] + '.pdf')  
     print('Report successfully compiled. Exiting now...')   
     os.system('killall -I python')
         

@@ -6,11 +6,11 @@ import sys
 from plotly.graph_objs import *
 import plotly.plotly as py
     
-def create_monthly_bar(file_paths):
+def create_monthly_bar(file_paths, months):
     ssfiles = map(lambda x: x + 'serverSummary.csv', file_paths)
-    create(ssfiles)
+    create(ssfiles, months)
     
-    bot_data = [['Mar15','Apr15','May15'],[]]   
+    bot_data = [months,[]]   
     ccfiles = map(lambda x: x + 'C&CServers.csv', file_paths)
     for ccf in ccfiles:
         with open(ccf) as csv_file:
@@ -35,7 +35,7 @@ def create_monthly_bar(file_paths):
                 hold.append(row['ip'])                 
     generate_chart(cc_data, ['Communication Type', 'Count'], 'BotCCType', 'Botnet (C&Cs) by communication type')
    
-    bot_data = [['Mar15','Apr15','May15'],[]]   
+    bot_data = [months,[]]   
     bnfiles = map(lambda x: x + 'botnetDailyMax.csv', file_paths)
     for bnf in bnfiles:
         with open(bnf) as csv_file:
@@ -48,7 +48,7 @@ def create_monthly_bar(file_paths):
     generate_chart(bot_data, ['Month', 'Botnet (Bots)'], 'BotBotsDis', 'Botnet (Bots) security event distribution')
       
     
-def create(file_paths):
+def create(file_paths, months):
     data = []
     headers = []
     for j in range(len(file_paths)):
@@ -63,7 +63,7 @@ def create(file_paths):
                     data[j][i].append(row[headers[i]])
 
     server_dis_headers = ['Month','Defacement','Phishing','Malware']                
-    server_dis = [['Mar15','Apr15','May15'],[],[],[]]
+    server_dis = [months,[],[],[]]
     for i in range(3):
         for j in range(3):
             server_dis[i+1].append(data[j][i+1][1])
@@ -71,7 +71,7 @@ def create(file_paths):
 
     gen = [(1,'Defacement'),(2,'Phishing'),(3,'Malware')]
     gen_headers = ['Month','URL','Domain','IP']                
-    gen_data = [['Mar15','Apr15','May15'],[],[],[]]
+    gen_data = [months,[],[],[]]
     for g in gen:
         index, type = g
         for i in range(3):
@@ -81,7 +81,7 @@ def create(file_paths):
         generate_chart(gen_data, gen_headers, type + 'Gen', type + ' General Statistics')
     
     url_ip_headers = ['Month', 'URL/IP Ratio']
-    url_data = [['Mar15','Apr15','May15'],[]]
+    url_data = [months,[]]
     for g in gen:
         index, type = g
         url_data[1] = []
