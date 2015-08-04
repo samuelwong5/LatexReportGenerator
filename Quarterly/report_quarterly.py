@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*- 
 import csv
 import os
 import sys
@@ -56,6 +57,7 @@ def prev_qrtr(year, qrtr, offset):
 
     
 def plot_line_chart(x_label, data, chart_title=''):
+    print(chart_title)
     data = Data([Scatter(x=x_label,y=data_array,mode='lines+markers',
                       name=data_name) for data_array, data_name in data])
     layout = Layout(title=chart_title)
@@ -64,8 +66,6 @@ def plot_line_chart(x_label, data, chart_title=''):
     
 
 def sum_array(a, b):
-    print(a)
-    print(b)
     return map(lambda x:str(int(x[0])+int(x[1])), zip(a, b))   
     
     
@@ -132,6 +132,8 @@ def create_qrtr_graphs():
     
     print('Creating charts:')
     
+    qrtr_bar = lambda x,y: plot_bar_chart(qrtr_label,x,y)
+    
     # Defacement, Phishing and Malware
     # Trend, URL/IP
     url_data = [[],[],[]]
@@ -152,8 +154,7 @@ def create_qrtr_graphs():
                        zip(url_ip_unique_data, ['Unique URL', 'Unique IP']), 
                        'Trend of ' + type + ' security events')  
         plotly_download_png(plot_url, output_dir + type + 'UniqueBar.png')        
-        plot_url = plot_bar_chart(qrtr_label,
-                       [(url_ip_ratio_data[0],'URL/IP ratio')], 
+        plot_url = qrtr_bar([(url_ip_ratio_data[0],'URL/IP ratio')], 
                        'URL/IP ratio of ' + type + ' security events')        
         plotly_download_png(plot_url, output_dir + type + 'RatioBar.png')                 
     
@@ -176,13 +177,15 @@ def create_qrtr_graphs():
         cc_data[1].append(str(http_count))
         cc_data[2].append(str(irc_count+http_count))
     plot_url = plot_bar_chart(qrtr_label,
-                   zip(cc_data[0:2], ['IRC','HTTP']),
+                    zip(cc_data[0:2], ['IRC','HTTP']),
                    'Trend and Distribution of Botnet (C&Cs) security events',
                    'stack')
     plotly_download_png(plot_url, output_dir + 'BotnetCCDisBar.png')   
-    plot_url = plot_bar_chart(qrtr_label,
-                   [(cc_data[2], 'Botnet C&Cs')],
-                   'Trend of Botnet (C&Cs) security events')  
+    plot_title = ['Trend of Botnet (C&C) security events'
+                 ,u'殭屍網絡控制中心(C&C)安全事件趨勢']
+                           
+    plot_url = qrtr_bar([(cc_data[2], 'Botnet C&Cs')],
+                   'Trend of Botnet (C&C) security events')  
     plotly_download_png(plot_url, output_dir + 'BotnetCCBar.png')
     
     # Unique Botnet (Bots) Trend
@@ -194,8 +197,7 @@ def create_qrtr_graphs():
             if data[0][i] is not '':
                 total_count += int(data[0][i])
         bn_data.append(total_count)
-    plot_url = plot_bar_chart(qrtr_label,
-                   [(bn_data,'Botnet (Bots)')],
+    plot_url = qrtr_bar([(bn_data,'Botnet (Bots)')],
                    'Trend of Botnet (Bots) security events')
     plotly_download_png(plot_url, output_dir + 'BotnetBotsBar.png')   
            
@@ -226,7 +228,17 @@ def create_qrtr_graphs():
                    zip(top_bn_data, top_bn_name),
                    'Trend of 5 Botnet Families in Hong Kong Network')      
     plotly_download_png(plot_url, output_dir + 'BotnetFamTopLine.png')   
-
+    table_hdr = ['Name'] + qrtr_label
+    table_top_bot = ''
+    table_top_bot += '\\begin{table}[!htbp]\n\\centering\n'
+    table_top_bot += '\n\\begin{tabular}{llllll} \\hline\n'
+    table_top_bot += '&'.join(map(lambda x: '\\bf ' + x, table_hdr)) + '\\\\\\hline\n'
+    rows = map(lambda x,y:x+'&'+'&'.join(y)+'\\\\\n', top_bn_name, top_bn_data)
+    for row in rows:  
+        table_top_bot += row     
+    table_top_bot += '\\hline\n\\end{tabular}\n\\end{table}\n'            
+    
+    
     # Server-related Events
     plot_url = plot_bar_chart(qrtr_label,
                    zip(url_data, ['Defacement','Phishing','Malware hosting']),
@@ -238,8 +250,7 @@ def create_qrtr_graphs():
     url_data.append(bn_data)
     url_data.append(cc_data[2])
     serv_events = reduce(sum_array, url_data)
-    plot_url = plot_bar_chart(qrtr_label,
-                   [(serv_events, 'Unique security events')],
+    plot_url = qrtr_bar([(serv_events, 'Unique security events')],
                    'Trend of Security events')      
     plotly_download_png(plot_url, output_dir + 'TotalEventBar.png')   
 
@@ -292,9 +303,10 @@ def create_qrtr_graphs():
         ltx_temp = f.read()
     ltx_temp = ltx_temp.replace('botnet\\_table', table_ltx)
     ltx_temp = ltx_temp.replace('QUARTER', qrtr_label[4])
-    ltx_temp = ltx_temp.replace('QUARTER2', qrtr_label[4])
+    ltx_temp = ltx_temp.replace('UNIQUEEVENTS', serv_events[4])
+    ltx_temp = ltx_temp.replace('table\\_top\\_bot', table_top_bot)
     with open(output_dir + 'SecurityWatchReport.tex', 'w+') as f:
-        f.write(ltx_temp.replace('botnet\\_table', table_ltx))
+        f.write(ltx_temp)
     
     print('Rendering PDF')
     os.chdir(output_dir)

@@ -7,6 +7,7 @@ import shutil
 import sys
 import stat
 
+import plotly
 from plotly.graph_objs import *
 import plotly.plotly as py
 from pyvirtualdisplay import Display
@@ -217,9 +218,13 @@ def create_pie_charts():
     driver.quit()
     display.stop() 
 
+
+def plotly_setup():
+    plotly.tools.set_credentials_file(username='shkpc', api_key='npyjvn8gkv')
     
 def main():
     parse_config()
+    plotly_setup()
     create_bar_charts()
     create_pie_charts()
     ltxutils.create_report(config["file_paths"][2], config["file_paths"][1], config['output_dir'], config["yymm"])
