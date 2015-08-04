@@ -106,7 +106,7 @@ def draw_bar_chart(file_path, max=10, bar_mode='stack'):
     fig = Figure(data=chart_data,layout=layout)
     
     # plot and download chart
-    plot_url = py.plot(fig, chart_title)
+    plot_url = py.plot(fig, chart_title, filename=chart_title, auto_open=False)
     print_no_newline('  ' + chart_title + '.png')
     download_png(plot_url, config['output_dir'] + chart_title + '.png')      
 
@@ -164,8 +164,9 @@ def parse_config():
         data_folder + str(year) + format_month_str(month) + '/report/'       # current month
         ]
     ltx_output = cfg.get('output','latex')
+    plotly_cred = (cfg.get('plotly','username'), cfg.get('plotly','api_key'))
     global config
-    config = {'yymm': yymm, 'year': year, 'month': month, 'file_paths':file_paths, 'output_dir': ltx_output}   
+    config = {'yymm': yymm, 'year': year, 'month': month, 'file_paths':file_paths, 'output_dir': ltx_output, 'plotly_cred': plotly_cred}   
 
     
 def create_bar_charts():
@@ -220,7 +221,8 @@ def create_pie_charts():
 
 
 def plotly_setup():
-    plotly.tools.set_credentials_file(username='shkpc', api_key='npyjvn8gkv')
+    usr, pwd = config['plotly_cred']
+    plotly.tools.set_credentials_file(username=usr, api_key=pwd)
     
 def main():
     parse_config()

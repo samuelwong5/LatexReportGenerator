@@ -90,10 +90,7 @@ def plot_bar_chart(x_label, data, chart_title='', bar_mode='group', annotations=
         for i in range(len(data)):
             y_height += reduce(lambda x,y:sum_array(x,y), map(lambda z:z[0], data[:i]), [0] * len(data[0][0]))
             anno_text += data[i][0]
-        #print(y_height)
-        #print(anno_text)
         anno_data = zip(range(len(data[0][0])) * len(data), y_height, anno_text)        
-        #print(anno_data)
     bars = [Bar(x=x_label,y=data_array,name=data_name) for data_array, data_name in data]
     chart_data = Data(bars) 
     layout = Layout(
@@ -112,7 +109,7 @@ def plot_bar_chart(x_label, data, chart_title='', bar_mode='group', annotations=
         ) for xi, yi, zi in anno_data]
     )
     fig = Figure(data=chart_data,layout=layout)
-    plot_url = py.plot(fig, chart_title)
+    plot_url = py.plot(fig, chart_title, filename=chart_title, auto_open=False)
     return plot_url
 
     
@@ -137,8 +134,10 @@ def create_qrtr_graphs():
     # Defacement, Phishing and Malware
     # Trend, URL/IP
     url_data = [[],[],[]]
-    url_ip_col = [('Defacement', 1), ('Phishing', 2), ('Malware',3)]
-    for type, index in url_ip_col:
+    url_ip_col = [('Defacement', 1, u'網頁塗改'), 
+                  ('Phishing', 2, u'釣魚網站'), 
+                  ('Malware',3,u'惡意程式寄存')]
+    for type, index, type_c in url_ip_col:
         url_ip_unique_data = [[],[]]
         url_ip_ratio_data = [[]]
         for d in data_paths:
@@ -150,13 +149,18 @@ def create_qrtr_graphs():
             url_ip_unique_data[1].append(ip_count)
             url_ip_ratio_data[0].append(str(url_ip_ratio))
         url_data[index-1] = url_ip_unique_data[0]
-        plot_url = plot_bar_chart(qrtr_label, 
-                       zip(url_ip_unique_data, ['Unique URL', 'Unique IP']), 
+        plot_url = qrtr_bar(zip(url_ip_unique_data, ['Unique URL', 'Unique IP']), 
                        'Trend of ' + type + ' security events')  
         plotly_download_png(plot_url, output_dir + type + 'UniqueBar.png')        
         plot_url = qrtr_bar([(url_ip_ratio_data[0],'URL/IP ratio')], 
                        'URL/IP ratio of ' + type + ' security events')        
-        plotly_download_png(plot_url, output_dir + type + 'RatioBar.png')                 
+        plotly_download_png(plot_url, output_dir + type + 'RatioBar.png')  
+        plot_url = qrtr_bar(zip(url_ip_unique_data, ['唯一網址', '唯一IP']), 
+                       type_c + u'安全事件趨勢')  
+        plotly_download_png(plot_url, output_dir + type + 'UniqueBarChi.png')        
+        plot_url = qrtr_bar([(url_ip_ratio_data[0],'唯一網址/IP比')], 
+                       type_c + u'安全事件唯一網址/IP比')        
+        plotly_download_png(plot_url, output_dir + type + 'RatioBarChi.png')         
     
     # Botnet (C&C) Distribution and Trend
     cc_data = [[],[],[]]
