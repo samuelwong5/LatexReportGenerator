@@ -301,6 +301,7 @@ def create_qrtr_graphs():
     base = driver.find_element_by_id('png').text
     with open(output_dir + 'BotnetFamPie.png', 'w+b') as f:
         f.write(base[22:].decode('base64'))
+    gchart.stop_flask_process()
     
     headers, data = read_csv(data_paths[4] + 'botnetDailyMax.csv', [0,1])
     _, prev_data = read_csv(data_paths[3] + 'botnetDailyMax.csv', [0,1])
@@ -338,6 +339,7 @@ def create_qrtr_graphs():
     table_eng = table_ltx.replace('__HEADERS__', table_ltx_hdr_eng)
     table_chi = table_ltx.replace('__HEADERS__', table_ltx_hdr_chi)
     print(table_chi)
+    
     # Output Latex
     with open(output_dir + 'report_quarterly_temp.tex') as f:
         ltx_temp = f.read()
@@ -348,14 +350,14 @@ def create_qrtr_graphs():
     with open(output_dir + 'SecurityWatchReport.tex', 'w+') as f:
         f.write(ltx_temp)
         
-    with codecs.open(output_dir + 'report_quarterly_temp_chi.tex', encoding='utf-8', errors='replace') as f:
+    with open(output_dir + 'report_quarterly_temp_chi.tex') as f:
         ltx_temp = f.read()
-    ltx_temp = ltx_temp.replace(unicode('QUARTER','utf-8'), u'20' + unicode('str(year)','utf-8') + u'第' + [u'一',u'二',u'三',u'四'][qrtr-1] + u'季度')
     ltx_temp = ltx_temp.replace('UNIQUEEVENTS', serv_events[4])
     ltx_temp = ltx_temp.replace('table\\_top\\_bot', table_top_bot)
-    with codecs.open(output_dir + 'SecurityWatchReportChi.tex', mode='w+', encoding='utf-8-sig') as f:
+    with open(output_dir + 'SecurityWatchReportChi.tex', 'w+') as f:
         f.write(ltx_temp)
-    
+    with codecs.open(output_dir + 'chiqrtr.tex', mode='w+', encoding='utf-8-sig') as f:
+        f.write(u'20' + unicode(year) + u'第' + [u'一',u'二',u'三',u'四'][qrtr-1] + u'季度')
     with codecs.open(output_dir + 'botnetchitable.tex', mode='w+', encoding='utf-8-sig') as f:
         f.write(table_chi)
         
@@ -364,12 +366,13 @@ def create_qrtr_graphs():
     os.system('pdflatex SecurityWatchReport.tex')    
     os.rename('SecurityWatchReport.pdf', 
               'SecurityWatchReport' + qrtr_label[4] + '.pdf')  
+    ''' 
     print('Report successfully compiled. Exiting now...')   
     os.system('xetex SecurityWatchReportChi.tex')    
     os.rename('SecurityWatchReportChi.pdf', 
-              'SecurityWatchReportChi' + qrtr_label[4] + '.pdf')  
+              'SecurityWatchReportChi' + qrtr_label[4] + '.pdf')  '''
     print('Report successfully compiled. Exiting now...')   
-    os.system('killall -I python')
+    
         
 if __name__ == '__main__':    
     create_qrtr_graphs()
