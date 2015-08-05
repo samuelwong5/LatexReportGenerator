@@ -56,6 +56,11 @@ def start_flask():
 def start_flask_process():
     server.start()
 
+def stop_flask_process():
+    server.terminate()
+    server.join()
+    
+    
 server = Process(target=start_flask) 
     
     

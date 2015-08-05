@@ -228,6 +228,7 @@ def create_pie_charts():
         with open(config['output_dir'] + file + '.png', 'w+b') as f:
             f.write(base[22:].decode('base64'))
         print_done()           
+    gchart.stop_flask_process()
     driver.quit()
     display.stop() 
 
@@ -242,7 +243,7 @@ def main():
     create_bar_charts()
     create_pie_charts()
     ltxutils.create_report(config["file_paths"][2], config["file_paths"][1], config['output_dir'], config["yymm"])
-    os.system('killall -I python')
+    # os.system('killall -I python')
         
     
 if __name__ == "__main__":    
