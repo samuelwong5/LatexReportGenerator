@@ -1,18 +1,26 @@
 # -*- coding: utf-8 -*- 
 import codecs
+import ConfigParser
 import csv
 import os
 import sys
 
-import requests
-from plotly.graph_objs import *
-import plotly.plotly as py
 from pyvirtualdisplay import Display
 from selenium import webdriver
 
 import gchart
 import report_utils as rutil
 
+
+#Global config dictionary
+config = {}
+
+
+def parse_config():
+    cfg = ConfigParser.ConfigParser(allow_no_value=True)
+    cfg.read('config.cfg')
+    config['data_dir'] = cfg.get('quarterly','input')
+    config['output_dir'] = cfg.get('quarterly', 'output')
     
 def prev_qrtr(year, qrtr, offset):
     new_qrtr = qrtr
@@ -27,8 +35,6 @@ def prev_qrtr(year, qrtr, offset):
 
 
 def create_qrtr_graphs():
-    data_dir = 'QOutput/'
-    output_dir = os.path.join(os.getcwd(), 'latex/')
     if len(sys.argv) < 2:
         print('Missing parameter: YYQQ (Y=Year / Q=Quarter)')
         return -1
@@ -40,6 +46,11 @@ def create_qrtr_graphs():
     if qrtr <= 0 or qrtr > 4:
         print('Invalid quarter. Accepted range: 0 < QQ <= 4')
         return -1
+        
+    parse_config()
+    data_dir = config['data_dir']
+    output_dir = os.path.join(os.getcwd(), config['output_dir'])
+    
     year = (yymm - qrtr) / 100
     qrtr_label = map(lambda x: prev_qrtr(year, qrtr, x),
                      range(4,-1,-1))
@@ -192,7 +203,7 @@ def create_qrtr_graphs():
     # Total Events
     url_data.append(bn_data)
     url_data.append(cc_data[2])
-    serv_events = reduce(sum_array, url_data)
+    serv_events = reduce(rutil.sum_array, url_data)
     plot_url = qrtr_bar([(serv_events, 'Unique security events')],
                    'Trend of Security events')      
     rutil.plotly_download_png(plot_url, output_dir + 'TotalEventBar.png')   
@@ -284,7 +295,7 @@ def create_qrtr_graphs():
     os.rename('SecurityWatchReportChi.pdf', 
               'SecurityWatchReportChi' + qrtr_label[4] + '.pdf')  
     print('Report successfully compiled. Exiting now...')   
-    
+            
         
 if __name__ == '__main__':    
     create_qrtr_graphs()

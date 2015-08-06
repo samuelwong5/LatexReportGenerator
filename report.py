@@ -11,8 +11,9 @@ import report_csv_monthly
 import report_utils as rutil
 import gchart
 
+
 # Global config dictionary
-config = []
+config = {}
 
 
 def print_done():
@@ -32,7 +33,7 @@ def format_month_str(y, x):
 def parse_config():
     cfg = ConfigParser.ConfigParser(allow_no_value=True)
     cfg.read('config.cfg')
-    data_folder = cfg.get('input','data')
+    data_folder = cfg.get('monthly','input')
     if len(sys.argv) < 2:
         print ('[FATAL] Error: Missing YYMM argument.')
         sys.exit(1)
@@ -53,7 +54,7 @@ def parse_config():
         data_folder + format_month_str(year, month - 1) + '/report/',  # 1 month ago
         data_folder + format_month_str(year, month) + '/report/'       # current month
         ]
-    ltx_output = cfg.get('output','latex')
+    ltx_output = cfg.get('monthly','output')
     plotly_cred = (cfg.get('plotly','username'), cfg.get('plotly','api_key'))
     rutil.plotly_init(plotly_cred)
     global config
@@ -102,7 +103,7 @@ def create_pie_charts():
                      'ISPServerAllPie',
                      'ISPAllPie']
     for file in pie_chart_csv:
-        rutil.print_no_newline('  ' + file + '.png')
+        rutil.print_no_newline(file + '.png')
         driver.get('http://localhost:5000/graph/' + file)
         base = driver.find_element_by_id('png').text
         # Decode Base64 string and save

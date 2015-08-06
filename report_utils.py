@@ -4,7 +4,7 @@ import sys
 
 import requests
 import plotly
-from plotly.graph_objs import Annotation, Bar, Data, Figure, Font, Layout
+from plotly.graph_objs import Annotation, Bar, Data, Figure, Font, Layout, Scatter
 import plotly.plotly as py
 
 
