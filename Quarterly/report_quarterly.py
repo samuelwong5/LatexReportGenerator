@@ -350,7 +350,7 @@ def create_qrtr_graphs():
     with open(output_dir + 'SecurityWatchReport.tex', 'w+') as f:
         f.write(ltx_temp)
         
-    with open(output_dir + 'report_quarterly_temp_chi.tex') as f:
+    with open(output_dir + 'report_qrtr_temp_chi.tex') as f:
         ltx_temp = f.read()
     ltx_temp = ltx_temp.replace('UNIQUEEVENTS', serv_events[4])
     ltx_temp = ltx_temp.replace('table\\_top\\_bot', table_top_bot)
@@ -366,11 +366,11 @@ def create_qrtr_graphs():
     os.system('pdflatex SecurityWatchReport.tex')    
     os.rename('SecurityWatchReport.pdf', 
               'SecurityWatchReport' + qrtr_label[4] + '.pdf')  
-    ''' 
+
     print('Report successfully compiled. Exiting now...')   
-    os.system('xetex SecurityWatchReportChi.tex')    
+    os.system('xelatex SecurityWatchReportChi.tex')    
     os.rename('SecurityWatchReportChi.pdf', 
-              'SecurityWatchReportChi' + qrtr_label[4] + '.pdf')  '''
+              'SecurityWatchReportChi' + qrtr_label[4] + '.pdf')  
     print('Report successfully compiled. Exiting now...')   
     
         

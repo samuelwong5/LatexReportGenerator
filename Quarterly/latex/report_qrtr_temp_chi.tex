@@ -1,0 +1,536 @@
+\documentclass[14pt]{extarticle}
+\usepackage[margin=0.5in]{geometry}
+\setlength\parindent{0pt}
+\usepackage{graphicx,hhline}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{multirow}
+\newcommand{\tabitem}{~~\llap{\textbullet}~~}
+\usepackage{,booktabs,placeins}
+\usepackage{xeCJK}
+\setCJKmainfont{SimSun}
+
+\begin{document}
+
+\vspace{1cm}
+
+\includegraphics{HKCERT}
+
+\vspace{4cm}
+
+\centerline{\Huge 香港保安觀察報告}
+
+\vspace{2.5cm}
+
+\centerline{\huge \input{chiqrtr}}
+\newpage
+
+
+\section*{前言}
+\subsection*{認知保安狀況提高網絡安全}
+現今，有很多「隱形」電腦，在使用者還不知道的情況下，被攻擊者入侵及控制。在這些電腦上的數據可能每天都被盜取及暴露，並用於不同種類的犯罪活動上。
+香港保安觀察報告旨在提高公眾對香港被入侵電腦狀況的「能見度」，以便他們可以做更好資訊保安的決策。
+報告提供在香港被發現曾經遭受或參與各類型網絡攻擊活動的電腦的數據，包括網頁塗改，釣魚網站，惡意程式寄存，殭屍網絡控制中心(C\&C)或殭屍電腦等。香港的電腦的定義，是處於香港網絡內，或其主機名稱的頂級域名是「.hk」或「.香港」的電腦。
+
+\subsection*{善用全球資訊的力量}
+本報告是HKCERT和全球各地的資訊保安研究人員協作的成果。很多資訊保安研究人員具有能力去偵測針對他們或其客戶的攻擊，有些會把錄得的攻擊來源的可疑IP地址或惡意活動網絡連結的數據提供給其他資訊保安機構，目的是改善互聯網的整體安全。他們有良好的實務守則，在分享數據之前刪除個人身份的數據。
+HKCERT建立Information Feed Analysis System (IFAS)系統，收集和匯聚這些寶貴的數據，對有關香港的資料進行分析。數據的來源(附錄1)非常分散及可靠，可以持平地反映香港的資訊保安情況。
+我們會移除來自多個數據來源的重複報告，並以下面的統計指標來確保統計數據的質量：
+
+
+\begin{table}[h]
+\centering
+\caption{網絡攻擊類型}
+\begin{tabular}{ll}
+\hline
+\textbf{網絡攻擊類型}              & \textbf{統計指標}                                                                         \\\hhline{==}
+網頁塗改、釣魚網站、                     & 在本報告所述期間，錄得有關的唯一網址的數量 \\
+惡意程式寄存                            & \\\hline
+
+殭屍網絡控制中心(C\&C)                    & 在本報告所述期間，錄得有關的唯一IP地址的數量 \\\hline
+殭屍電腦                               & 在本報告所述期間，錄得各個殭屍網絡在季度內的同日唯一IP  \\
+                                      & 地址數量的最高值的總和。 \\\hline
+\end{tabular}
+
+\end{table}
+
+\subsection*{更好的資訊，更好的服務}
+
+我們將來會加入更多的有價值的數據來源和進行更深入的分析，持續改善這報告。我們亦會探討如何利用這些數據改進我們的服務。\textit{請以電郵（\textbf{hkcert@hkcert.org}）給我們你的反饋意見。}
+
+\subsubsection*{報告的局限}
+
+本報告的數據有不同的來源，他們採用不同的收集方法、收集週期、表達方式和有各自的局限，因此數據宜作參考之用，不宜用於直接比較或視為反映現實的全貌。
+
+\subsubsection*{免責聲明}
+本中心可隨時更新或修正報告，恕不另行通知。對於本報告內容及數據中出現的任何錯誤、偏頗、疏漏或延誤，或據此而採取之任何行動，本中心概不負上任何責任。對於因使用本報告內容及數據而產生的任何特殊的、附帶或相應的損失，本中心概不負上任何責任。
+
+\subsubsection*{授權條款}
+本報告是採用創用 CC 姓名標示 4.0 國際授權條款。任何人只要表明來源始於HKCERT，均可以合法共享本報告的內容，制作衍生的內容，作任何用途。
+
+http://creativecommons.org/licenses/by/4.0/
+
+\clearpage
+\tableofcontents
+\clearpage
+
+\section*{報告概要}
+本報告是\input{chiqrtr}報告。
+
+在\input{chiqrtr}，有關香港的唯一的網絡攻擊數據共有UNIQUEEVENTS個。數據經IFAS\footnote{IFAS - Information Feed Analysis System(IFAS) 是HKCERT 建立的系統，用作收集有關香港的環球保安資訊來源中有關香港的保安數據作分析之用}系統由19個來源 收集。它們並不是來自HKCERT 所收到的事故報告。
+
+\begin{figure}[h!]
+\centerline{\includegraphics[height=10cm]{TotalEventBarChi}}
+\caption{安全事件趨勢
+{\protect\footnote{數字曾被調整以排除未被確定的網頁塗改事件}}}
+\end{figure}
+
+本季度安全事件大幅增加99\%或10,851宗，創了2013年第二季至今的新高。加幅主要來自與伺服器有關的安全事件。
+
+\subsection*{與伺服器有關的安全事件}
+
+與伺服器有關的安全事件有: 惡意程式寄存、釣魚網站和網頁塗改。以下為其趨勢和分佈:
+
+\begin{figure}[h!]
+\centerline{\includegraphics[height=10cm]{ServerDisBarChi}}
+\caption{與伺服器有關的安全事件的趨勢和分佈
+{\protect\footnote{數字曾被調整以?ㄔ撲Q確定的網頁塗改事件}}}
+\end{figure}
+有關伺服器的安全事件的數量在\input{chiqrtr}從5,867宗大幅增加至16,338宗。有關伺服器的安全事件、釣魚網站事件及惡意程式寄存事件全部創新高。
+本季網頁塗改攻擊的數量輕微上升了5\%，惟釣魚網站攻擊及惡意程式寄存攻擊分別大幅增加168\%及412\%。
+釣魚網站事件的大幅上升由幾個大型釣魚網站攻擊導致。本季最大的釣魚網站攻擊目標是一個日本遊戲網站hiroba.dqx.jp。該攻擊使用超過10個IP地址及超過3200個唯一網址，佔所有釣魚網站攻擊當中超過四成。第二及第三大的釣魚網站攻擊目標都是中國的網上商城，它們分別是淘寶網和秀正網，針對它們的唯一網址數量分別超過1600個及1200個。執筆之時，大部份上述釣魚網站已不能連接。?
+惡意程式寄存事件之中，大約41\%或2828宗寄存了HTML/Drop.Agent.AB惡意程式。這隻惡意程式與Ramnit殭屍網絡有關。
+
+
+\begin{table}[h!]
+    \small
+     \begin{center}
+     \begin{tabular}{ c p{14cm} }
+     \toprule
+     & \textit{HKCERT促請系統和應用程式管理員保護好伺服器} \\
+     \cmidrule(l){2-2}
+     \raisebox{-\totalheight}{\includegraphics[width=0.1\textwidth]{warning}}
+      & 
+      \begin{itemize}[topsep=0pt]
+      \item 為伺服器安裝最新修補程式及更新，以避免已知漏洞被利用
+      \item 更新網站應用程式和插件至最新版本
+      \item 按照最佳實務守則來管理使用者帳戶和密碼
+      \item 必須核實客戶在網上應用程式的輸入，及系統的輸出
+      \item 在管理控制界面使用強認證，例如﹕雙重認證
+      \item 獲取信息安全知識以防止社交工程
+      \end{itemize}
+      \\\bottomrule
+      \end{tabular}
+      \end{center}
+\end{table}
+     
+\clearpage
+\subsection*{殭屍網絡相關的安全事件}
+
+殭屍網絡相關的安全事件可以分為兩類：
+\begin{itemize}
+\item 殭屍網絡控制中心(C\&C) 安全事件—涉及少數擁有較強能力的電腦，向殭屍電腦發送指令。受影響的主要是伺服器。
+\item 殭屍電腦安全事件—涉及到大量的電腦，它們接收來自殭屍網絡控制中心(C\&C) 的指令。受影響的主要是家用電腦。
+\end{itemize}
+
+\subsubsection*{殭屍網絡控制中心安全事件}
+
+以下將是殭屍網絡控制中心(C\&C)安全事件的趨勢:
+\begin{figure}[h!]
+\centerline{\includegraphics[height=10cm]{BotnetCCBarChi}}
+\caption{殭屍網絡控制中心(C\&C)安全事件的趨勢}
+\end{figure}
+殭屍?舋萵惆謅中萿獐r在本季保持不變。
+
+本季有4個殭屍網絡控制中心的報告。其中一個被確定為Zeus的殭屍網絡控制中心，另外三個是IRC殭屍網絡控制中心。
+
+\subsubsection*{殭屍電腦安全事件}
+
+以下為殭屍電腦安全事件的趨勢:
+\begin{figure}[h!]
+\centerline{\includegraphics[height=10cm]{BotnetBotsBarChi}}
+\caption{殭屍電腦安全事件的趨勢}
+\end{figure}
+\FloatBarrier
+殭屍電腦安全事件在本季輕微上升，終止了自2014年第三季的跌勢。
+
+在2015年第二季，香港的殭屍電腦感染的數字增加了8\%，當中Virut殭屍網絡大增87\%，並取代Zeus成為香港第二大的殭屍網絡。
+除Virut外，有三個殭屍網絡首次成為十大殭屍網絡之一，它們是Ramnit， Tinba及Dyre。
+
+\textbf{Ramnit} 
+
+Ramnit是一隻全功能蠕蟲，它能偷取不同種類的敏感資料，包括網絡登入憑據，FTP登入憑據，瀏覽器cookies及檔案等。它能讓攻擊者存取受害電腦的檔案系統並操制該電腦。它亦能下載其他惡意程式。
+Ramnit在2010年首次出現並訊速搌散。現在它己在全世界感染了超過三百二十萬部電腦。在二月二十五日，一些執法機構發起了一個聯合行動\footnote{http://www.symantec.com/connect/blogs/ramnit-cybercrime-group-hit-major-law-enforcement-operation} ，由歐洲刑警組織領導並由包括賽門鐵克及微軟等業界伙伴協助，查封了操作Ramnit殭屍網絡的犯罪組織擁有的伺服器及其他設施。該行動發現大量受害者，令Ramnit一躍成為本季第六大殭屍網絡。
+Ramnit透過感染檔案、網站和社交網絡上的漏洞攻擊包，公共FTP伺服器以及綑綁其他軟件散播。
+
+\textbf{Tinba} 
+
+Tinba是一隻針對銀行的木馬程式，它能以瀏覽器中間人攻擊(MiTB)偷取銀行登入憑據。Tinba在2012年被首次發現。它初時針對土耳其用戶，後來再針對捷克。現在，它已能大範圍地針對世界各地不同的銀行\footnote{https://blog.avast.com/2014/09/15/tiny-banker-trojan-targets-customers-of-major-banks-worldwide/}。
+Tinba利用一些有趣的反沙盤技巧\footnote{https://www.f-secure.com/weblog/archives/00002810.html}來避過分析。首先，它透過檢查鼠標位置和現用視窗來偵測用戶的動作。如果Tinba是在沙盤上運行，鼠標位置和現用視窗永遠不會改變，Tinba便不會執行其主程式。另外，它亦會偵測電腦硬盤的大小，如果容量太少，該環境很可能是個沙盤，Tinba會自動關閉。
+Tinba利用漏洞攻擊包和垃圾電郵散播。
+
+
+\textbf{Dyre} 
+
+Dyre是一個針對銀行的木馬程式?A它在2015年成功地偷取數以百萬計金錢\footnote{http://securityintelligence.com/dyre-wolf/ }。它在受害電腦上監察用戶瀏覽的網站。當受害者登入目標銀行的網站，Dyre會顯示一個假網頁，聲稱網站出現問題，要求用戶致電一個號碼。若用戶照指示致電，罪犯會利用社交工程技巧在電話中騙取受害者的重要資訊，然後他們便可利用這些資訊把受害者戶口的錢轉到海外戶口。令情況更差的是，罪犯往往會在成功轉移金錢後馬上對受害者發動分散式阻斷服務攻擊以轉移視線，令受害人無暇發現戶口損失。
+像Tinba一樣，Dyre同樣利用反沙盤技巧 。不同的是Dyre只使用了一個技巧 ─ 檢查系統的處理器核心數目。若受害電腦只擁有一顆核心，程式會馬上關閉。由於大部份沙盤只會模擬一顆核心，而現代大部份電腦都擁有多核心，這個技巧雖然簡單但卻非常有效。研究人員嘗試以八個沙盤去測試一個Dyre樣本，全部都不能成功分析Dyre惡意程式。
+Dyre透過垃圾電郵散播。
+ 
+\begin{table}[h!]
+    \small
+     \begin{center}
+     \begin{tabular}{ c p{14cm} }
+     \toprule
+     & \textit{HKCERT促請使用者保護好電腦，免淪為殭屍網絡的一部分。} \\
+     \cmidrule(l){2-2}
+     \raisebox{-\totalheight}{\includegraphics[width=0.1\textwidth]{warning}}
+      & 
+      \begin{itemize}[topsep=0pt]
+      \item 安裝最新修補程式及更新
+      \item 安裝及使用有效的保安防護工具，並定期掃描
+      \item 設定強密碼以防止密碼容易被破解
+      \item 不要使用盜版的Windows系統，多媒體檔案及軟件
+      \item 不要使用沒有安全更新的Windows系統及軟件
+      \end{itemize}
+      \\\bottomrule
+      \end{tabular}
+      \end{center}
+      \end{table}
+      
+自2013年6月，本中心一直有跟進接收到的保安事件，並主動接觸本地互聯網供應商以清除殭屍網絡。現在殭屍網絡的清除行動仍在進行中，針對的是幾個主要的殭屍網絡家族，包括Pushdo, Citadel,ZeroAccess及GameOver Zeus。
+
+\begin{table}[h!]
+    \small
+     \begin{center}
+     \begin{tabular}{ c p{14cm} }
+     \toprule
+     & \textit{使用者可HKCERT提供的指引，偵測及清理殭屍網絡。} \\
+     \cmidrule(l){2-2}
+     \raisebox{-\totalheight}{\includegraphics[width=0.1\textwidth]{warning}}
+      & 
+      \begin{itemize}[topsep=0pt]
+      \item 殭屍網絡偵測及清理指引
+      \item https://www.hkcert.org/botnet
+      \end{itemize}
+      \\\bottomrule
+      \end{tabular}
+      \end{center}
+\end{table}
+\newpage
+\clearpage
+
+\section*{詳細數據}
+\section{網頁塗改}
+\subsection{數據統計}
+\begin{figure}[h!]
+\centerline{\includegraphics[height=10cm]{DefacementUniqueBarChi}}
+\caption{網頁塗改安全事件趨勢{\protect\footnote{數字曾被調整以排除未被確定的網頁塗改事件}}}
+\end{figure}
+
+\begin{table}[h!]
+    \small
+     \begin{center}
+     \begin{tabular}{ c p{14cm} }
+     \toprule
+     \multirow{4}{*}{\raisebox{-\totalheight}{\includegraphics[width=0.1\textwidth]{lightbulb}}} & 什麼是網頁塗改? \\\cline{2-2} 
+                            & \begin{itemize}[topsep=0pt]
+                                  \item 網頁塗改是在未經授權下，使用黑客攻擊方法去更改合法網站的內容。
+                              \end{itemize} \\\cline{2-2}
+                            & 有什麼潛在影響？ \\\cline{2-2} 
+                            & \begin{itemize}[topsep=0pt]
+                                  \item 網站內容的完整性被破壞
+                                  \item 不能存取網站原來的內容
+                                  \item 合法網站的擁有者的聲譽或受損害
+                                  \item 伺服器上存儲/處理的其他資訊亦有可能被黑客入侵，用作其他攻擊
+                             \end{itemize} \\
+      \\\bottomrule
+      \end{tabular}
+      \end{center}    
+\end{table}
+
+\begin{figure}[h!]
+\centerline{\includegraphics[height=13cm]{DefacementRatioBarChi}}
+\caption{網頁塗改全事件唯一網址/IP比}
+\end{figure}
+
+\begin{table}[h!]
+    \small
+     \begin{center}
+     \begin{tabular}{ c p{14cm} }
+     \toprule
+     \multirow{4}{*}{\raisebox{-\totalheight}{\includegraphics[width=0.1\textwidth]{lightbulb}}} & 甚麼是唯一網址/IP比？ \\\cline{2-2} 
+                            & \begin{itemize}[topsep=0pt]
+                                  \item 它是以唯一網址計算的安全事件數量除以以IP地址計算的安全事件數量
+                              \end{itemize} \\\cline{2-2}
+                            & 這個比例能顯示甚麼？ \\\cline{2-2} 
+                            & \begin{itemize}[topsep=0pt]
+                                  \item 以唯一網址計算的安全事件數量並不能反映被入侵伺服器的數量，因為一台伺服器可能提供很多唯一網址
+                                  \item 以IP地址計算的安全事件數量能更能關聯被入侵伺服器的數量
+                                  \item 這個比例越高，代表越多大型入侵事件
+                             \end{itemize} \\
+      \\\bottomrule
+      \end{tabular}
+      \end{center}    
+\end{table}
+
+
+\clearpage
+\section{釣魚網站}
+\subsection{數據統計}
+\begin{figure}[h!]
+\centerline{\includegraphics[height=12cm]{PhishingUniqueBarChi}}
+\caption{釣魚網站安全事件趨勢}
+\end{figure}
+
+\begin{table}[h!]
+    \small
+     \begin{center}
+     \begin{tabular}{ c p{14cm} }
+     \toprule
+     \multirow{4}{*}{\raisebox{-\totalheight}{\includegraphics[width=0.1\textwidth]{lightbulb}}} & 什麼是釣魚網站? \\\cline{2-2} 
+                            & \begin{itemize}[topsep=0pt]
+                                  \item 釣魚網站是冒充一個合法網站，以達到詐騙的目的。
+                              \end{itemize} \\\cline{2-2}
+                            &有什麼潛在影響？ \\\cline{2-2} 
+                            & \begin{itemize}[topsep=0pt]
+                                  \item 訪客的個人資料可能被盜取，導致金錢上的損失。
+                                  \item 不能存取網站原來的內容
+                                  \item 合法網站的擁有者的聲譽或受損害
+                                  \item 伺服器可能被黑客進一步入侵，用作其他攻擊。
+                             \end{itemize} \\
+      \\\bottomrule
+      \end{tabular}
+      \end{center}    
+\end{table}
+
+\newpage
+\FloatBarrier
+
+\begin{figure}[h!]
+\centerline{\includegraphics[height=13cm]{PhishingRatioBarChi}}
+\caption{釣魚網站安全事件唯一網址/IP比}
+\end{figure}
+
+\begin{table}[h!]
+    \small
+     \begin{center}
+     \begin{tabular}{ c p{14cm} }
+     \toprule
+     \multirow{4}{*}{\raisebox{-\totalheight}{\includegraphics[width=0.1\textwidth]{lightbulb}}} & 甚麼是唯一網址/IP比？ \\\cline{2-2} 
+                            & \begin{itemize}[topsep=0pt]
+                                  \item 它是以唯一網址計算的安全事件數量除以以IP地址計算的安全事件數量
+                              \end{itemize} \\\cline{2-2}
+                            & 這個比例能顯示甚麼？ \\\cline{2-2} 
+                            & \begin{itemize}[topsep=0pt]
+                                  \item 以唯一網址計算的安全事件數量並不能反映被入侵伺服器的數量，因為一台伺服器可能提供很多唯一網址
+                                  \item 以IP地址計算的安全事件數量能更能關聯被入侵伺服器的數量
+                                  \item 這個比例越高，代表越多大型入侵事件
+                             \end{itemize} \\
+      \\\bottomrule
+      \end{tabular}
+      \end{center}    
+\end{table}
+
+\clearpage
+\section{惡意程式寄存}
+\subsection{數據統計}
+
+\textit{hi}
+\begin{figure}[h!]
+\centerline{\includegraphics[height=10cm]{MalwareUniqueBarChi}}
+\caption{惡意程式寄存安全事件趨勢}
+\end{figure}
+\begin{table}[h!]
+    \small
+     \begin{center}
+     \begin{tabular}{ c p{14cm} }
+     \toprule
+     \multirow{4}{*}{\raisebox{-\totalheight}{\includegraphics[width=0.1\textwidth]{lightbulb}}} & 什麼是惡意程式寄存? \\\cline{2-2} 
+                            & \begin{itemize}[topsep=0pt]
+                                  \item 惡意程式寄存是透過網站散播惡意程式
+                              \end{itemize} \\\cline{2-2}
+                            & 有什麼潛在影響？ \\\cline{2-2} 
+                            & \begin{itemize}[topsep=0pt]
+                                  \item 訪客可能下載及安裝惡意程式，或執行網頁的惡意程式碼，導致被入侵。
+                                  \item 不能存取網站原來的內容
+                                  \item 網站的擁有者的聲譽或受損害
+                                  \item 伺服器可能被黑客進一步入侵，用作其他攻擊。
+                             \end{itemize} \\
+      \\\bottomrule
+      \end{tabular}
+      \end{center}    
+\end{table}
+
+\newpage
+\FloatBarrier
+
+\begin{figure}[h!]
+\centerline{\includegraphics[height=13cm]{MalwareRatioBarChi}}
+\caption{惡意程式寄存安全事件唯一網址/IP比}
+\end{figure}
+
+\begin{table}[h!]
+    \small
+     \begin{center}
+     \begin{tabular}{ c p{14cm} }
+     \toprule
+     \multirow{4}{*}{\raisebox{-\totalheight}{\includegraphics[width=0.1\textwidth]{lightbulb}}} & 甚麼是唯一網址/IP比？ \\\cline{2-2} 
+                            & \begin{itemize}[topsep=0pt]
+                                  \item 它是以唯一網址計算的安全事件數量除以以IP地址計算的安全事件數量
+                              \end{itemize} \\\cline{2-2}
+                            & 這個比例能顯示甚麼？ \\\cline{2-2} 
+                            & \begin{itemize}[topsep=0pt]
+                                  \item 以唯一網址計算的安全事件數量並不能反映被入侵伺服器的數量，因為一台伺服器可能提供很多唯一網址
+                                  \item 以IP地址計算的安全事件數量能更能關聯被入侵伺服器的數量
+                                  \item 這個比例越高，代表越多大型入侵事件
+                             \end{itemize} \\
+      \\\bottomrule
+      \end{tabular}
+      \end{center}    
+\end{table}
+
+
+\clearpage
+\section{殭屍網絡}
+\subsection{殭屍網絡控制中心(C\&C)}
+\begin{figure}[h!]
+\centerline{\includegraphics[height=12cm]{BotnetCCDisBarChi}}
+\caption{殭屍網絡控制中心安全事件的趨勢和分佈}
+\end{figure}
+
+\begin{table}[h!]
+    \small
+     \begin{center}
+     \begin{tabular}{ c p{14cm} }
+     \toprule
+     \multirow{4}{*}{\raisebox{-\totalheight}{\includegraphics[width=0.1\textwidth]{lightbulb}}} & 什麼是殭屍網絡控制中心? \\\cline{2-2} 
+                            & \begin{itemize}[topsep=0pt]
+                                  \item 殭屍網絡控制中心是網絡罪犯用來控制殭屍電腦的伺服器，通過發送命令來遙控殭屍電腦執行惡意活動，例如竊取個人信息財務信息和分散式阻斷服務攻擊。
+                              \end{itemize} \\\cline{2-2}
+                            & 有什麼潛在影響？ \\\cline{2-2} 
+                            & \begin{itemize}[topsep=0pt]
+                                  \item 當很多殭屍電腦連接時，伺服器可能嚴重負荷。
+                                  \item 伺服器可能收集到大量由殭屍電腦盜取的個人或財務數據。
+                             \end{itemize} \\
+      \\\bottomrule
+      \end{tabular}
+      \end{center}    
+\end{table}
+
+\subsection{殭屍電腦}
+\subsubsection{香港網絡內的主要殭屍網絡{\protect\footnote{Major Botnet Families are selected botnet families with considerable amount of security events reported from the information sources constantl across the reporting period.}}}
+
+殭屍網絡的規模是計算在報告時間內，每天嘗試連接到殭屍網絡的唯一IP地址的總數的最大值。換句話說，因為不是所有殭屍電腦都一定在同一天開機，殭屍網絡的真實規模應該比所見的數字更大。
+\begin{figure}[h!]
+\centerline{\includegraphics[trim={4cm 8cm 4cm 5.5cm},clip,height=8cm]{BotnetFamPie}}
+\caption{香港網絡內的主要殭屍網絡}
+\end{figure}
+
+\input{botnetchitable}
+
+\clearpage
+\begin{figure}[h!]
+\centerline{\includegraphics[height=8cm]{BotnetFamTopLineChi}}
+\caption{五大主要殭屍網絡趨勢}
+\end{figure}
+
+table\_top\_bot
+
+\begin{table}[h!]
+    \small
+     \begin{center}
+     \begin{tabular}{ c p{14cm} }
+     \toprule
+     \multirow{4}{*}{\raisebox{-\totalheight}{\includegraphics[width=0.1\textwidth]{lightbulb}}} & 什麼是殭屍網絡? \\\cline{2-2} 
+                            & \begin{itemize}[topsep=0pt]
+                                  \item 殭屍網絡由一群殭屍電腦組成。殭屍電腦，大多數是一般的電腦，由於被惡意程式感染而成為殭屍電腦。當被感染後，惡意程式會用盡方法隱藏，並隱身連接到命令與控制服務器，得到黑客的指令，並進行攻擊。
+                              \end{itemize} \\\cline{2-2}
+                            & 有什麼潛在影響？ \\\cline{2-2} 
+                            & \begin{itemize}[topsep=0pt]
+                                  \item 伺服器資源被佔用，並使用於犯罪活動上。
+                                  \item 盜取個人資料被及導致金錢上損失?C
+                                  \item 客的指令可能導致其他惡意活動，例如:散播惡意程式和進行分散式阻斷服務攻擊(DDoS)
+                             \end{itemize} \\
+      \\\bottomrule
+      \end{tabular}
+      \end{center}    
+\end{table}
+
+\pagebreak
+\appendix
+\pagebreak
+\section*{附錄}
+\section{資料來源}
+以下是資料的來源:
+\begin{table}[!htbp]
+\centering
+\begin{tabular}{lll}
+\hline
+{\bf 以下是資料的來源:} & {\bf 資料來源} & \bf 首次使用日期 \\\hhline{===}
+網頁塗改 & Zone - H & 2013-04
+\\\hline
+網頁塗改 & ArborNetwork: Atlas SRF-Phishing & 2013-04
+\\\hline
+網頁塗改 & CleanMX - Phishing & 2013-04
+\\\hline
+網頁塗改 & Millersmiles & 2013-04
+\\\hline
+網頁塗改 & Phishtank & 2013-04
+\\\hline
+惡意程式寄存 & Abuse.ch: Zeus Tracker - Binary URL & 2013-04
+\\\hline
+惡意程式寄存 & Abuse.ch: SpyEye Tracker - Binary URL & 2013-04
+\\\hline
+惡意程式寄存 & CleanMX - Malware & 2013-04
+\\\hline
+惡意程式寄存 & Malc0de & 2013-04
+\\\hline
+惡意程式寄存 & MalwareDomainList & 2013-04
+\\\hline
+惡意程式寄存 & Savour.cn & 2013-04
+\\\hline
+殭屍網絡控制中心(C\&Cs) & Abuse.ch: Zeus Tracker - C\&Cs & 2013-04
+\\\hline
+殭屍網絡控制中心(C\&Cs) & Abuse.ch: SpyEye Tracker - C\&Cs & 2013-04
+\\\hline
+殭屍網絡控制中心(C\&Cs) & Abuse.ch: Palevo Tracker - C\&Cs & 2013-04
+\\\hline
+殭屍網絡控制中心(C\&Cs) & Shadowserver - C\&Cs & 2013-09
+\\\hline
+殭屍電腦 & Arbor Network: Atlas SRF-Conficker & 2013-08
+\\\hline
+殭屍電腦 & Shadowserver - botnet\_drone & 2013-08
+\\\hline
+殭屍電腦 & Shadowserver - sinkhole\_http\_drone & 2013-08
+\\\hline
+Botnet (Bots) & Shadowserver - microsoft\_sinkhole & 2013-08
+\\\hline
+\end{tabular}
+\end{table}
+
+\FloatBarrier
+
+\section{地理位置識別方法}
+我們採用以下方法去識別方網絡的地理位置是否香港。
+\begin{table}[!htbp]
+\centering
+\begin{tabular}{ll}
+\hline
+{\bf 方法名稱} & {\bf 最近更新日期} \\\hhline{==}
+
+Maxmind & 2015-6-15
+\\\hline
+\end{tabular}
+\end{table}
+\newpage
+
+
+
+
+
+
+
+
+
+
+\end{document}
