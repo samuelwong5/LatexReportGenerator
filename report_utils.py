@@ -3,7 +3,8 @@ import os
 import sys
 
 import requests
-from plotly.graph_objs import *
+import plotly
+from plotly.graph_objs import Annotation, Bar, Data, Figure, Font, Layout
 import plotly.plotly as py
 
 
@@ -34,6 +35,11 @@ def read_csv(file, columns=[], max_row=-1):
             if row_count == 0:
                 break
     return header, data
+        
+  
+def plotly_init(cred):
+    usr, pwd = cred
+    plotly.tools.set_credentials_file(username=usr, api_key=pwd)
         
         
 def plotly_download_png(url, output):

@@ -1,10 +1,4 @@
 import csv
-import os
-import requests
-import sys
-
-from plotly.graph_objs import *
-import plotly.plotly as py
 
 import report_utils as rutil
   

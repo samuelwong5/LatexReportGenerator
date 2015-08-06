@@ -1,15 +1,8 @@
 import ConfigParser
-import csv
-import io
 import os 
-import requests
 import shutil
 import sys
-import stat
 
-import plotly
-from plotly.graph_objs import *
-import plotly.plotly as py
 from pyvirtualdisplay import Display
 from selenium import webdriver
 
@@ -62,6 +55,7 @@ def parse_config():
         ]
     ltx_output = cfg.get('output','latex')
     plotly_cred = (cfg.get('plotly','username'), cfg.get('plotly','api_key'))
+    rutil.plotly_init(plotly_cred)
     global config
     config = {'yymm': yymm, 'year': year, 'month': month, 'file_paths':file_paths, 'output_dir': ltx_output, 'plotly_cred': plotly_cred}   
 
@@ -119,14 +113,9 @@ def create_pie_charts():
     driver.quit()
     display.stop() 
 
-
-def plotly_setup():
-    usr, pwd = config['plotly_cred']
-    plotly.tools.set_credentials_file(username=usr, api_key=pwd)
     
 def main():    
     parse_config()
-    plotly_setup()
     create_bar_charts()
     create_pie_charts()
     ltxutils.create_report(config["file_paths"][2], config["file_paths"][1], config['output_dir'], config["yymm"])
