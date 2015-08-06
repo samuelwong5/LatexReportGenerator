@@ -15,128 +15,15 @@ from selenium import webdriver
 
 import ltxutils
 import report_csv_monthly
+import report_utils as rutil
 import gchart
 
-# Global variables
+# Global config dictionary
 config = []
 
-def get_file_name(file_path):
-    strSplit = file_path.split('/')
-    return (strSplit[len(strSplit)-1]).split('.')[0]
-    
-# file_path: relative file path to .csv file
-# max: optional maximum number of bars
-# bar_mode: 'overlay', 'stack', 'group'
-def draw_bar_chart(file_path, max=10, bar_mode='stack'):
-    # method scoped variables assigned in 'with' scope
-    data = []
-    headers = []
-    
-    # reading from csv file
-    with open(file_path) as csv_file:
-        dreader = csv.DictReader(csv_file)
-        headers = dreader.fieldnames
-        for row in dreader:
-            for i in range(len(headers)):
-                if (headers[i] == 'Total'):
-                    break
-                if (len(data) < i + 1):
-                    data.append([])
-                if (i == 0):
-                    data[0].append(row[headers[0]])
-                else:
-                    data[i].append(float(row[headers[i]]))
-                    
-    # converting raw data to plotly 'Bar' class
-    bars = []
-    for i in range(len(data[0])):
-        if (len(data[0][i]) > 15): # Cut label length to not exceed boundaries
-            data[0][i] = data[0][i][:13] + '...' 
-            
-    for i in range(1,len(data)):
-        if (max == -1):
-            bars.append(Bar(
-                            x=data[0],
-                            y=data[i],
-                            name=headers[i]
-                        ))
-        else:
-            bars.append(Bar(
-                            x=(data[0])[:10],
-                            y=(data[i])[:10],
-                            name=headers[i]
-                        ))
-    total_len = 10 if len(data[0]) > 10 else len(data[0])
-    total = data[1][:total_len]
-    for i in range(2, len(data)):
-        total = map(sum, zip(total, data[i][:total_len]))
-    if len(data) > 2:
-        all_columns =  sum([(data[x][:10]) for x in range(1,len(data))],[])
-        all_columns_height = list(all_columns)
-        for i in range(len(all_columns_height) - 1, 9, -1):
-            j = 10
-            all_columns_height[i] *= 0.4
-            while (i - j >= 0):
-                all_columns_height[i] += all_columns_height[i-j]
-                j += 10
-        for i in range(0, 10 if 10 <= len(all_columns_height) else len(all_columns_height)):
-            all_columns_height[i] /= 2
-    else:
-        all_columns = total[:10]
-        all_columns_height = total[:10] 
-        
-    # misc. chart setup
-    chart_data = Data(bars)
-    chart_title = get_file_name(file_path)
-    layout = Layout(
-        title=chart_title,
-        font=Font(
-            size=16
-        ),
-        barmode=bar_mode,
-        annotations=[Annotation(
-            x=xi,
-            y=zi,
-            text=str(int(yi)),
-            xanchor='center',
-            yanchor='bottom',
-            showarrow=False,
-        ) for xi, yi, zi in filter(lambda x: x[1] > (total[0] / 8), zip(data[0][:10] * (len(data)), all_columns, all_columns_height))]
-    )
-    fig = Figure(data=chart_data,layout=layout)
-    
-    # plot and download chart
-    plot_url = py.plot(fig, chart_title, filename=chart_title, auto_open=False)
-    print_no_newline('  ' + chart_title + '.png')
-    download_png(plot_url, config['output_dir'] + chart_title + '.png')      
 
-         
-def download_png(url, output):
-    r = requests.get(url + '.png', stream=True)
-    if r.status_code == 200:
-        dir = os.path.dirname(output)
-        if not os.path.exists(dir): 
-            os.makedirs(dir)
-        with open(output, 'w+b') as f:
-            for chunk in r.iter_content(1024):
-                f.write(chunk)
-        print_done()   
-
-        
-def print_no_newline(text):
-    sys.stdout.write('  ' + text + (' ' * (71 - len(text))))
-    sys.stdout.flush()  # Flush text to stdout without newline
-    
-    
 def print_done():
     print('[DONE]')    
-
-def fms2(y, x):
-    if x <= 0:
-        x += 12
-        y -= 1
-    y_str = str(y) if y >= 10 else '0' + str(y)
-    return ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][x-1] + y_str
     
     
 def format_month_str(y, x):
@@ -184,30 +71,30 @@ def create_bar_charts():
     print('Creating bar charts...')
     print('  Downloading bar charts...')
     bar_chart_dir = os.path.join(os.getcwd(), config["file_paths"][2])
-    bar_chart_csv = ['ISPServerAll',
-                     'ISPAll',
-                     'ISPBotnets']
-    for file in bar_chart_csv:
+    bar_charts = [('ISPServerAll', 'Top 10 ISPs by server related event types'),
+                  ('ISPBotnets', 'Top 10 ISPs by non-server event type'),
+                  ('ISPAll', 'Top 10 ISPs for all events')]
+    for file, title in bar_charts:
         shutil.copyfile(bar_chart_dir + file + '.csv', bar_chart_dir + file + 'Pie.csv')
-        draw_bar_chart(bar_chart_dir + file + '.csv')
-    
-    year = config['year']
-    month = config['month']    
+        header, data = rutil.read_csv(bar_chart_dir + file + '.csv', max_row=10)
+        plot_url = rutil.plotly_bar_chart(data[0][:10], zip(data[1:], header[1:]), title, 'stack')
+        rutil.plotly_download_png(plot_url, config['output_dir'] + file + '.png')
+
     # Create bar charts that use data from multiple months
-    report_csv_monthly.create_monthly_bar(config['file_paths'], [fms2(year, month-2), fms2(year, month-1), fms2(year, month)])
+    report_csv_monthly.create_monthly_bar(config)
  
  
 def create_pie_charts():
     print('Creating pie charts...')
-    print_no_newline('Starting virtual display...')
+    rutil.print_no_newline('Starting virtual display...')
     display = Display(visible=0, size=(1024, 768))
     display.start()
     print_done()
-    print_no_newline('Starting Flask webserver...')
+    rutil.print_no_newline('Starting Flask webserver...')
     gchart.set_input_dir(config['file_paths'][2])
     gchart.start_flask_process()
     print_done()
-    print_no_newline('Initializing Selenium webdriver...')        
+    rutil.print_no_newline('Initializing Selenium webdriver...')        
     driver = webdriver.Firefox()
     print_done()
     pie_chart_csv = ['DefacementTld',
@@ -221,7 +108,7 @@ def create_pie_charts():
                      'ISPServerAllPie',
                      'ISPAllPie']
     for file in pie_chart_csv:
-        print_no_newline('  ' + file + '.png')
+        rutil.print_no_newline('  ' + file + '.png')
         driver.get('http://localhost:5000/graph/' + file)
         base = driver.find_element_by_id('png').text
         # Decode Base64 string and save
@@ -243,8 +130,7 @@ def main():
     create_bar_charts()
     create_pie_charts()
     ltxutils.create_report(config["file_paths"][2], config["file_paths"][1], config['output_dir'], config["yymm"])
-    # os.system('killall -I python')
-        
+           
     
 if __name__ == "__main__":    
     main()    

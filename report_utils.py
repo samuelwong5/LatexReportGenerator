@@ -86,7 +86,7 @@ def plotly_bar_chart(x_label, data, chart_title='', bar_mode='group', annotation
     """
     print_no_newline(chart_title)
     anno_data = [] 
-    if bar_mode=='group' and annotations:
+    if (bar_mode=='group' or len(data) == 1) and annotations:
         # Previously calculated offsets for bar labels
         anno_offset = [(0,0), (-0.2,0.4), (-0.27,0.27)]
     
@@ -104,7 +104,8 @@ def plotly_bar_chart(x_label, data, chart_title='', bar_mode='group', annotation
         for i in range(len(data)):
             y_height += reduce(lambda x,y:sum_array(x,y), map(lambda z:z[0], data[:i]), [0] * len(data[0][0]))
             anno_text += data[i][0]
-        anno_data = zip(range(len(data[0][0])) * len(data), y_height, anno_text)        
+        max_height = max(map(int, y_height)) / 6
+        anno_data = filter(lambda x: int(x[2]) >= max_height, zip(range(len(data[0][0])) * len(data), y_height, anno_text))        
     bars = [Bar(x=x_label,y=data_array,name=data_name) for data_array, data_name in data]
     chart_data = Data(bars) 
     layout = Layout(

@@ -8,8 +8,23 @@ import plotly.plotly as py
 
 import report_utils as rutil
   
+# Formats month string 
+# Takes integer year, month into readable string (Apr15)
+def fms(year, month):
+    while month <= 0:
+        month += 12
+        year -= 1
+    y_str = str(year) if year >= 10 else '0' + str(year)   # year 9 -> 09, 8 -> 08 ...
+    return ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][month-1] + y_str  
     
-def create_monthly_bar(file_paths, months, output_dir='latex/'):
+def create_monthly_bar(config):
+    # Parse configs
+    file_paths = config['file_paths']
+    year = config['year']
+    month = config['month']
+    months = [fms(year, month-2), fms(year, month-1), fms(year, month)]
+    output_dir = config['output_dir']
+    
     ssfiles = map(lambda x: x + 'serverSummary.csv', file_paths)
     create(ssfiles, months, output_dir)
     
@@ -61,7 +76,6 @@ def create(file_paths, months, output_dir='latex/'):
     for file in file_paths:
         _, csv_data = rutil.read_csv(file, [1,2,3])
         data.append(csv_data)
-    print(data)
     server_dis_headers = ['Defacement','Phishing','Malware']                
     server_dis = [[],[],[]]
     for i in range(3):
