@@ -31,9 +31,23 @@ def prev_qrtr(year, qrtr, offset):
 
 
 def create_qrtr_graphs():
+    # File dependencies
+    required_files = ['report_qrtr_temp_chi.tex',
+                      'report_quarterly_temp.tex',
+                      'lightbulb.jpg',
+                      'warning.png',
+                      'HKCERT.png']   
     if len(sys.argv) < 2:
         print('Missing parameter: YYQQ (Y=Year / Q=Quarter)')
         sys.exit()
+    parse_config()
+    data_dir = config['data_dir']
+    output_dir = os.path.join(os.getcwd(), config['output_dir'])    
+    if sys.argv[1] == '--clean':
+        for file in os.listdir(output_dir):
+            if not file in required_files and os.path.isfile(output_dir + file):
+                os.remove(output_dir + file)
+        sys.exit(0)
     yymm = int(sys.argv[1])
     if yymm < 1000:
         print('Invalid input. Expected format: YYQQ')
@@ -43,16 +57,9 @@ def create_qrtr_graphs():
         print('Invalid quarter. Accepted range: 0 < QQ <= 4')
         sys.exit()
           
-    parse_config()
-    data_dir = config['data_dir']
-    output_dir = os.path.join(os.getcwd(), config['output_dir'])
+   
     
-    # Check file dependencies 
-    required_files = ['report_qrtr_temp_chi.tex',
-                      'report_quarterly_temp.tex',
-                      'lightbulb.jpg',
-                      'warning.png',
-                      'HKCERT.png']      
+    # Check file dependencies    
     file_missing = False                      
     for req in map(lambda x: config['output_dir'] + x, required_files):
         if not os.path.isfile(req):

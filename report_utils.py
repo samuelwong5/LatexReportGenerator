@@ -65,6 +65,8 @@ def plotly_download_png(url, output):
             for chunk in r.iter_content(1024):
                 f.write(chunk)
         print('[DONE]')
+    else:
+        print('[FAIL]')
     
 def plotly_line_chart(x_label, data, chart_title=''):
     """

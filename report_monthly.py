@@ -106,7 +106,7 @@ def create_server_summary(file_paths, months, output_dir='latex/'):
         plot_url = rutil.plotly_bar_chart(months,
                                           zip(gen_data, gen_headers),
                                           type + ' General Statistics')
-        rutil.plotly_download_png(plot_url, output_dir + output_dir + type + 'Gen.png')
+        rutil.plotly_download_png(plot_url, output_dir + type + 'Gen.png')
     
     url_ip_headers = ['URL/IP Ratio']
 
@@ -130,12 +130,23 @@ def format_month_str(y, x):
 
     
 def parse_config():
+    # File dependencies 
+    required_files = ['footer.tex',
+                      'header.tex',
+                      'HKCERT.png']         
+    
     cfg = ConfigParser.ConfigParser(allow_no_value=True)
     cfg.read('config.cfg')
+    ltx_output = cfg.get('monthly','output')
     data_folder = cfg.get('monthly','input')
     if len(sys.argv) < 2:
         print ('[FATAL] Error: Missing YYMM argument.')
         sys.exit(1)
+    if sys.argv[1] == '--clean':
+        for file in os.listdir(ltx_output):
+            if (not file in required_files) and os.path.isfile(ltx_output + file):
+                os.remove(ltx_output + file)
+        sys.exit(0)
     if len(sys.argv[1]) != 4:
         print('[FATAL] Error: Argument should be in format YYMM (e.g. 1403 for 2014 March)')
         sys.exit(1)
@@ -153,9 +164,18 @@ def parse_config():
         data_folder + format_month_str(year, month - 1) + '/report/',  # 1 month ago
         data_folder + format_month_str(year, month) + '/report/'       # current month
         ]
-    ltx_output = cfg.get('monthly','output')
     plotly_cred = (cfg.get('plotly','username'), cfg.get('plotly','api_key'))
     rutil.plotly_init(plotly_cred)
+    
+    # Check file dependencies
+    file_missing = False                      
+    for req in map(lambda x: ltx_output + x, required_files):
+        if not os.path.isfile(req):
+            print('[FATAL] Missing file: ' + req)
+            file_missing = True
+    if file_missing:
+        sys.exit('[FATAL] Please check the data path is correct in config.cfg')
+        
     global config
     config = {'yymm': yymm, 'year': year, 'month': month, 'file_paths':file_paths, 'output_dir': ltx_output, 'plotly_cred': plotly_cred}   
 
