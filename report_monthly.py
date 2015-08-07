@@ -4,12 +4,8 @@ import os
 import shutil
 import sys
 
-from pyvirtualdisplay import Display
-from selenium import webdriver
-
 import ltxutils
 import report_utils as rutil
-import gchart
 
 
 # Global config dictionary
@@ -183,18 +179,6 @@ def create_bar_charts():
  
  
 def create_pie_charts():
-    print('Creating pie charts...')
-    rutil.print_no_newline('Starting virtual display...')
-    display = Display(visible=0, size=(1024, 768))
-    display.start()
-    print_done()
-    rutil.print_no_newline('Starting Flask webserver...')
-    gchart.set_input_dir(config['file_paths'][2])
-    gchart.start_flask_process()
-    print_done()
-    rutil.print_no_newline('Initializing Selenium webdriver...')        
-    driver = webdriver.Firefox()
-    print_done()
     pie_chart_csv = ['DefacementTld',
                      'ISPDefacement',
                      'ISPMalware',
@@ -205,18 +189,8 @@ def create_pie_charts():
                      'ISPBotnetsPie',
                      'ISPServerAllPie',
                      'ISPAllPie']
-    for file in pie_chart_csv:
-        rutil.print_no_newline(file + '.png')
-        driver.get('http://localhost:5000/graph/' + file)
-        base = driver.find_element_by_id('png').text
-        # Decode Base64 string and save
-        with open(config['output_dir'] + file + '.png', 'w+b') as f:
-            f.write(base[22:].decode('base64'))
-        print_done()           
-    gchart.stop_flask_process()
-    driver.quit()
-    display.stop() 
-
+    rutil.google_bar_chart(zip(pie_chart_csv, pie_chart_csv), config['file_paths'][2], config['output_dir'])
+    
     
 def main():    
     parse_config()

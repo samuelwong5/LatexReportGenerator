@@ -6,7 +6,10 @@ import requests
 import plotly
 from plotly.graph_objs import Annotation, Bar, Data, Figure, Font, Layout, Scatter
 import plotly.plotly as py
+from pyvirtualdisplay import Display
+from selenium import webdriver
 
+import report_gchart as gchart
 
 def read_csv(file, columns=[], max_row=-1):
     """
@@ -61,7 +64,7 @@ def plotly_download_png(url, output):
         with open(output, 'w+b') as f:
             for chunk in r.iter_content(1024):
                 f.write(chunk)
-    print('[DONE]')
+        print('[DONE]')
     
 def plotly_line_chart(x_label, data, chart_title=''):
     """
@@ -72,6 +75,7 @@ def plotly_line_chart(x_label, data, chart_title=''):
     data        -- a list of (data set, data set title)
     chart_title -- the above chart title (default: empty string)    
     """
+    print_no_newline(chart_title)
     data = Data([Scatter(x=x_label,y=data_array,mode='lines+markers',
                       name=data_name) for data_array, data_name in data])
     layout = Layout(title=chart_title)
@@ -133,6 +137,33 @@ def plotly_bar_chart(x_label, data, chart_title='', bar_mode='group', annotation
     return py.plot(fig, chart_title, auto_open=False)
     
 
+def google_bar_chart(files, input_dir, output_dir):
+    print('Creating pie charts...')
+    print_no_newline('Starting virtual display...')
+    display = Display(visible=0, size=(1024, 768))
+    display.start()
+    print('[DONE]')
+    print_no_newline('Starting Flask webserver...')
+    gchart.set_input_dir(input_dir)
+    gchart.start_flask_process()
+    print('[DONE]')
+    try:
+        print_no_newline('Initializing Selenium webdriver...')        
+        driver = webdriver.Firefox()
+        print('[DONE]')
+        for url, file in files:
+            print_no_newline(file)
+            driver.get('http://localhost:5000/graph/' + url)
+            png_encoded = driver.find_element_by_id('png').text
+            with open(output_dir + file + '.png', 'w+b') as f:
+                f.write(png_encoded[22:].decode('base64'))  # Strip header
+            print('[DONE]')
+        display.stop()
+        driver.quit()
+    finally:
+        gchart.stop_flask_process()
+    
+    
 def sum_array(fst, snd):
     """
     Utility function to sum two arrays by pairing
@@ -145,7 +176,7 @@ def sum_array(fst, snd):
     return map(lambda x,y:str(int(x)+int(y)), fst, snd)   
     
     
-def print_no_newline(text, width=71):
+def print_no_newline(text, width=71, prespace=2):
     """
     Utility function to print text without newline
     
@@ -153,6 +184,9 @@ def print_no_newline(text, width=71):
     text  -- the text to be printed
     width -- total padding for text (default: 71)
     """
-    sys.stdout.write('  ' + text + (' ' * (width - len(text))))
+    len = width - reduce(lambda x,y: x + (1 if ord(y) < 128 else 2), text, 0)
+    while len < 0:
+        len += width
+    sys.stdout.write((' ' * prespace) + text + (' ' * len))
     sys.stdout.flush()  
     

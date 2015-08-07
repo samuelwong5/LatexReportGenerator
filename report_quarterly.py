@@ -5,14 +5,10 @@ import csv
 import os
 import sys
 
-from pyvirtualdisplay import Display
-from selenium import webdriver
-
-import gchart
 import report_utils as rutil
 
 
-#Global config dictionary
+# Global config dictionary
 config = {}
 
 
@@ -37,19 +33,33 @@ def prev_qrtr(year, qrtr, offset):
 def create_qrtr_graphs():
     if len(sys.argv) < 2:
         print('Missing parameter: YYQQ (Y=Year / Q=Quarter)')
-        return -1
+        sys.exit()
     yymm = int(sys.argv[1])
     if yymm < 1000:
         print('Invalid input. Expected format: YYQQ')
-        return -1
+        sys.exit()
     qrtr = yymm % 10
     if qrtr <= 0 or qrtr > 4:
         print('Invalid quarter. Accepted range: 0 < QQ <= 4')
-        return -1
-        
+        sys.exit()
+          
     parse_config()
     data_dir = config['data_dir']
     output_dir = os.path.join(os.getcwd(), config['output_dir'])
+    
+    # Check file dependencies 
+    required_files = ['report_qrtr_temp_chi.tex',
+                      'report_quarterly_temp.tex',
+                      'lightbulb.jpg',
+                      'warning.png',
+                      'HKCERT.png']      
+    file_missing = False                      
+    for req in map(lambda x: config['output_dir'] + x, required_files):
+        if not os.path.isfile(req):
+            print('[FATAL] Missing file: ' + req)
+            file_missing = True
+    if file_missing:
+        sys.exit('[FATAL] Please check the data path is correct in config.cfg')
     
     year = (yymm - qrtr) / 100
     qrtr_label = map(lambda x: prev_qrtr(year, qrtr, x),
@@ -211,20 +221,8 @@ def create_qrtr_graphs():
                    u'安全事件趨勢')      
     rutil.plotly_download_png(plot_url, output_dir + 'TotalEventBarChi.png')   
     
-    
     # Botnet Family Pie Chart (Google Charts)
-    gchart.set_input_dir('QOutput/' + str(yymm) + '/report/')
-    gchart.start_flask_process()
-    display = Display(visible=0, size=(1024, 768))
-    display.start()
-    driver = webdriver.Firefox()
-    driver.get('http://localhost:5000/graph/botnetDailyMax')
-    with open('selenium_debug.html','w+') as f:
-        f.write(driver.page_source.encode('utf-8'))
-    base = driver.find_element_by_id('png').text
-    with open(output_dir + 'BotnetFamPie.png', 'w+b') as f:
-        f.write(base[22:].decode('base64'))
-    gchart.stop_flask_process()
+    rutil.google_bar_chart([('botnetDailyMax','BotnetFamPie')], data_dir, output_dir)
     
     headers, data = rutil.read_csv(data_paths[4] + 'botnetDailyMax.csv', [0,1])
     _, prev_data = rutil.read_csv(data_paths[3] + 'botnetDailyMax.csv', [0,1])
