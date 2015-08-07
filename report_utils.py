@@ -137,7 +137,7 @@ def plotly_bar_chart(x_label, data, chart_title='', bar_mode='group', annotation
     return py.plot(fig, chart_title, auto_open=False)
     
 
-def google_bar_chart(files, input_dir, output_dir):
+def google_pie_chart(files, input_dir, output_dir):
     print('Creating pie charts...')
     print_no_newline('Starting virtual display...')
     display = Display(visible=0, size=(1024, 768))

@@ -222,7 +222,9 @@ def create_qrtr_graphs():
     rutil.plotly_download_png(plot_url, output_dir + 'TotalEventBarChi.png')   
     
     # Botnet Family Pie Chart (Google Charts)
-    rutil.google_bar_chart([('botnetDailyMax','BotnetFamPie')], data_dir, output_dir)
+    rutil.google_pie_chart([('botnetDailyMax','BotnetFamPie')], 
+                            data_paths[len(data_paths) - 1], 
+                            output_dir)
     
     headers, data = rutil.read_csv(data_paths[4] + 'botnetDailyMax.csv', [0,1])
     _, prev_data = rutil.read_csv(data_paths[3] + 'botnetDailyMax.csv', [0,1])

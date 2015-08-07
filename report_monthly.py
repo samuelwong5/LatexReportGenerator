@@ -189,7 +189,7 @@ def create_pie_charts():
                      'ISPBotnetsPie',
                      'ISPServerAllPie',
                      'ISPAllPie']
-    rutil.google_bar_chart(zip(pie_chart_csv, pie_chart_csv), config['file_paths'][2], config['output_dir'])
+    rutil.google_pie_chart(zip(pie_chart_csv, pie_chart_csv), config['file_paths'][2], config['output_dir'])
     
     
 def main():    
