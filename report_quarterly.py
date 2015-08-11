@@ -294,11 +294,13 @@ def create_qrtr_graphs():
     print('Rendering PDF')
     os.chdir(output_dir)
     os.system('pdflatex SecurityWatchReport.tex')    
+    os.system('pdflatex SecurityWatchReport.tex')   # Second time to replace references and ToC  
     os.rename('SecurityWatchReport.pdf', 
               'SecurityWatchReport' + qrtr_label[4] + '.pdf')  
 
     print('Report successfully compiled. Exiting now...')   
     os.system('xelatex SecurityWatchReportChi.tex')    
+    os.system('xelatex SecurityWatchReportChi.tex') # Second time to replace references and ToC
     os.rename('SecurityWatchReportChi.pdf', 
               'SecurityWatchReportChi' + qrtr_label[4] + '.pdf')  
     print('Report successfully compiled. Exiting now...')   

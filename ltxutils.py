@@ -161,6 +161,16 @@ def read_csv(file_path, dir):
                         percent_change[i] = str((new - old) * 100 / old)
             #data.append(percent_change)
             headers.append('+-\\%')
+        if 'Botnet Family' in hdr:
+            total_column_offset += 1
+            for row in dreader:
+                for i in range(10):
+                    if row['Botnet Family'] == data[2][i]:
+                        if row['Count'] is not '':
+                            old = int(row[hdr[len(hdr)-1]])
+                            new = int(data[len(data)-1][i])
+                            percent_change[i] = str((new - old) * 100 / old)
+            headers.append('+-\\%')
     for i in range(len(data[0])):
         percentages.append(str(int(data[len(data)-1][i]) * 100 / total_count))
     if total_column_offset > 1:
@@ -343,6 +353,7 @@ def create_report(dir, prev_month_dir, output, yymm):
     print('Rendering .pdf')
     os.chdir(os.path.join(os.getcwd(), output))
     os.system('pdflatex SecurityWatchReport.tex')    
+    os.system('pdflatex SecurityWatchReport.tex')    # Second time to replace references and ToC
     os.rename('SecurityWatchReport.pdf', 
               'SecurityWatchReport' + str(yymm) + '.pdf')  
     print('Report successfully compiled. Exiting now...')
