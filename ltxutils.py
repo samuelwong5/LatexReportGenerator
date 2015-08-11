@@ -23,7 +23,7 @@ class LatexDocument():
         self.ltx += '\\begin{figure}[h]\n\\centerline{\\includegraphics['
         self.ltx += param + ']{' 
         self.ltx += img + '}}\n'
-        self.ltx += '\\caption{' + sanitize(caption) + '}\n\\end{figure}\n'
+        self.ltx += '\\caption{' + sanitize(caption) + '}\n\\label{fig:'+ img + '}\n\\end{figure}\n'
     
     # table with ranks and change
     def rc_table(self, file_path, dir, max_row=10):
