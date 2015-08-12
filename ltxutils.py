@@ -30,15 +30,11 @@ class LatexDocument():
     # table with ranks and change
     def rc_table(self, file_path, dir, max_row=10):
         input_dir, prev_dir = dir
-        data, headers = read_csv(input_dir + file_path, dir)
-        data_prev, headers_prev = read_csv(prev_dir + file_path, dir)
-        for i in range(10):
-            if data[2][i] in data_prev[2][:i]:
-                data[1][i] = '$\\Downarrow$'
-            elif data[2][i] == data_prev[2][i]:
-                data[1][i] = '$\\rightarrow$'
-            elif data[2][i] in data_prev[2][i+1:]:
-                data[1][i] = '$\\Uparrow$'
+        csv_headers, csv_data = rutil.read_csv(input_dir + file_path)
+        prev_headers, prev_data = rutil.read_csv(prev_dir + file_path)
+    
+        data, headers = calculate_rank_change([(csv_headers, csv_data),(prev_headers, prev_data)])
+          
         file_name = get_file_name(file_path)
         self.table(data, headers, file_name)
 
@@ -86,51 +82,17 @@ class LatexDocument():
     def write_to_file(self, fpath):
         with open(fpath, 'w+') as f:
             f.write(self.ltx)
-            
-            
-### Utility Methods ###            
-def string_length_split(str, max):
-    '''Splits a string into an array where each
-       string is no longer than a given max length
-    '''
-    str_split = str.split(' ')
-    count = 0
-    curr = max
-    result = ['']
-    for word in str_split:
-        if (len(word) < curr):
-            result[count] += word + ' '
-            curr -= (len(word) + 1)
-        else:
-            result.append('')
-            count += 1
-            curr = max
-            result[count] += word + ' '
-            curr -= (len(word) + 1)
-    return(result)
-
-def sanitize(str):
-    '''Escapes special characters in LaTeX'''
-    return str.replace('&', '\\&').replace('#','')
-
-def get_file_name(file_path):
-    '''Gets the file name from absolute/relative file path'''
-    strSplit = file_path.split(os.sep)
-    return (strSplit[len(strSplit) - 1]).split('.')[0]
-            
-def read_csv(file_path, dir):        
-    '''Reads a csv file and returns a tuple (headers, data)'''
-    input_dir, prev_dir = dir
+         
+  
+def calculate_rank_change(data):
+    csv_headers, csv_data = data[0]
+    prev_headers, prev_data = data[1]
     data = [[],[]]
     headers = ['Rank','+-']
-    
-    csv_headers, csv_data = rutil.read_csv(file_path)
-    
+      
     # add rank column (assumes csv is sorted)
     data[0] = map(str,range(1,len(csv_data[0])+1))
 
-    prev_headers, prev_data = rutil.read_csv(file_path.replace(input_dir, prev_dir))
-        
     # add change in rank wrt previous column
     total = 0
     data[1] = len(csv_data[0]) * ['NEW']
@@ -170,9 +132,43 @@ def read_csv(file_path, dir):
             percentages.append(str(int(csv_data[len(csv_data)-1][i]) * 100 / total))
     headers.append('Total\\%')
     data.append(percentages)
+    
+    return data, headers    
 
-    return (data, headers)
+  
+            
+### Utility Methods ###            
+def string_length_split(str, max):
+    '''Splits a string into an array where each
+       string is no longer than a given max length
+    '''
+    str_split = str.split(' ')
+    count = 0
+    curr = max
+    result = ['']
+    for word in str_split:
+        if (len(word) < curr):
+            result[count] += word + ' '
+            curr -= (len(word) + 1)
+        else:
+            result.append('')
+            count += 1
+            curr = max
+            result[count] += word + ' '
+            curr -= (len(word) + 1)
+    return(result)
 
+    
+def sanitize(str):
+    '''Escapes special characters in LaTeX'''
+    return str.replace('&', '\\&').replace('#','')
+
+    
+def get_file_name(file_path):
+    '''Gets the file name from absolute/relative file path'''
+    strSplit = file_path.split(os.sep)
+    return (strSplit[len(strSplit) - 1]).split('.')[0]
+     
     
 def summary(doc, title, file_name, dir_t):
     summ_param = 'height=8.5cm'
@@ -275,28 +271,23 @@ def create_report(dir, prev_month_dir, output, yymm):
         title = i[0]
         report.subsection('Top 10 ISPs for ' + i[0])
         report.figure(i[2] + 'Pie', i[1] + ' - Top ISPs', pie_chart_trim_param)
-        isp_all_data, isp_all_hdr = read_csv(input_dir + i[2] + '.csv', (input_dir, prev_dir))
-        data_prev, headers_prev = read_csv(prev_dir + i[2] + '.csv',  (input_dir, prev_dir))
-        for i in range(10):
-            if isp_all_data[2][i] in data_prev[2][:i]:
-                isp_all_data[1][i] = '$\\Downarrow$'
-            elif isp_all_data[2][i] == data_prev[2][i]:
-                isp_all_data[1][i] = '$\\rightarrow$'
-            elif isp_all_data[2][i] in data_prev[2][i+1:]:
-                isp_all_data[1][i] = '$\\Uparrow$'
-        report.table(isp_all_data[:3] + isp_all_data[len(isp_all_data)-3:len(isp_all_data)-1],
-                     isp_all_hdr[:3] + isp_all_hdr[len(isp_all_data)-3:len(isp_all_data)-1], 'Top 10 ISPs for ' + title)
+        isp_all_hdr, isp_all_data = rutil.read_csv(input_dir + i[2] + '.csv')
+        headers_prev, data_prev = rutil.read_csv(prev_dir + i[2] + '.csv')
+        data, headers = calculate_rank_change([(isp_all_hdr, isp_all_data), (headers_prev, data_prev)])
+        
+        report.table(data[:3] + data[len(data)-3:len(data)-1],
+                     headers[:3] + headers[len(data)-3:len(data)-1], 'Top 10 ISPs for ' + title)
         report.newpage()
     
     report.subsection('Top 10 ISPs by event types')
     report.subsubsection('Non-server related event types')
     report.figure('ISPBotnets', 'Top 10 ISPs by non-server event type', isp_param)
-    bot_data, bot_hdr = read_csv(input_dir + 'ISPBotnets.csv', (input_dir, prev_dir))
-    report.table(bot_data[2:4], bot_hdr[2:4])
+    bot_hdr, bot_data = rutil.read_csv(input_dir + 'ISPBotnets.csv')
+    report.table(bot_data[0:2], bot_hdr[0:2])
     report.newpage()
     report.subsubsection('Server related event types')
     report.figure('ISPServerAll', 'Top 10 ISPs by server related event types', isp_param)
-    report.table(isp_all_data[2:7], isp_all_hdr[2:7])
+    report.table(isp_all_data[0:5], isp_all_hdr[0:5])
     report.newpage()
     print('[DONE]')
     
