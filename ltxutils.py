@@ -3,6 +3,8 @@ import math
 import os
 import sys
 
+import report_utils as rutil
+
 class LatexDocument():
     def __init__(self):
          self.ltx = ''
@@ -119,64 +121,56 @@ def get_file_name(file_path):
 def read_csv(file_path, dir):        
     '''Reads a csv file and returns a tuple (headers, data)'''
     input_dir, prev_dir = dir
-    data = []
+    data = [[],[]]
     headers = ['Rank','+-']
     
-    # reading from csv file
-    with open(file_path) as csv_file:
-        dreader = csv.DictReader(csv_file)
-        headers += dreader.fieldnames
-        total_count = 0
-        row_count = 1
-        for row in dreader:
-            for i in range(len(headers)):
-                if (len(data) < len(headers)):
-                    data.append([])
-                if (i == 0):
-                    data[0].append(str(row_count))
-                    row_count += 1
-                elif (i==1):
-                    data[1].append('NEW')
-                elif (i==len(headers)-1):
-                    if row[headers[i]] == '':
-                        data[i].append(0)
-                    else:
-                        data[i].append(row[headers[i]])
-                        total_count += int(row[headers[i]])                    
-                else:
-                    data[i].append(row[headers[i]])
-    percent_change = ['N/A'] * 10
+    csv_headers, csv_data = rutil.read_csv(file_path)
+    
+    # add rank column (assumes csv is sorted)
+    data[0] = map(str,range(1,len(csv_data[0])+1))
+
+    prev_headers, prev_data = rutil.read_csv(file_path.replace(input_dir, prev_dir))
+        
+    # add change in rank wrt previous column
+    total = 0
+    data[1] = len(csv_data[0]) * ['NEW']
+    min = lambda x,y: x if x < y else y
+    for i in range(min(len(csv_data[0]), len(prev_data[0]))):
+        count = csv_data[len(csv_data)-1][i]
+        if count is not '':
+            total += int(count)
+        if csv_data[0][i] in prev_data[0][:i]:
+            data[1][i] = '$\\Downarrow$'
+        elif csv_data[0][i] == prev_data[0][i]:
+            data[1][i] = '$\\rightarrow$'
+        elif csv_data[0][i] in prev_data[0][i+1:]:
+            data[1][i] = '$\\Uparrow$'
+  
+    data += csv_data
+    headers += csv_headers
+  
+    # add change % wrt previous column
+    percent_change = ['N/A'] * len(csv_data[0])
+    if ('ISP' in csv_headers) or ('Botnet Family' in csv_headers):
+        for i in range(len(prev_data[0])):
+            for j in range(len(csv_data[0])):
+                if prev_data[0][i] == csv_data[0][j]:
+                    old = prev_data[1][i]
+                    new = csv_data[1][j]
+                    if (old != '') and (new != '') and (old != '0'):
+                        percent_change[j] = str((int(new) - int(old)) * 100 / int(old))
+                    break
+        headers.append('+-\\%')
+        data.append(percent_change)        
+    
+    # add percentages column
     percentages = []
-    total_column_offset = 1
-    with open(file_path.replace(input_dir, prev_dir)) as csv_file:
-        dreader = csv.DictReader(csv_file)
-        hdr = dreader.fieldnames
-        if 'ISP' in hdr:
-            total_column_offset += 1
-            for row in dreader:
-                for i in range(10):
-                    if data[2][i] == row['ISP']:
-                        old = int(row[hdr[len(hdr)-1]])
-                        new = int(data[len(data)-1][i])
-                        percent_change[i] = str((new - old) * 100 / old)
-            #data.append(percent_change)
-            headers.append('+-\\%')
-        if 'Botnet Family' in hdr:
-            total_column_offset += 1
-            for row in dreader:
-                for i in range(10):
-                    if row['Botnet Family'] == data[2][i]:
-                        if row['Count'] is not '':
-                            old = int(row[hdr[len(hdr)-1]])
-                            new = int(data[len(data)-1][i])
-                            percent_change[i] = str((new - old) * 100 / old)
-            headers.append('+-\\%')
     for i in range(len(data[0])):
-        percentages.append(str(int(data[len(data)-1][i]) * 100 / total_count))
-    if total_column_offset > 1:
-        data.append(percent_change)
-    data.append(percentages)
+        if csv_data[len(csv_data)-1][i] != '':
+            percentages.append(str(int(csv_data[len(csv_data)-1][i]) * 100 / total))
     headers.append('Total\\%')
+    data.append(percentages)
+
     return (data, headers)
 
     
@@ -353,7 +347,7 @@ def create_report(dir, prev_month_dir, output, yymm):
     print('Rendering .pdf')
     os.chdir(os.path.join(os.getcwd(), output))
     os.system('pdflatex SecurityWatchReport.tex')    
-    os.system('pdflatex SecurityWatchReport.tex')    # Second time to replace references and ToC
+    os.system('pdflatex SecurityWatchReport.tex')  # Second time to replace references and ToC
     os.rename('SecurityWatchReport.pdf', 
               'SecurityWatchReport' + str(yymm) + '.pdf')  
     print('Report successfully compiled. Exiting now...')
