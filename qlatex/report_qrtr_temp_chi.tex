@@ -11,6 +11,15 @@
 \usepackage{xeCJK}
 \setCJKmainfont{SimSun}
 
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks,
+    citecolor=black,
+    filecolor=black,
+    linkcolor=black,
+    urlcolor=black
+}
+
 \begin{document}
 
 \vspace{1cm}
@@ -422,7 +431,7 @@ Dyre透過垃圾電郵散播。
 
 殭屍網絡的規模是計算在報告時間內，每天嘗試連接到殭屍網絡的唯一IP地址的總數的最大值。換句話說，因為不是所有殭屍電腦都一定在同一天開機，殭屍網絡的真實規模應該比所見的數字更大。
 \begin{figure}[h!]
-\centerline{\includegraphics[trim=4cm 8cm 4cm 5.5cm,clip,height=8cm]{BotnetFamPie}}
+\centerline{\adjincludegraphics[trim=4cm 8cm 4cm 5.5cm,clip,height=8cm]{BotnetFamPie}}
 \caption{香港網絡內的主要殭屍網絡}
 \end{figure}
 
@@ -668,7 +677,7 @@ ZeroAccess	& max++ & 木馬程式 & \tabitem 以rootkit技術  & \tabitem 下載
 &&& \tabitem 偽裝成有效檔\\
 &&& 案(例如:多媒體\\
 &&& 檔案，keygen)	\\\hline
-Zeus	& Gameover & 針對網上 & \tabitem 隱身技術  & \tabitem l	竊取銀行登入認 \\
+Zeus	& Gameover & 針對網上 & \tabitem 隱身技術  & \tabitem 	竊取銀行登入認 \\
 & 	 & 銀行的木 &	\tabitem 通過P2P網絡& 證資料及敏感資料 \\
 &&馬程式& 進行通訊 & \tabitem 瀏覽器中間人攻撃 \\
 &&& \tabitem 利用「路過式下載」 & \tabitem 按鍵記錄\\
