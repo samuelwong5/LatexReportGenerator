@@ -422,7 +422,7 @@ Dyre透過垃圾電郵散播。
 
 殭屍網絡的規模是計算在報告時間內，每天嘗試連接到殭屍網絡的唯一IP地址的總數的最大值。換句話說，因為不是所有殭屍電腦都一定在同一天開機，殭屍網絡的真實規模應該比所見的數字更大。
 \begin{figure}[h!]
-\adjincludegraphics[trim=4cm 8cm 4cm 5.5cm,clip,height=8cm]{BotnetFamPie}
+\centerline{\includegraphics[trim=4cm 8cm 4cm 5.5cm,clip,height=8cm]{BotnetFamPie}}
 \caption{香港網絡內的主要殭屍網絡}
 \end{figure}
 
@@ -520,6 +520,163 @@ Botnet (Bots) & Shadowserver - microsoft\_sinkhole & 2013-08
 
 Maxmind & 2015-6-15
 \\\hline
+\end{tabular}
+\end{table}
+
+\section{主要殭屍網絡}
+\begin{table}[!htbp]
+\centering
+\caption{主要殭屍網絡}
+\begin{tabular}{lllll} \hline
+\bf 主要殭屍網絡 & \bf 別名 & \bf 性質 & \bf 感染方法 & \bf 攻擊/影響\\\hline
+BankPatch & MultiBanker     &針對網上  &\tabitem 透過成人網站 &監視特定的銀行 \\
+          & Patcher         &銀行的木  &\tabitem 有問題的多媒 &網站並竊取用戶 \\
+          & BankPatcher     &馬程式   & 體編解碼器            & 密碼、信用卡資 \\
+          &                         &        & \tabitem 垃圾電郵    & 料及其他敏感財\\
+ &&&\tabitem 即時通訊系統&務數據 \\\hline
+BlackEnergy & 無 & DDoS & \tabitem 以rootkit技術 & 發動分散式阻斷 \\
+&&木馬程式&保持隠藏&服務攻擊(DDoS)\\
+&&&\tabitem 使用流程注入技術 & \\
+&&&\tabitem 擁有強的加密 & \\
+&&& 技術和模塊化的架構 \\\hline
+Citadel  & 無     &針對網上  &逃避及停止安 &\tabitem 竊取銀行登入認 \\
+          &       &銀行的木  &全檢測工具 &證資料及敏感資料 \\
+          &      &馬程式    &          & \tabitem 按鍵記錄 \\
+ & & & & \tabitem 截圖擷取 \\
+ & & & & \tabitem 視訊擷取 \\
+ & & & & \tabitem 瀏覽器中間人攻撃 \\
+ & & & & \tabitem 勒索軟件 \\\hline
+Conficker & Downadup & 蠕蟲 & \tabitem 動態網域產生& \tabitem 利用Window伺服 \\
+ & Kido & & 演算法 (DGA) 能力 & 器服務漏洞MS08-067\\
+ & & & \tabitem 通過P2P網絡 & \tabitem 暴力破解管理員 \\
+ & & & 進行通訊 & 密碼，在網絡上傳播 \\
+ & & & \tabitem 停止安全檢測 & \tabitem 利用Window自動 \\
+ & & & 運行工具 & (auto-run)，透過外置 \\
+ & & & & 磁碟機傳播 \\\hline
+Dyre & 無 & 針對網上 & \tabitem 透過垃圾電郵 & \tabitem 誘騙受害人致電 \\
+ & & 銀行的木 & & 詐騙電話號碼以竊取 \\
+ & & 馬程式 & & 銀行登入認證資料 \\
+ & & & & \tabitem 發送垃圾電郵 \\\hline
+Gamarue & Andromeda & 下載器/蠕蟲 & \tabitem 透過漏洞攻擊包 & \tabitem 竊取敏感資訊 \\
+ & & & \tabitem 透過垃圾電郵 & \tabitem 允許未經授權的 \\
+ & & & \tabitem 微軟Word巨集 &  存取 \\
+ & & & \tabitem 透過外置磁碟機 & \tabitem 安裝其他惡意程式 \\\hline
+Glupteba & 無 & 木馬程式 & 利用「路過式下載」 & \tabitem 推送內容關聯廣告 \\
+ & & & (drive-by-download) & \tabitem 	點擊劫持 \\ 
+ & & & 感染系統 \\\hline
+IRC Botnet & 無 & 木馬程式 &  通過IRC網絡 & \tabitem	後門程式，允許 \\
+ &&& 進行通訊 & 未經授權的存取 \\
+ &&&& \tabitem 發動分散式阻斷 \\
+ &&&& 服務攻擊(DDoS) \\
+ &&&& \tabitem 發送垃圾郵件 \\\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[!htbp]
+\centering
+\caption{主要殭屍網絡}
+\begin{tabular}{lllll} \hline
+\bf 主要殭屍網絡 & \bf 別名 & \bf 性質 & \bf 感染方法 & \bf 攻擊/影響\\\hline
+Palevo & \tabitem Rimecud & 蠕蟲 & \tabitem 即時通訊系統  & \tabitem 後門程式，允許 \\
+& \tabitem Butterfly & & ,點對點網絡及 & 未經授權的存取 \\
+& bot & & 外置磁碟機 & \tabitem 竊取登入認證資 \\
+& \tabitem Pilleuz &&& 料及敏感資料 \\
+& \tabitem Mariposa &&& \tabitem 利用洗黑錢手法 \\
+& \tabitem Vaklik &&& 直接用銀行竊取金錢 \\\hline
+Pushdo & \tabitem Cutwail & 下載器 & \tabitem 隱藏惡意網絡 & \tabitem 下載其他針對\\
+& \tabitem Pandex & & 流量 &  網上銀行的惡意程式 \\
+& & & \tabitem 動態網域產生 & (例如: Zeus 和Spyeye) \\
+& & & 演算法 (DGA) 能力 & \tabitem 發動分散式阻斷 \\
+& & & \tabitem 利用「路過式下載」 & 服務攻擊(DDoS) \\
+& & & (drive-by-download) & \tabitem 發送垃圾郵件 \\
+& & & 感染系統 \\
+& & & \tabitem 利用瀏覽器和 \\
+& & & 插件漏洞 \\\hline
+Ramnit & 無	& 蠕蟲 &	感染檔案 & \tabitem 後門程式，允許 \\
+& & & 透過漏洞攻擊包 & 未經授權的存取 \\
+& & & 公期FTP伺服器 & \tabitem 竊取登入認證資料 \\
+&&&&及敏感資料 \\\hline
+
+
+Sality & 無 & 	木馬程式	& \tabitem 以rootkit技術 & \tabitem 發送垃圾郵件 \\
+&&& 保持隠藏 & \tabitem 通信代理 \\	
+&&& \tabitem 通過P2P網絡 & \tabitem 竊取敏感資料 \\
+&&& 進行通訊 & \tabitem 感染網絡伺服器 \\
+&&& \tabitem 透過外置磁碟 & 和/或發佈計算任務 \\
+&&& 機或共享傳播 & 來達到處理密集型任 \\ 
+&&&	\tabitem 停止安全檢測 &務目的（例如﹕破解密碼）\\
+&&& 工具 & \tabitem 下載其他惡意程式 \\
+&&&	\tabitem 使用多態性和\\
+&&& 遮蔽切入點（Entry \\
+&&& Point Obscuring）\\
+&&& 技術來感染檔案 \\\hline
+
+\end{tabular}
+\end{table}
+
+\begin{table}[!htbp]
+\centering
+\caption{主要殭屍網絡}
+\begin{tabular}{lllll} \hline
+\bf 主要殭屍網絡 & \bf 別名 & \bf 性質 & \bf 感染方法 & \bf 攻擊/影響\\\hline
+Slenfbot &	無 &	蠕蟲	& 透過外置磁碟 & \tabitem 後門程式，允許 \\
+ &&& 機或共享傳播 &未經授權的存取\\
+  &&&& \tabitem 其他針對網上銀\\
+  &&&& 行的的惡意程式\\
+&&&& \tabitem 發動分散式阻斷 \\
+&&&& 服務攻擊(DDoS) \\
+&&&& \tabitem 發送垃圾郵件 \\\hline
+Tinba	&	TinyBanker & 針對網上 & \tabitem 透過漏洞攻擊包 & 竊取登入認證資料及 \\
+&	Zusy& 	銀行的木 & \tabitem 透過垃圾電郵 & 敏感資料 \\
+& & 馬程式 \\\hline
+Torpig	&	Sinowal &木馬程式 & \tabitem 以rootkit技術 & \tabitem 竊取敏感資料 \\
+& Anserin	& & 保持隠藏 & \tabitem 瀏覽器中間人攻撃 \\
+& & & (Mebroot rootkit)\\
+& & & \tabitem 動態網域產生演 \\
+& & & 算法 (DGA) 能力\\
+&&& 利用「路過式下載」\\
+&&& (drive-by-download) \\
+&&& 感染系統	\\\hline
+Virut & 無	& 木馬程式	& 透過外置磁碟機或 & \tabitem 發送垃圾郵件 \\
+ &&& 共享傳播 & \tabitem 發動分散式阻斷 \\
+&&&& \tabitem 服務攻擊(DDoS) \\
+&&&& \tabitem	詐騙 \\
+&&&& \tabitem 竊取資料 \\\hline	
+Wapomi	& 無	& 蠕蟲	& \tabitem 透過外置磁碟機& \tabitem 後門程式，允許 \\
+ &&& 或共享傳播 & 未經授權的存取 \\
+&&& \tabitem 感染可執行檔案 & \tabitem 下載其他惡意程式 \\
+&&&& \tabitem 改動重要檔案，\\
+&&&& 導致系統不穩定\\
+&&&&\tabitem 收集電腦活動\\
+&&&& 數據，竊取個人資料，\\
+&&&& 並令降低電腦效能\\\hline
+
+\end{tabular}
+\end{table}
+\begin{table}[!htbp]
+\centering
+\caption{主要殭屍網絡}
+\begin{tabular}{lllll} \hline
+\bf 主要殭屍網絡 & \bf 別名 & \bf 性質 & \bf 感染方法 & \bf 攻擊/影響\\\hline
+ZeroAccess	& max++ & 木馬程式 & \tabitem 以rootkit技術  & \tabitem 下載其他惡意程式 \\
+& 	Sirefef & &	保持隠藏 & \tabitem 採礦比特幣和 \\
+&&& \tabitem 通過P2P網絡 & 欺詐點擊\\
+&&& 進行通訊\\
+&&& \tabitem 利用「路過式下載」\\
+&&& (drive-by-download)\\
+&&& 感染系統\\
+&&& \tabitem 偽裝成有效檔\\
+&&& 案(例如:多媒體\\
+&&& 檔案，keygen)	\\\hline
+Zeus	& Gameover & 針對網上 & \tabitem 隱身技術  & \tabitem l	竊取銀行登入認 \\
+& 	 & 銀行的木 &	\tabitem 通過P2P網絡& 證資料及敏感資料 \\
+&&馬程式& 進行通訊 & \tabitem 瀏覽器中間人攻撃 \\
+&&& \tabitem 利用「路過式下載」 & \tabitem 按鍵記錄\\
+&&& (drive-by-download) & \tabitem 下載其他惡意程式\\
+&&& 感染系統 & (例如:Cryptolocker)\\
+&&&& \tabitem 發動分散式阻斷服 \\
+&&&& 務攻擊(DDoS) \\\hline
+
 \end{tabular}
 \end{table}
 \newpage
