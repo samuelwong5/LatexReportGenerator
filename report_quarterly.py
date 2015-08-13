@@ -255,7 +255,7 @@ def create_qrtr_graphs():
     headers = ['Rank', '$\\Uparrow\\Downarrow$', 'Concerned Bots', 'Number of Unique', 'Changes with']
     table_ltx = ''
     table_ltx += '\\begin{table}[!htbp]\n\\centering\n'
-    table_ltx += '\\caption{Major Botnet Families in Hong Kong Networks}'
+    table_ltx += '\\caption{__CAPTION__}'
     table_ltx += '\n\\begin{tabular}{lllll} \\hline\n__HEADERS__\\\\\\hline\n'
 
     
@@ -264,11 +264,14 @@ def create_qrtr_graphs():
     table_ltx += '\\hline\n\\end{tabular}\n\\end{table}\n'            
     ltx_temp = ''
     
-    table_ltx_hdr_eng = '&'.join(map(lambda x:'\\bf ' + x,headers)) + '\\\\\n&&& \\bf IP addresses & \\bf previous period\\\\\hline\n'
-    table_ltx_hdr_chi = u'\\bf 排名 & \\bf $\\Uparrow\\Downarrow$ & \\bf 殭屍網絡名稱 & \\bf 唯一IP地址 & \\bf 變化 \\\\\\hline\n'
+    table_ltx_cap_eng = 'Major Botnet Families in Hong Kong Networks'
+    table_ltx_cap_chi = u'香港網絡內的主要殭屍網絡'
+    table_ltx_hdr_eng = '&'.join(map(lambda x:'\\bf ' + x,headers)) + '\\\\\n&&& \\bf IP addresses & \\bf previous period\n'
+    table_ltx_hdr_chi = u'\\bf 排名 & \\bf $\\Uparrow\\Downarrow$ & \\bf 殭屍網絡名稱 & \\bf 唯一IP地址 & \\bf 變化 \n'
     table_eng = table_ltx.replace('__HEADERS__', table_ltx_hdr_eng)
+    table_eng = table_eng.replace('__CAPTION__', table_ltx_cap_eng)
     table_chi = table_ltx.replace('__HEADERS__', table_ltx_hdr_chi)
-    print(table_chi)
+    table_chi = table_chi.replace('__CAPTION__', table_ltx_cap_chi)
     
     # Output Latex
     with open(output_dir + 'report_quarterly_temp.tex') as f:
