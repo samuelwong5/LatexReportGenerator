@@ -531,7 +531,7 @@ Maxmind & 2015-6-15
 \\\hline
 \end{tabular}
 \end{table}
-
+\newpage
 \section{主要殭屍網絡}
 \begin{table}[!htbp]
 \centering
@@ -573,11 +573,7 @@ Gamarue & Andromeda & 下載器/蠕蟲 & \tabitem 透過漏洞攻擊包 & \tabit
 Glupteba & 無 & 木馬程式 & 利用「路過式下載」 & \tabitem 推送內容關聯廣告 \\
  & & & (drive-by-download) & \tabitem 	點擊劫持 \\ 
  & & & 感染系統 \\\hline
-IRC Botnet & 無 & 木馬程式 &  通過IRC網絡 & \tabitem	後門程式，允許 \\
- &&& 進行通訊 & 未經授權的存取 \\
- &&&& \tabitem 發動分散式阻斷 \\
- &&&& 服務攻擊(DDoS) \\
- &&&& \tabitem 發送垃圾郵件 \\\hline
+
 \end{tabular}
 \end{table}
 
@@ -586,6 +582,11 @@ IRC Botnet & 無 & 木馬程式 &  通過IRC網絡 & \tabitem	後門程式，允
 \caption{主要殭屍網絡}
 \begin{tabular}{lllll} \hline
 \bf 主要殭屍網絡 & \bf 別名 & \bf 性質 & \bf 感染方法 & \bf 攻擊/影響\\\hline
+IRC Botnet & 無 & 木馬程式 &  通過IRC網絡 & \tabitem	後門程式，允許 \\
+ &&& 進行通訊 & 未經授權的存取 \\
+ &&&& \tabitem 發動分散式阻斷 \\
+ &&&& 服務攻擊(DDoS) \\
+ &&&& \tabitem 發送垃圾郵件 \\\hline
 Palevo & \tabitem Rimecud & 蠕蟲 & \tabitem 即時通訊系統  & \tabitem 後門程式，允許 \\
 & \tabitem Butterfly & & ,點對點網絡及 & 未經授權的存取 \\
 & bot & & 外置磁碟機 & \tabitem 竊取登入認證資 \\
@@ -607,6 +608,16 @@ Ramnit & 無	& 蠕蟲 &	感染檔案 & \tabitem 後門程式，允許 \\
 &&&&及敏感資料 \\\hline
 
 
+
+
+\end{tabular}
+\end{table}
+
+\begin{table}[!htbp]
+\centering
+\caption{主要殭屍網絡}
+\begin{tabular}{lllll} \hline
+\bf 主要殭屍網絡 & \bf 別名 & \bf 性質 & \bf 感染方法 & \bf 攻擊/影響\\\hline
 Sality & 無 & 	木馬程式	& \tabitem 以rootkit技術 & \tabitem 發送垃圾郵件 \\
 &&& 保持隠藏 & \tabitem 通信代理 \\	
 &&& \tabitem 通過P2P網絡 & \tabitem 竊取敏感資料 \\
@@ -619,15 +630,6 @@ Sality & 無 & 	木馬程式	& \tabitem 以rootkit技術 & \tabitem 發送垃圾
 &&& 遮蔽切入點（Entry \\
 &&& Point Obscuring）\\
 &&& 技術來感染檔案 \\\hline
-
-\end{tabular}
-\end{table}
-
-\begin{table}[!htbp]
-\centering
-\caption{主要殭屍網絡}
-\begin{tabular}{lllll} \hline
-\bf 主要殭屍網絡 & \bf 別名 & \bf 性質 & \bf 感染方法 & \bf 攻擊/影響\\\hline
 Slenfbot &	無 &	蠕蟲	& 透過外置磁碟 & \tabitem 後門程式，允許 \\
  &&& 機或共享傳播 &未經授權的存取\\
   &&&& \tabitem 其他針對網上銀\\
@@ -651,14 +653,7 @@ Virut & 無	& 木馬程式	& 透過外置磁碟機或 & \tabitem 發送垃圾郵
 &&&& \tabitem 服務攻擊(DDoS) \\
 &&&& \tabitem	詐騙 \\
 &&&& \tabitem 竊取資料 \\\hline	
-Wapomi	& 無	& 蠕蟲	& \tabitem 透過外置磁碟機& \tabitem 後門程式，允許 \\
- &&& 或共享傳播 & 未經授權的存取 \\
-&&& \tabitem 感染可執行檔案 & \tabitem 下載其他惡意程式 \\
-&&&& \tabitem 改動重要檔案，\\
-&&&& 導致系統不穩定\\
-&&&&\tabitem 收集電腦活動\\
-&&&& 數據，竊取個人資料，\\
-&&&& 並令降低電腦效能\\\hline
+
 
 \end{tabular}
 \end{table}
@@ -667,6 +662,14 @@ Wapomi	& 無	& 蠕蟲	& \tabitem 透過外置磁碟機& \tabitem 後門程式，
 \caption{主要殭屍網絡}
 \begin{tabular}{lllll} \hline
 \bf 主要殭屍網絡 & \bf 別名 & \bf 性質 & \bf 感染方法 & \bf 攻擊/影響\\\hline
+Wapomi	& 無	& 蠕蟲	& \tabitem 透過外置磁碟機& \tabitem 後門程式，允許 \\
+ &&& 或共享傳播 & 未經授權的存取 \\
+&&& \tabitem 感染可執行檔案 & \tabitem 下載其他惡意程式 \\
+&&&& \tabitem 改動重要檔案，\\
+&&&& 導致系統不穩定\\
+&&&&\tabitem 收集電腦活動\\
+&&&& 數據，竊取個人資料，\\
+&&&& 並令降低電腦效能\\\hline
 ZeroAccess	& max++ & 木馬程式 & \tabitem 以rootkit技術  & \tabitem 下載其他惡意程式 \\
 & 	Sirefef & &	保持隠藏 & \tabitem 採礦比特幣和 \\
 &&& \tabitem 通過P2P網絡 & 欺詐點擊\\
