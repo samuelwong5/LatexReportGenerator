@@ -175,13 +175,10 @@ def parse_config():
     if file_missing:
         sys.exit('[FATAL] Please check the data path is correct in config.cfg')
         
-    defce_clr = map(lambda x: x+')', cfg.get('monthly','defce_colors').split('),'))
-    print(defce_clr)
-    phish_clr = map(lambda x: x+')', cfg.get('monthly','phish_colors').split('),'))
-    print(phish_clr)
-    malwr_clr = map(lambda x: x+')', cfg.get('monthly','malwr_colors').split('),'))
-    print(malwr_clr)
-    other_clr = map(lambda x: x+')', cfg.get('monthly','other_colors').split('),'))
+    defce_clr = map(lambda x: x.replace('-',','), cfg.get('monthly','defce_colors').split(','))
+    phish_clr = map(lambda x: x.replace('-',','), cfg.get('monthly','phish_colors').split(','))
+    malwr_clr = map(lambda x: x.replace('-',','), cfg.get('monthly','malwr_colors').split(','))
+    other_clr = map(lambda x: x.replace('-',','), cfg.get('monthly','other_colors').split(','))
     rutil.set_bar_deflt_colors(other_clr)
     global config
     config = {'yymm': yymm, 'year': year, 'month': month, 'file_paths':file_paths, 'output_dir': ltx_output, 'plotly_cred': plotly_cred,

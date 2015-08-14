@@ -92,7 +92,7 @@ def plotly_line_chart(x_label, data, chart_title=''):
     return py.plot(fig, chart_title, auto_open=False)
     
  
-def plotly_bar_chart(x_label, data, chart_title='', bar_mode='group', color=bar_deflt_colors, annotations=True):
+def plotly_bar_chart(x_label, data, chart_title='', bar_mode='group', color=[], annotations=True):
     """
     Plots a bar chart using the Plotly API.
     
@@ -103,6 +103,8 @@ def plotly_bar_chart(x_label, data, chart_title='', bar_mode='group', color=bar_
     bar_mode    -- 'overlay', 'stack' or 'group' (default: 'group')
     annotations -- turns on labels for the bars (default: on)
     """
+    if color == []:
+        color = bar_deflt_colors
     print_no_newline(chart_title)
     anno_data = [] 
     if (bar_mode=='group' or len(data) == 1) and annotations:
@@ -119,6 +121,8 @@ def plotly_bar_chart(x_label, data, chart_title='', bar_mode='group', color=bar_
         anno_data = zip(offset_array, y_height, y_height)
         if color == []:
             bars = [Bar(x=x_label,y=data_array,name=data_name) for (data_array, data_name) in data]
+        elif len(data) > 1:
+            bars = [Bar(x=x_label,y=data_array,name=data_name,marker=Marker(color=clr)) for ((data_array, data_name), clr) in zip(data, color[:len(data)])]
         else:
             bars = [Bar(x=x_label,y=data_array,name=data_name,marker=Marker(color=color[:len(x_label)])) for (data_array, data_name) in data]
     elif bar_mode=='stack' and annotations:

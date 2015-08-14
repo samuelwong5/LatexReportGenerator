@@ -13,10 +13,17 @@ config = {}
 
 
 def parse_config():
+    global config
     cfg = ConfigParser.ConfigParser(allow_no_value=True)
     cfg.read('config.cfg')
-    config['data_dir'] = cfg.get('quarterly','input')
-    config['output_dir'] = cfg.get('quarterly', 'output')
+    config = {key : cfg.get('quarterly',key) for key in ['input','output']}
+    config.update({k:map(lambda x:x.replace('-',','),
+                         cfg.get('quarterly',k).split(',')) 
+                         for k in ['defce_color','phish_color','malwr_color','other_color']})
+    rutil.set_bar_deflt_colors(config['other_color'])
+    print(config['phish_color'])
+    print(config['malwr_color'])
+    
     
 def prev_qrtr(year, qrtr, offset):
     new_qrtr = qrtr
@@ -41,12 +48,14 @@ def create_qrtr_graphs():
         print('Missing parameter: YYQQ (Y=Year / Q=Quarter)')
         sys.exit()
     parse_config()
-    data_dir = config['data_dir']
-    output_dir = os.path.join(os.getcwd(), config['output_dir'])    
+    if (config == {}):
+        print("WTF")
+    input = config['input']
+    output = os.path.join(os.getcwd(), config['output'])    
     if sys.argv[1] == '--clean':
-        for file in os.listdir(output_dir):
-            if not file in required_files and os.path.isfile(output_dir + file):
-                os.remove(output_dir + file)
+        for file in os.listdir(output):
+            if not file in required_files and os.path.isfile(output + file):
+                os.remove(output + file)
         sys.exit(0)
     yymm = int(sys.argv[1])
     if yymm < 1000:
@@ -57,11 +66,10 @@ def create_qrtr_graphs():
         print('Invalid quarter. Accepted range: 0 < QQ <= 4')
         sys.exit()
           
-   
-    
+
     # Check file dependencies    
     file_missing = False                      
-    for req in map(lambda x: config['output_dir'] + x, required_files):
+    for req in map(lambda x: config['output'] + x, required_files):
         if not os.path.isfile(req):
             print('[FATAL] Missing file: ' + req)
             file_missing = True
@@ -71,7 +79,7 @@ def create_qrtr_graphs():
     year = (yymm - qrtr) / 100
     qrtr_label = map(lambda x: prev_qrtr(year, qrtr, x),
                      range(4,-1,-1))
-    data_paths = map(lambda x: data_dir + x + '/report/', qrtr_label)
+    data_paths = map(lambda x: input + x + '/report/', qrtr_label)
     qrtr_label = map(lambda x: '20' + str(int(x)/100) + ' Q' + str(int(x)%100),
                      qrtr_label)
     
@@ -80,14 +88,15 @@ def create_qrtr_graphs():
     print('Creating charts:')
     
     qrtr_bar = lambda x,y: rutil.plotly_bar_chart(qrtr_label,x,y)
+     
     
     # Defacement, Phishing and Malware
     # Trend, URL/IP
     url_data = [[],[],[]]
-    url_ip_col = [('Defacement', 1, u'網頁塗改'), 
-                  ('Phishing', 2, u'釣魚網站'), 
-                  ('Malware',3,u'惡意程式寄存')]
-    for type, index, type_c in url_ip_col:
+    url_ip_col = [('Defacement', 1, u'網頁塗改',config['defce_color']), 
+                  ('Phishing', 2, u'釣魚網站',config['phish_color']), 
+                  ('Malware',3,u'惡意程式寄存',config['malwr_color'])]
+    for type, index, type_c, clr in url_ip_col:
         url_ip_unique_data = [[],[]]
         url_ip_ratio_data = [[]]
         for d in data_paths:
@@ -99,18 +108,18 @@ def create_qrtr_graphs():
             url_ip_unique_data[1].append(ip_count)
             url_ip_ratio_data[0].append(str(url_ip_ratio))
         url_data[index-1] = url_ip_unique_data[0]
-        plot_url = qrtr_bar(zip(url_ip_unique_data, ['Unique URL', 'Unique IP']), 
-                       'Trend of ' + type + ' security events')  
-        rutil.plotly_download_png(plot_url, output_dir + type + 'UniqueBar.png')        
-        plot_url = qrtr_bar([(url_ip_ratio_data[0],'URL/IP ratio')], 
-                       'URL/IP ratio of ' + type + ' security events')        
-        rutil.plotly_download_png(plot_url, output_dir + type + 'RatioBar.png')  
-        plot_url = qrtr_bar(zip(url_ip_unique_data, ['唯一網址', '唯一IP']), 
-                       type_c + u'安全事件趨勢')  
-        rutil.plotly_download_png(plot_url, output_dir + type + 'UniqueBarChi.png')        
-        plot_url = qrtr_bar([(url_ip_ratio_data[0],'唯一網址/IP比')], 
-                       type_c + u'安全事件唯一網址/IP比')        
-        rutil.plotly_download_png(plot_url, output_dir + type + 'RatioBarChi.png')         
+        plot_url = rutil.plotly_bar_chart(qrtr_label, zip(url_ip_unique_data, ['Unique URL', 'Unique IP']), 
+                       'Trend of ' + type + ' security events',color=clr)  
+        rutil.plotly_download_png(plot_url, output + type + 'UniqueBar.png')        
+        plot_url = rutil.plotly_bar_chart(qrtr_label, [(url_ip_ratio_data[0],'URL/IP ratio')], 
+                       'URL/IP ratio of ' + type + ' security events',color=clr)        
+        rutil.plotly_download_png(plot_url, output + type + 'RatioBar.png')  
+        plot_url = rutil.plotly_bar_chart(qrtr_label, zip(url_ip_unique_data, ['唯一網址', '唯一IP']), 
+                       type_c + u'安全事件趨勢',color=clr)  
+        rutil.plotly_download_png(plot_url, output + type + 'UniqueBarChi.png')        
+        plot_url = rutil.plotly_bar_chart(qrtr_label, [(url_ip_ratio_data[0],'唯一網址/IP比')], 
+                       type_c + u'安全事件唯一網址/IP比',color=clr)        
+        rutil.plotly_download_png(plot_url, output + type + 'RatioBarChi.png')         
     
     # Botnet (C&C) Distribution and Trend
     cc_data = [[],[],[]]
@@ -134,18 +143,18 @@ def create_qrtr_graphs():
                     zip(cc_data[0:2], ['IRC','HTTP']),
                    'Trend and Distribution of Botnet (C&Cs) security events',
                    'stack')
-    rutil.plotly_download_png(plot_url, output_dir + 'BotnetCCDisBar.png')                   
+    rutil.plotly_download_png(plot_url, output + 'BotnetCCDisBar.png')                   
     plot_url = rutil.plotly_bar_chart(qrtr_label,
                     zip(cc_data[0:2], ['IRC','HTTP']),
                    u'殭屍網絡控制中心安全事件的趨勢和分佈',
                    'stack')
-    rutil.plotly_download_png(plot_url, output_dir + 'BotnetCCDisBarChi.png')  
+    rutil.plotly_download_png(plot_url, output + 'BotnetCCDisBarChi.png')  
     plot_url = qrtr_bar([(cc_data[2], 'Botnet C&Cs')],
                    'Trend of Botnet (C&C) security events')  
-    rutil.plotly_download_png(plot_url, output_dir + 'BotnetCCBar.png')   
+    rutil.plotly_download_png(plot_url, output + 'BotnetCCBar.png')   
     plot_url = qrtr_bar([(cc_data[2], u'殭屍網絡控制中心(C&C)')],
                    u'殭屍網絡控制中心(C&C)安全事件趨勢')  
-    rutil.plotly_download_png(plot_url, output_dir + 'BotnetCCBarChi.png')
+    rutil.plotly_download_png(plot_url, output + 'BotnetCCBarChi.png')
     
     # Unique Botnet (Bots) Trend
     bn_data = []
@@ -158,10 +167,10 @@ def create_qrtr_graphs():
         bn_data.append(total_count)
     plot_url = qrtr_bar([(bn_data,'Botnet (Bots)')],
                    'Trend of Botnet (Bots) security events')
-    rutil.plotly_download_png(plot_url, output_dir + 'BotnetBotsBar.png')   
+    rutil.plotly_download_png(plot_url, output + 'BotnetBotsBar.png')   
     plot_url = qrtr_bar([(bn_data,u'殭屍電腦')],
                    u'殭屍網絡(殭屍電腦)安全事件趨勢')
-    rutil.plotly_download_png(plot_url, output_dir + 'BotnetBotsBarChi.png')          
+    rutil.plotly_download_png(plot_url, output + 'BotnetBotsBarChi.png')          
            
     # Top 5 Botnets 
     top_bn_data = [[],[],[],[],[]]
@@ -189,11 +198,11 @@ def create_qrtr_graphs():
     plot_url = rutil.plotly_line_chart(qrtr_label,
                    zip(top_bn_data, top_bn_name),
                    'Trend of 5 Botnet Families in Hong Kong Network')      
-    rutil.plotly_download_png(plot_url, output_dir + 'BotnetFamTopLine.png')   
+    rutil.plotly_download_png(plot_url, output + 'BotnetFamTopLine.png')   
     plot_url = rutil.plotly_line_chart(qrtr_label,
                    zip(top_bn_data, top_bn_name),
                    u'五大主要殭屍網絡趨勢')      
-    rutil.plotly_download_png(plot_url, output_dir + 'BotnetFamTopLineChi.png')   
+    rutil.plotly_download_png(plot_url, output + 'BotnetFamTopLineChi.png')   
     table_hdr = ['Name'] + qrtr_label
     table_top_bot = ''
     table_top_bot += '\\begin{table}[!htbp]\n\\centering\n'
@@ -210,12 +219,12 @@ def create_qrtr_graphs():
                    zip(url_data, ['Defacement','Phishing','Malware hosting']),
                    'Trend and Distribution of server related security events',
                    'stack')
-    rutil.plotly_download_png(plot_url, output_dir + 'ServerDisBar.png')   
+    rutil.plotly_download_png(plot_url, output + 'ServerDisBar.png')   
     plot_url = rutil.plotly_bar_chart(qrtr_label,
                    zip(url_data, [u'網頁塗改',u'釣魚網站',u'惡意程式寄存']),
                    u'與伺服器有關的安全事件的趨勢和分佈',
                    'stack')
-    rutil.plotly_download_png(plot_url, output_dir + 'ServerDisBarChi.png')   
+    rutil.plotly_download_png(plot_url, output + 'ServerDisBarChi.png')   
 
     # Total Events
     url_data.append(bn_data)
@@ -223,15 +232,15 @@ def create_qrtr_graphs():
     serv_events = reduce(rutil.sum_array, url_data)
     plot_url = qrtr_bar([(serv_events, 'Unique security events')],
                    'Trend of Security events')      
-    rutil.plotly_download_png(plot_url, output_dir + 'TotalEventBar.png')   
+    rutil.plotly_download_png(plot_url, output + 'TotalEventBar.png')   
     plot_url = qrtr_bar([(serv_events, u'唯一安全事件')],
                    u'安全事件趨勢')      
-    rutil.plotly_download_png(plot_url, output_dir + 'TotalEventBarChi.png')   
+    rutil.plotly_download_png(plot_url, output + 'TotalEventBarChi.png')   
     
     # Botnet Family Pie Chart (Google Charts)
     rutil.google_pie_chart([('botnetDailyMax','BotnetFamPie')], 
                             data_paths[len(data_paths) - 1], 
-                            output_dir)
+                            output)
     
     headers, data = rutil.read_csv(data_paths[4] + 'botnetDailyMax.csv', [0,1])
     _, prev_data = rutil.read_csv(data_paths[3] + 'botnetDailyMax.csv', [0,1])
@@ -274,28 +283,28 @@ def create_qrtr_graphs():
     table_chi = table_chi.replace('__CAPTION__', table_ltx_cap_chi)
     
     # Output Latex
-    with open(output_dir + 'report_quarterly_temp.tex') as f:
+    with open(output + 'report_quarterly_temp.tex') as f:
         ltx_temp = f.read()
     ltx_temp = ltx_temp.replace('botnet\\_table', table_eng)
     ltx_temp = ltx_temp.replace('QUARTER', qrtr_label[4])
     ltx_temp = ltx_temp.replace('UNIQUEEVENTS', serv_events[4])
     ltx_temp = ltx_temp.replace('table\\_top\\_bot', table_top_bot)
-    with open(output_dir + 'SecurityWatchReport.tex', 'w+') as f:
+    with open(output + 'SecurityWatchReport.tex', 'w+') as f:
         f.write(ltx_temp)
         
-    with open(output_dir + 'report_qrtr_temp_chi.tex') as f:
+    with open(output + 'report_qrtr_temp_chi.tex') as f:
         ltx_temp = f.read()
     ltx_temp = ltx_temp.replace('UNIQUEEVENTS', serv_events[4])
     ltx_temp = ltx_temp.replace('table\\_top\\_bot', table_top_bot)
-    with open(output_dir + 'SecurityWatchReportChi.tex', 'w+') as f:
+    with open(output + 'SecurityWatchReportChi.tex', 'w+') as f:
         f.write(ltx_temp)
-    with codecs.open(output_dir + 'chiqrtr.tex', mode='w+', encoding='utf-8-sig') as f:
+    with codecs.open(output + 'chiqrtr.tex', mode='w+', encoding='utf-8-sig') as f:
         f.write(u'20' + unicode(year) + u'第' + [u'一',u'二',u'三',u'四'][qrtr-1] + u'季度')
-    with codecs.open(output_dir + 'botnetchitable.tex', mode='w+', encoding='utf-8-sig') as f:
+    with codecs.open(output + 'botnetchitable.tex', mode='w+', encoding='utf-8-sig') as f:
         f.write(table_chi)
         
     print('Rendering PDF')
-    os.chdir(output_dir)
+    os.chdir(output)
     os.system('pdflatex SecurityWatchReport.tex')    
     os.system('pdflatex SecurityWatchReport.tex')   # Second time to replace references and ToC  
     os.rename('SecurityWatchReport.pdf', 
