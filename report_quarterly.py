@@ -283,6 +283,11 @@ def create_qrtr_graphs():
     # Output Latex
     with open(output + 'report_quarterly_temp.tex') as f:
         ltx_temp = f.read()
+    fontcfg = ConfigParser.ConfigParser(allow_no_value=True)
+    fontcfg.read('config.cfg')
+    f = lambda x: fontcfg.get('font','font_' + x)
+    ltx_temp = ltx_temp.replace('__FONT_SIZE__',f('size'))
+    ltx_temp = ltx_temp.replace('__FONT__',f('family'))
     ltx_temp = ltx_temp.replace('botnet\\_table', table_eng)
     ltx_temp = ltx_temp.replace('QUARTER', qrtr_label[4])
     ltx_temp = ltx_temp.replace('UNIQUEEVENTS', serv_events[4])
