@@ -95,7 +95,7 @@ def create_server_summary(file_paths, months, output_dir='latex/'):
                            bar_mode='stack')
     rutil.plotly_download_png(plot_url, output_dir + 'ServerRelated.png')
 
-    gen = [(1,'Defacement',config['defce_clr']),(2,'Phishing',config['phish_clr']),(3,'Malware',config['malwr_clr'])]
+    gen = [(1,'Defacement',config['defce_color']),(2,'Phishing',config['phish_color']),(3,'Malware',config['malwr_color'])]
     gen_headers = ['URL','Domain','IP']                
     gen_data = [[],[],[]]
     for index, type, colors in gen:
@@ -141,11 +141,15 @@ def parse_config():
     if len(sys.argv) < 2:
         print ('[FATAL] Error: Missing YYMM argument.')
         sys.exit(1)
+        
+    # Clean output folder
     if sys.argv[1] == '--clean':
         for file in os.listdir(ltx_output):
             if (not file in required_files) and os.path.isfile(ltx_output + file):
                 os.remove(ltx_output + file)
         sys.exit(0)
+        
+    # Check arguments
     if len(sys.argv[1]) != 4:
         print('[FATAL] Error: Argument should be in format YYMM (e.g. 1403 for 2014 March)')
         sys.exit(1)
@@ -160,8 +164,8 @@ def parse_config():
         print('Invalid argument. Expected format: YYMM (e.g. 1403 for 2014 March')
         sys.exit(1)
     file_paths = [data_folder + format_month_str(year, month - 2) + '/report/',  
-        data_folder + format_month_str(year, month - 1) + '/report/',  # 1 month ago
-        data_folder + format_month_str(year, month) + '/report/'       # current month
+        data_folder + format_month_str(year, month - 1) + '/report/',  
+        data_folder + format_month_str(year, month) + '/report/'       
         ]
     plotly_cred = (cfg.get('plotly','username'), cfg.get('plotly','api_key'))
     rutil.plotly_init(plotly_cred)
@@ -174,15 +178,15 @@ def parse_config():
             file_missing = True
     if file_missing:
         sys.exit('[FATAL] Please check the data path is correct in config.cfg')
-        
-    defce_clr = map(lambda x: x.replace('-',','), cfg.get('monthly','defce_colors').split(','))
-    phish_clr = map(lambda x: x.replace('-',','), cfg.get('monthly','phish_colors').split(','))
-    malwr_clr = map(lambda x: x.replace('-',','), cfg.get('monthly','malwr_colors').split(','))
-    other_clr = map(lambda x: x.replace('-',','), cfg.get('monthly','other_colors').split(','))
-    rutil.set_bar_deflt_colors(other_clr)
+    
+    # Set global config    
+
     global config
-    config = {'yymm': yymm, 'year': year, 'month': month, 'file_paths':file_paths, 'output_dir': ltx_output, 'plotly_cred': plotly_cred,
-              'defce_clr': defce_clr, 'phish_clr': phish_clr, 'malwr_clr': malwr_clr, 'other_clr': other_clr}   
+    config = {'yymm': yymm, 'year': year, 'month': month, 'file_paths':file_paths, 'output_dir': ltx_output, 'plotly_cred': plotly_cred}
+    config.update({k:map(lambda x:x.replace('-',','),
+                         cfg.get('monthly',k).split(',')) 
+                         for k in ['defce_color','phish_color','malwr_color','other_color']})
+    rutil.set_bar_deflt_colors(config['other_color'])
 
     
 def create_bar_charts():

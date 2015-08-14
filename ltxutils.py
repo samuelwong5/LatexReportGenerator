@@ -1,3 +1,4 @@
+import ConfigParser
 import csv
 import math
 import os
@@ -7,7 +8,8 @@ import report_utils as rutil
 
 class LatexDocument():
     def __init__(self):
-         self.ltx = ''
+        self.ltx = ''
+        self.font = ''
 
     def section(self, title, fltbarrier=True):
         if fltbarrier:
@@ -207,8 +209,15 @@ def create_report(dir, prev_month_dir, output, yymm):
     header = ''
     with open(output + 'header.tex') as f:
         header = f.read()
-        report.text(header)
+       
 
+    
+    fontcfg = ConfigParser.ConfigParser(allow_no_value=True)
+    fontcfg.read('config.cfg')
+    f = lambda x: fontcfg.get('font','font_' + x)
+    header = header.replace('__FONT_SIZE__',f('size'))
+    report.text(header.replace('__FONT__',f('family')))
+    
     #sections 1-3
     print_no_newline('Section 1')
     summary(report, 'Defacement', 'DefacementTld', dir_t)

@@ -101,6 +101,7 @@ def plotly_bar_chart(x_label, data, chart_title='', bar_mode='group', color=[], 
     data        -- a list of (data set, data set title)
     chart_title -- the above chart title (default: empty string)
     bar_mode    -- 'overlay', 'stack' or 'group' (default: 'group')
+    color       -- the color schemes for the bars
     annotations -- turns on labels for the bars (default: on)
     """
     if color == []:

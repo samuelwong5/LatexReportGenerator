@@ -21,8 +21,6 @@ def parse_config():
                          cfg.get('quarterly',k).split(',')) 
                          for k in ['defce_color','phish_color','malwr_color','other_color']})
     rutil.set_bar_deflt_colors(config['other_color'])
-    print(config['phish_color'])
-    print(config['malwr_color'])
     
     
 def prev_qrtr(year, qrtr, offset):
