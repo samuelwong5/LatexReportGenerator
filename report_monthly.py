@@ -95,27 +95,26 @@ def create_server_summary(file_paths, months, output_dir='latex/'):
                            bar_mode='stack')
     rutil.plotly_download_png(plot_url, output_dir + 'ServerRelated.png')
 
-    gen = [(1,'Defacement'),(2,'Phishing'),(3,'Malware')]
+    gen = [(1,'Defacement',config['defce_clr']),(2,'Phishing',config['phish_clr']),(3,'Malware',config['malwr_clr'])]
     gen_headers = ['URL','Domain','IP']                
     gen_data = [[],[],[]]
-    for index, type in gen:
+    for index, type, colors in gen:
         for i in range(3):
             gen_data[i] = []
             for j in range(3):
                 gen_data[i].append(data[j][index-1][i+1])    
         plot_url = rutil.plotly_bar_chart(months,
                                           zip(gen_data, gen_headers),
-                                          type + ' General Statistics')
+                                          type + ' General Statistics', color=colors)
         rutil.plotly_download_png(plot_url, output_dir + type + 'Gen.png')
     
     url_ip_headers = ['URL/IP Ratio']
 
-    for g in gen:
-        index, type = g
+    for index, type, colors in gen:
         url_data = []
         for j in range(3):
             url_data.append(round(float(data[j][index-1][1]) / float(data[j][index-1][3]),2))  
-        plot_url = rutil.plotly_bar_chart(months, [(url_data, 'URL/IP Ratio')], type + ' URL/IP Ratio')
+        plot_url = rutil.plotly_bar_chart(months, [(url_data, 'URL/IP Ratio')], type + ' URL/IP Ratio', color=colors)
         rutil.plotly_download_png(plot_url, output_dir + type + 'URLIP.png')
   
   
@@ -176,8 +175,17 @@ def parse_config():
     if file_missing:
         sys.exit('[FATAL] Please check the data path is correct in config.cfg')
         
+    defce_clr = map(lambda x: x+')', cfg.get('monthly','defce_colors').split('),'))
+    print(defce_clr)
+    phish_clr = map(lambda x: x+')', cfg.get('monthly','phish_colors').split('),'))
+    print(phish_clr)
+    malwr_clr = map(lambda x: x+')', cfg.get('monthly','malwr_colors').split('),'))
+    print(malwr_clr)
+    other_clr = map(lambda x: x+')', cfg.get('monthly','other_colors').split('),'))
+    rutil.set_bar_deflt_colors(other_clr)
     global config
-    config = {'yymm': yymm, 'year': year, 'month': month, 'file_paths':file_paths, 'output_dir': ltx_output, 'plotly_cred': plotly_cred}   
+    config = {'yymm': yymm, 'year': year, 'month': month, 'file_paths':file_paths, 'output_dir': ltx_output, 'plotly_cred': plotly_cred,
+              'defce_clr': defce_clr, 'phish_clr': phish_clr, 'malwr_clr': malwr_clr, 'other_clr': other_clr}   
 
     
 def create_bar_charts():
