@@ -14,11 +14,27 @@ config = {}
 
 def print_done():
     print('[DONE]')    
-    
+      
+      
+def month_format(year, month):
+    """
+    Formats year and month to YYMM.
+    Example: 9, 4 -> 0904
+    """
+    if month <= 0:
+        month += 12
+        year -= 1
+    y_str = str(year) if year >= 10 else '0' + str(year)
+    if month < 10:
+        return y_str + '0' + str(month)    
+    return y_str + str(month)
+
  
-# Formats month string 
-# Takes integer year, month into readable string (Apr15)
-def fms(year, month):
+def month_string_format(year, month):
+    """
+    Formats the input to a string suitable for
+    human input. Example: 1504 -> Apr15
+    """
     while month <= 0:
         month += 12
         year -= 1
@@ -27,10 +43,14 @@ def fms(year, month):
     
     
 def create_monthly_bar():
+    """
+    Creates the bar charts that uses data from
+    multiple months.
+    """
     file_paths = config['file_paths']
     year = config['year']
     month = config['month']
-    months = [fms(year, month-2), fms(year, month-1), fms(year, month)]
+    months = [month_string_format(year, month-2), month_string_format(year, month-1), month_string_format(year, month)]
     output_dir = config['output_dir']
     
     ssfiles = map(lambda x: x + 'serverSummary.csv', file_paths)
@@ -80,6 +100,15 @@ def create_monthly_bar():
       
       
 def create_server_summary(file_paths, months, output_dir='latex/'):
+    """
+    Creates the summary bar charts:
+    Defacement/Phishing/Malware Summary/(URL/IP)
+    
+    Arguments:
+    file_paths -- folder paths for the three months of csv files
+    months     -- list of human-readable formatted strings
+    output_dir -- directory to save the PNG files of the charts
+    """
     data = []
     for file in file_paths:
         _, csv_data = rutil.read_csv(file, [1,2,3])
@@ -117,18 +146,12 @@ def create_server_summary(file_paths, months, output_dir='latex/'):
         plot_url = rutil.plotly_bar_chart(months, [(url_data, 'URL/IP Ratio')], type + ' URL/IP Ratio', color=colors)
         rutil.plotly_download_png(plot_url, output_dir + type + 'URLIP.png')
   
-  
-def format_month_str(y, x):
-    if x <= 0:
-        x += 12
-        y -= 1
-    y_str = str(y) if y >= 10 else '0' + str(y)
-    if x < 10:
-        return y_str + '0' + str(x)    
-    return y_str + str(x)
-
     
 def parse_config():
+    """
+    Parses the config.cfg file and outputs it to the global
+    python dictionary variable config.
+    """
     # File dependencies 
     required_files = ['footer.tex',
                       'header.tex',
@@ -163,9 +186,9 @@ def parse_config():
     except:
         print('Invalid argument. Expected format: YYMM (e.g. 1403 for 2014 March')
         sys.exit(1)
-    file_paths = [data_folder + format_month_str(year, month - 2) + '/report/',  
-        data_folder + format_month_str(year, month - 1) + '/report/',  
-        data_folder + format_month_str(year, month) + '/report/'       
+    file_paths = [data_folder + month_format(year, month - 2) + '/report/',  
+        data_folder + month_format(year, month - 1) + '/report/',  
+        data_folder + month_format(year, month) + '/report/'       
         ]
     plotly_cred = (cfg.get('plotly','username'), cfg.get('plotly','api_key'))
     rutil.plotly_init(plotly_cred)
@@ -179,8 +202,7 @@ def parse_config():
     if file_missing:
         sys.exit('[FATAL] Please check the data path is correct in config.cfg')
     
-    # Set global config    
-
+    # Set global config   
     global config
     config = {'yymm': yymm, 'year': year, 'month': month, 'file_paths':file_paths, 'output_dir': ltx_output, 'plotly_cred': plotly_cred}
     config.update({k:map(lambda x:x.replace('-',','),
@@ -190,7 +212,11 @@ def parse_config():
 
     
 def create_bar_charts():
-    # Create bar charts that use data from current month
+    """
+    Create bar charts that use data from current month
+    [N.B. Bar charts that use data from multiple months are generated
+    in create_monthly_bar]
+    """
     print('Creating bar charts...')
     print('  Downloading bar charts...')
     bar_chart_dir = os.path.join(os.getcwd(), config["file_paths"][2])
@@ -208,6 +234,10 @@ def create_bar_charts():
  
  
 def create_pie_charts():
+    """
+    Creates the bar charts for the security watch report.
+    Uses the Google Charts API.
+    """
     pie_chart_csv = ['DefacementTld',
                      'ISPDefacement',
                      'ISPMalware',
@@ -221,12 +251,12 @@ def create_pie_charts():
     rutil.google_pie_chart(zip(pie_chart_csv, pie_chart_csv), config['file_paths'][2], config['output_dir'])
     
     
-def main():    
-    parse_config()
-    create_bar_charts()
+def create_monthly_report():    
+    parse_config()          
+    create_bar_charts()    
     create_pie_charts()
     ltxutils.create_report(config["file_paths"][2], config["file_paths"][1], config['output_dir'], config["yymm"])
            
     
 if __name__ == "__main__":    
-    main()    
+    create_monthly_report()  

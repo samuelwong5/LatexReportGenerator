@@ -13,6 +13,10 @@ config = {}
 
 
 def parse_config():
+    """
+    Parses the config.cfg file and outputs it to the global
+    python dictionary variable config.
+    """
     global config
     cfg = ConfigParser.ConfigParser(allow_no_value=True)
     cfg.read('config.cfg')
@@ -23,7 +27,16 @@ def parse_config():
     rutil.set_bar_deflt_colors(config['other_color'])
     
     
-def prev_qrtr(year, qrtr, offset):
+def prev_qrtr(year, qrtr, offset=0):
+    """
+    Formats a given year and quarter to a YYQQ format 
+    corresponding to the file system structure. 
+    
+    Arguments:
+    year   -- the year the report is being generated for
+    qrtr   -- the quarter the report is being generated for
+    offset -- the offset to calculate the file paths for previous quarters
+    """
     new_qrtr = qrtr
     new_year = year
     for i in range(offset):
@@ -34,22 +47,29 @@ def prev_qrtr(year, qrtr, offset):
             new_qrtr -= 1
     return str(new_year).zfill(2) + str(new_qrtr).zfill(2)
 
-
-def create_qrtr_graphs():
+    
+def check_file_dependencies():
+    """
+    Checks whether the required file dependencies exist. 
+    Cleans the output directory if --clean flag is received.
+    Process configuration files.
+    """
     # File dependencies
     required_files = ['report_qrtr_temp_chi.tex',
                       'report_quarterly_temp.tex',
                       'lightbulb.jpg',
                       'warning.png',
                       'HKCERT.png']   
+                      
     if len(sys.argv) < 2:
         print('Missing parameter: YYQQ (Y=Year / Q=Quarter)')
         sys.exit()
     parse_config()
-    if (config == {}):
-        print("WTF")
     input = config['input']
     output = os.path.join(os.getcwd(), config['output'])    
+    config['output'] = output
+    
+    # Clean output_dir if --clean flag
     if sys.argv[1] == '--clean':
         for file in os.listdir(output):
             if not file in required_files and os.path.isfile(output + file):
@@ -64,7 +84,6 @@ def create_qrtr_graphs():
         print('Invalid quarter. Accepted range: 0 < QQ <= 4')
         sys.exit()
           
-
     # Check file dependencies    
     file_missing = False                      
     for req in map(lambda x: config['output'] + x, required_files):
@@ -80,16 +99,25 @@ def create_qrtr_graphs():
     data_paths = map(lambda x: input + x + '/report/', qrtr_label)
     qrtr_label = map(lambda x: '20' + str(int(x)/100) + ' Q' + str(int(x)%100),
                      qrtr_label)
+    return yymm, year, qrtr_label, data_paths
+                     
+                     
+def create_quarterly_report():
+    """
+    Main function to create the quarterly security watch report.
+    """
+    yymm, year, qrtr_label, data_paths = check_file_dependencies()
+    output = config['output']
     
     print('Generating Security Watch Report for ' + qrtr_label[4])
     
     print('Creating charts:')
     
+    # Lambda function to use qrtr_labels as the labels for the x-axis
     qrtr_bar = lambda x,y: rutil.plotly_bar_chart(qrtr_label,x,y)
      
     
-    # Defacement, Phishing and Malware
-    # Trend, URL/IP
+    # Defacement, Phishing and Malware Trend and URL/IP
     url_data = [[],[],[]]
     url_ip_col = [('Defacement', 1, u'網頁塗改',config['defce_color']), 
                   ('Phishing', 2, u'釣魚網站',config['phish_color']), 
@@ -211,7 +239,6 @@ def create_qrtr_graphs():
         table_top_bot += row     
     table_top_bot += '\\hline\n\\end{tabular}\n\\end{table}\n'            
     
-    
     # Server-related Events
     plot_url = rutil.plotly_bar_chart(qrtr_label,
                    zip(url_data, ['Defacement','Phishing','Malware hosting']),
@@ -239,7 +266,9 @@ def create_qrtr_graphs():
     rutil.google_pie_chart([('botnetDailyMax','BotnetFamPie')], 
                             data_paths[len(data_paths) - 1], 
                             output)
-    
+                   
+                   
+    # Generate latex table for Major Botnet Families
     headers, data = rutil.read_csv(data_paths[4] + 'botnetDailyMax.csv', [0,1])
     _, prev_data = rutil.read_csv(data_paths[3] + 'botnetDailyMax.csv', [0,1])
     rank_change = []
@@ -258,19 +287,22 @@ def create_qrtr_graphs():
             if prev_data[0][i] == data[0][j]:
                 new = float(data[1][j])
                 old = float(prev_data[1][i])
-                pct_change[j] = str(round((new - old) * 100 / old, 1)) + '\%'           
+                pct_change[j] = str(round((new - old) * 100 / old, 1)) + '\%'   
+
+    # Major Botnet Families table headers            
     headers = ['Rank', '$\\Uparrow\\Downarrow$', 'Concerned Bots', 'Number of Unique', 'Changes with']
     table_ltx = ''
     table_ltx += '\\begin{table}[!htbp]\n\\centering\n'
     table_ltx += '\\caption{__CAPTION__}'
     table_ltx += '\n\\begin{tabular}{lllll} \\hline\n__HEADERS__\\\\\\hline\n'
 
-    
+    # Major Botnet Families table data
     for i in range(len(data[0]) if len(data[0]) < 10 else 10):
         table_ltx += '&'.join([str(i), rank_change[i], data[0][i], data[1][i], pct_change[i]]) + '\\\\\n'      
     table_ltx += '\\hline\n\\end{tabular}\n\\end{table}\n'            
     ltx_temp = ''
     
+    # Create Chinese and English version of Major Botnet Families
     table_ltx_cap_eng = 'Major Botnet Families in Hong Kong Networks'
     table_ltx_cap_chi = u'香港網絡內的主要殭屍網絡'
     table_ltx_hdr_eng = '&'.join(map(lambda x:'\\bf ' + x,headers)) + '\\\\\n&&& \\bf IP addresses & \\bf previous period\n'
@@ -280,7 +312,7 @@ def create_qrtr_graphs():
     table_chi = table_ltx.replace('__HEADERS__', table_ltx_hdr_chi)
     table_chi = table_chi.replace('__CAPTION__', table_ltx_cap_chi)
     
-    # Output Latex
+    # Compile Latex report
     with open(output + 'report_quarterly_temp.tex') as f:
         ltx_temp = f.read()
     fontcfg = ConfigParser.ConfigParser(allow_no_value=True)
@@ -322,4 +354,4 @@ def create_qrtr_graphs():
             
         
 if __name__ == '__main__':    
-    create_qrtr_graphs()
+    create_quarterly_report()

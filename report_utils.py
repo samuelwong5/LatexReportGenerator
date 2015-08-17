@@ -14,6 +14,12 @@ import report_gchart as gchart
 bar_deflt_colors = []
 
 def set_bar_deflt_colors(colors):
+    """
+    Sets the default color scheme for the Plotly
+    bar charts. This color scheme will be used
+    if the optional parameter is not used in
+    plotly_bar_chart
+    """
     global bar_deflt_colors
     bar_deflt_colors = colors
 
@@ -48,6 +54,12 @@ def read_csv(file, columns=[], max_row=-1):
         
   
 def plotly_init(cred):
+    """
+    Initializes plotly API credentials. See config file.
+    
+    Arguments:
+    cred -- tuple containing API username and key
+    """
     usr, pwd = cred
     plotly.tools.set_credentials_file(username=usr, api_key=pwd)
         
@@ -61,9 +73,11 @@ def plotly_download_png(url, output):
     url    -- return value of py.plot
     output -- output path for the image file
     """
+    print(url)
     if url == '':
         return
     r = requests.get(url + '.png', stream=True)
+    print(r.status_code)
     if r.status_code == 200:
         dir = os.path.dirname(output)
         if not os.path.exists(dir): 
@@ -74,6 +88,7 @@ def plotly_download_png(url, output):
         print('[DONE]')
     else:
         print('[FAIL]' )
+    
     
 def plotly_line_chart(x_label, data, chart_title=''):
     """
@@ -101,13 +116,15 @@ def plotly_bar_chart(x_label, data, chart_title='', bar_mode='group', color=[], 
     data        -- a list of (data set, data set title)
     chart_title -- the above chart title (default: empty string)
     bar_mode    -- 'overlay', 'stack' or 'group' (default: 'group')
-    color       -- the color schemes for the bars
+    color       -- the color schemes for the bar chart
     annotations -- turns on labels for the bars (default: on)
     """
     if color == []:
         color = bar_deflt_colors
     print_no_newline(chart_title)
     anno_data = [] 
+    
+    # Calculate annotations positions 
     if (bar_mode=='group' or len(data) == 1) and annotations:
         # Previously calculated offsets for bar labels
         anno_offset = [(0,0), (-0.2,0.4), (-0.27,0.27)]
@@ -120,6 +137,8 @@ def plotly_bar_chart(x_label, data, chart_title='', bar_mode='group', color=[], 
             offset_base += offset_inc
         y_height = reduce(lambda x,y:x+y, map(lambda z:z[0], data), [])
         anno_data = zip(offset_array, y_height, y_height)
+        
+        # Map the color scheme into the Plotly Bar object
         if color == []:
             bars = [Bar(x=x_label,y=data_array,name=data_name) for (data_array, data_name) in data]
         elif len(data) > 1:
@@ -137,7 +156,7 @@ def plotly_bar_chart(x_label, data, chart_title='', bar_mode='group', color=[], 
         if color == []:
             bars = [Bar(x=x_label,y=data_array,name=data_name) for (data_array, data_name) in data]
         else:
-            bars = [Bar(x=x_label,y=data_array,name=data_name,marker=Marker(color=clr)) for ((data_array, data_name), clr) in zip(data, color[:len(data)])]
+            bars = [Bar(x=x_label,y=data_array,name=data_name,marker=Marker(color=clr)) for ((data_array, data_name), clr) in zip(data, color[:len(data)])]       
     chart_data = Data(bars) 
     layout = Layout(
         title=chart_title,
@@ -155,10 +174,23 @@ def plotly_bar_chart(x_label, data, chart_title='', bar_mode='group', color=[], 
         ) for xi, yi, zi in anno_data]
     )
     fig = Figure(data=chart_data,layout=layout)
-    return py.plot(fig, chart_title, auto_open=False)
-    
+    url =  py.plot(fig, chart_title, auto_open=False)
+    print(url)
+    return url    
 
 def google_pie_chart(files, input_dir, output_dir):
+    """
+    Creates a pie chart using Google Charts API
+    Uses Flask as a webserver and selenium as a browser
+    to run the Google Charts JS API, converts the chart
+    to a Base64 encoded string and then saves it as a 
+    PNG file.
+    
+    Arguments:
+    files      -- CSV filenames to be parsed and plotted
+    input_dir  -- Location of the input data files
+    output_dir -- Location where the PNG files should be saved
+    """
     print('Creating pie charts...')
     print_no_newline('Starting virtual display...')
     display = Display(visible=0, size=(1024, 768))

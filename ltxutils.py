@@ -210,8 +210,6 @@ def create_report(dir, prev_month_dir, output, yymm):
     with open(output + 'header.tex') as f:
         header = f.read()
        
-
-    
     fontcfg = ConfigParser.ConfigParser(allow_no_value=True)
     fontcfg.read('config.cfg')
     f = lambda x: fontcfg.get('font','font_' + x)
