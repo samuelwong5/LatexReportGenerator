@@ -73,11 +73,9 @@ def plotly_download_png(url, output):
     url    -- return value of py.plot
     output -- output path for the image file
     """
-    print(url)
     if url == '':
         return
     r = requests.get(url + '.png', stream=True)
-    print(r.status_code)
     if r.status_code == 200:
         dir = os.path.dirname(output)
         if not os.path.exists(dir): 
@@ -174,9 +172,7 @@ def plotly_bar_chart(x_label, data, chart_title='', bar_mode='group', color=[], 
         ) for xi, yi, zi in anno_data]
     )
     fig = Figure(data=chart_data,layout=layout)
-    url =  py.plot(fig, chart_title, auto_open=False)
-    print(url)
-    return url    
+    return py.plot(fig, chart_title, auto_open=False)   
 
 def google_pie_chart(files, input_dir, output_dir):
     """
