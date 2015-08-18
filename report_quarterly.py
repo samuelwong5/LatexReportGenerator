@@ -185,7 +185,7 @@ def quarterly_compile_data():
     config['serv_events'] = reduce(rutil.sum_array, url_data)
    
    
-def quarterly_create_charts(params):
+def quarterly_create_charts():
     """
     Generates charts for the quarterly security watch report 
     using Plotly and Google Charts.
@@ -351,7 +351,7 @@ def quarterly_latex():
 
     # Major Botnet Families table data
     for i in range(len(data[0]) if len(data[0]) < 10 else 10):
-        table_ltx += '&'.join([str(i), rank_change[i], data[0][i], data[1][i], pct_change[i]]) + '\\\\\n'      
+        table_ltx += '&'.join([str(i+1), rank_change[i], data[0][i], data[1][i], pct_change[i]]) + '\\\\\n'      
     table_ltx += '\\hline\n\\end{tabular}\n\\end{table}\n'            
     ltx_temp = ''
     
