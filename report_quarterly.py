@@ -47,6 +47,21 @@ def prev_qrtr(year, qrtr, offset=0):
             new_qrtr -= 1
     return str(new_year).zfill(2) + str(new_qrtr).zfill(2)
 
+
+def quarterly_help():
+    print ('Usage: python report_quarterly.py <YYQQ> [--help] [<args>]')
+    print('''\nCommands:
+    --clean
+        Clears the latex output directory of all files except
+        the file dependencies for report generation
+    --latex-only
+        Only compiles the latex report without replotting the 
+        charts. REQUIRES THE GRAPHS TO BE PLOTTED PREVIOUSLY
+    --graph-only
+        Only generates the charts for the report without compiling
+        the LaTeX pdf''')   
+    sys.exit(0)
+ 
     
 def check_file_dependencies():
     """
@@ -418,12 +433,12 @@ def create_quarterly_report():
         Only generates the charts for the report without compiling
         the LaTeX pdf        
     """
+    if len(sys.argv) == 1 or '--help' in sys.argv: quarterly_help()
     check_file_dependencies()
     quarterly_compile_data()
     if not '--latex-only' in sys.argv: quarterly_create_charts()
     if not '--graph-only' in sys.argv: quarterly_latex()
     
             
-        
 if __name__ == '__main__':    
     create_quarterly_report()
