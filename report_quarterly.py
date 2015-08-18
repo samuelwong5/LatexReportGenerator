@@ -8,16 +8,11 @@ import sys
 import report_utils as rutil
 
 
-# Global config dictionary
-config = {}
-
-
 def parse_config():
     """
     Parses the config.cfg file and outputs it to the global
     python dictionary variable config.
     """
-    global config
     cfg = ConfigParser.ConfigParser(allow_no_value=True)
     cfg.read('config.cfg')
     config = {key : cfg.get('quarterly',key) for key in ['input','output']}
@@ -25,6 +20,7 @@ def parse_config():
                          cfg.get('quarterly',k).split(',')) 
                          for k in ['defce_color','phish_color','malwr_color','other_color']})
     rutil.set_bar_deflt_colors(config['other_color'])
+    return config
     
     
 def prev_qrtr(year, qrtr, offset=0):
@@ -49,7 +45,7 @@ def prev_qrtr(year, qrtr, offset=0):
 
 
 def quarterly_help():
-    print ('Usage: python report_quarterly.py <YYQQ> [--help] [<args>]')
+    print ('Usage: python report_quarterly.py <YYQQ> [--help] [<commands>]')
     print('''\nCommands:
     --clean
         Clears the latex output directory of all files except
@@ -63,7 +59,7 @@ def quarterly_help():
     sys.exit(0)
  
     
-def check_file_dependencies():
+def check_file_dependencies(config):
     """
     Checks whether the required file dependencies exist. 
     Cleans the output directory if --clean flag is received.
@@ -79,7 +75,6 @@ def check_file_dependencies():
     if len(sys.argv) < 2:
         print('Missing parameter: YYQQ (Y=Year / Q=Quarter)')
         sys.exit()
-    parse_config()
     input = config['input']
     output = os.path.join(os.getcwd(), config['output'])    
     config['output'] = output
@@ -117,11 +112,10 @@ def check_file_dependencies():
     config['params'] = (yyqq, year, qrtr, qrtr_label, data_paths)
    
    
-def quarterly_compile_data():
+def quarterly_compile_data(config):
     """
     Reads CSV files and compiles the data.
     """  
-    global config
     yyqq, year, qrtr, qrtr_label, data_paths = config['params']
     # URL/IP data
     url_data = [[],[],[]]
@@ -204,7 +198,7 @@ def quarterly_compile_data():
     config['serv_events'] = reduce(rutil.sum_array, url_data)
    
    
-def quarterly_create_charts():
+def quarterly_create_charts(config):
     """
     Generates charts for the quarterly security watch report 
     using Plotly and Google Charts.
@@ -306,7 +300,7 @@ def quarterly_create_charts():
                             output)               
                    
                    
-def quarterly_latex():
+def quarterly_latex(config):
     """
     Compiles the LaTeX report for the Quarterly Security
     Watch Report. Generates the LaTeX tables from reading
@@ -426,6 +420,8 @@ def create_quarterly_report():
     --clean
         Clears the latex output directory of all files except
         the file dependencies for report generation
+    --help
+        Shows the usage and commands
     --latex-only
         Only compiles the latex report without replotting the 
         charts. REQUIRES THE GRAPHS TO BE PLOTTED PREVIOUSLY
@@ -433,11 +429,15 @@ def create_quarterly_report():
         Only generates the charts for the report without compiling
         the LaTeX pdf        
     """
-    if len(sys.argv) == 1 or '--help' in sys.argv: quarterly_help()
-    check_file_dependencies()
-    quarterly_compile_data()
-    if not '--latex-only' in sys.argv: quarterly_create_charts()
-    if not '--graph-only' in sys.argv: quarterly_latex()
+    if len(sys.argv) == 1 or '--help' in sys.argv: 
+        quarterly_help()
+    config = parse_config()
+    check_file_dependencies(config)
+    quarterly_compile_data(config)
+    if not '--latex-only' in sys.argv: 
+        quarterly_create_charts(config)
+    if not '--graph-only' in sys.argv: 
+        quarterly_latex(config)
     
             
 if __name__ == '__main__':    

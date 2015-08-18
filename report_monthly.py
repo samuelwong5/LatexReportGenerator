@@ -8,11 +8,10 @@ import ltxutils
 import report_utils as rutil
 
 
-# Global config dictionary
-config = {}
-
-
 def print_done():
+    """
+    Utility function that prints '[DONE]'
+    """
     print('[DONE]')    
       
       
@@ -42,10 +41,28 @@ def month_string_format(year, month):
     return ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][month-1] + y_str  
     
     
-def create_monthly_bar():
+def monthly_help():
+    print ('Usage: python report_monthly.py <YYMM> [--help] [<commands>]')
+    print('''\nCommands:
+    --clean
+        Clears the latex output directory of all files except
+        the file dependencies for report generation
+    --latex-only
+        Only compiles the latex report without replotting the 
+        charts. REQUIRES THE GRAPHS TO BE PLOTTED PREVIOUSLY
+    --graph-only
+        Only generates the charts for the report without compiling
+        the LaTeX pdf''')   
+    sys.exit(0)
+ 
+ 
+def monthly_create_multi_bar(config):
     """
     Creates the bar charts that uses data from
     multiple months.
+    
+    Arguments:
+    config     -- configuration dictionary
     """
     file_paths = config['file_paths']
     year = config['year']
@@ -54,7 +71,7 @@ def create_monthly_bar():
     output_dir = config['output_dir']
     
     ssfiles = map(lambda x: x + 'serverSummary.csv', file_paths)
-    create_server_summary(ssfiles, months, output_dir)
+    create_server_summary(ssfiles, config)
     
     bot_data = []   
     ccfiles = map(lambda x: x + 'C&CServers.csv', file_paths)
@@ -99,16 +116,20 @@ def create_monthly_bar():
     rutil.plotly_download_png(plot_url, output_dir + 'BotBotsDis.png')
       
       
-def create_server_summary(file_paths, months, output_dir='latex/'):
+def create_server_summary(file_paths, config):
     """
     Creates the summary bar charts:
     Defacement/Phishing/Malware Summary/(URL/IP)
     
     Arguments:
     file_paths -- folder paths for the three months of csv files
-    months     -- list of human-readable formatted strings
-    output_dir -- directory to save the PNG files of the charts
+    config     -- configuration dictionary
     """
+    month = config['month']
+    year = config['year']
+    months = [month_string_format(year, month-2), month_string_format(year, month-1), month_string_format(year, month)]
+    output_dir = config['output_dir']
+    
     data = []
     for file in file_paths:
         _, csv_data = rutil.read_csv(file, [1,2,3])
@@ -203,19 +224,22 @@ def parse_config():
         sys.exit('[FATAL] Please check the data path is correct in config.cfg')
     
     # Set global config   
-    global config
     config = {'yymm': yymm, 'year': year, 'month': month, 'file_paths':file_paths, 'output_dir': ltx_output, 'plotly_cred': plotly_cred}
     config.update({k:map(lambda x:x.replace('-',','),
                          cfg.get('monthly',k).split(',')) 
                          for k in ['defce_color','phish_color','malwr_color','other_color']})
     rutil.set_bar_deflt_colors(config['other_color'])
-
+    return config
     
-def create_bar_charts():
+    
+def monthly_create_bar_charts(config):
     """
     Create bar charts that use data from current month
     [N.B. Bar charts that use data from multiple months are generated
-    in create_monthly_bar]
+    in monthly_create_multi_bar]
+    
+    Arguments:
+    config     -- configuration dictionary
     """
     print('Creating bar charts...')
     print('  Downloading bar charts...')
@@ -230,13 +254,16 @@ def create_bar_charts():
         rutil.plotly_download_png(plot_url, config['output_dir'] + file + '.png')
 
     # Create bar charts that use data from multiple months
-    create_monthly_bar()
+    monthly_create_multi_bar(config)
  
  
-def create_pie_charts():
+def monthly_create_pie_charts(config):
     """
     Creates the bar charts for the security watch report.
     Uses the Google Charts API.
+    
+    Arguments:
+    config     -- configuration dictionary
     """
     pie_chart_csv = ['DefacementTld',
                      'ISPDefacement',
@@ -248,14 +275,39 @@ def create_pie_charts():
                      'ISPBotnetsPie',
                      'ISPServerAllPie',
                      'ISPAllPie']
-    rutil.google_pie_chart(zip(pie_chart_csv, pie_chart_csv), config['file_paths'][2], config['output_dir'])
+    rutil.google_pie_chart(zip(pie_chart_csv, pie_chart_csv), 
+                           config['file_paths'][2], 
+                           config['output_dir'])
     
     
 def create_monthly_report():    
-    parse_config()          
-    create_bar_charts()    
-    create_pie_charts()
-    ltxutils.create_report(config["file_paths"][2], config["file_paths"][1], config['output_dir'], config["yymm"])
+    """
+    Main function to create the quarterly security watch report.
+    
+    Flags:
+    --clean
+        Clears the latex output directory of all files except
+        the file dependencies for report generation
+    --help
+        Shows the usage and commands
+    --latex-only
+        Only compiles the latex report without replotting the 
+        charts. REQUIRES THE GRAPHS TO BE PLOTTED PREVIOUSLY
+    --graph-only
+        Only generates the charts for the report without compiling
+        the LaTeX pdf        
+    """
+    if len(sys.argv) == 1 or '--help' in sys.argv: 
+        monthly_help()
+    config = parse_config()       
+    if not '--latex-only' in sys.argv: 
+        monthly_create_bar_charts(config)    
+        monthly_create_pie_charts(config)
+    if not '--graph-only' in sys.argv: 
+        ltxutils.create_report(config["file_paths"][2], 
+                               config["file_paths"][1], 
+                               config['output_dir'], 
+                               config["yymm"])
            
     
 if __name__ == "__main__":    
