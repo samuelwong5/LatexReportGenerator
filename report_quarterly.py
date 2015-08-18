@@ -101,9 +101,13 @@ def check_file_dependencies():
                      qrtr_label)
     config['params'] = (yyqq, year, qrtr, qrtr_label, data_paths)
    
+   
 def quarterly_compile_data():
-    yyqq, year, qrtr, qrtr_label, data_paths = config['params']
+    """
+    Reads CSV files and compiles the data.
+    """  
     global config
+    yyqq, year, qrtr, qrtr_label, data_paths = config['params']
     # URL/IP data
     url_data = [[],[],[]]
     url_ip_col = [('Defacement', 1), 
@@ -189,10 +193,6 @@ def quarterly_create_charts():
     """
     Generates charts for the quarterly security watch report 
     using Plotly and Google Charts.
-    
-    Arguments:
-    param -- contains the year, quarter and misc data for 
-             chart graphing
     """
     yyqq, year, qrtr, qrtr_label, data_paths = config['params']
     output = config['output']
@@ -298,10 +298,6 @@ def quarterly_latex():
     CSV files; Uses template LaTeX report_qrtr_temp_chi
     and report_quarterly_temp and inserts the data 
     appropriately.
-    
-    Arguments:
-    param -- contains the year, quarter and misc data for 
-             report generation
     """
     
     yyqq, year, qrtr, qrtr_label, data_paths = config['params']
