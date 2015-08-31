@@ -119,14 +119,14 @@ def calculate_rank_change(data):
         for i in range(len(prev_data[0])):
             for j in range(len(csv_data[0])):
                 if prev_data[0][i] == csv_data[0][j]:
-                    old = prev_data[1][i]
-                    new = csv_data[1][j]
+                    old = prev_data[len(prev_data)-1][i]
+                    new = csv_data[len(csv_data)-1][j]
                     if (old != '') and (new != '') and (old != '0'):
                         percent_change[j] = str((int(new) - int(old)) * 100 / int(old))
                     break
         headers.append('+-\\%')
         data.append(percent_change)        
-    
+
     # add percentages column
     percentages = []
     for i in range(len(data[0])):
@@ -174,7 +174,7 @@ def get_file_name(file_path):
     
 def summary(doc, title, file_name, dir_t):
     summ_param = 'height=8.5cm'
-    pie_chart_trim_param = 'trim={4cm 8cm 4cm 5.5cm},clip,height=12cm'
+    pie_chart_trim_param = 'trim={4cm 8cm 4cm 5cm},clip,height=12cm'
     title = sanitize(title)
     doc.section(sanitize(title))
     doc.subsection('Summary')
