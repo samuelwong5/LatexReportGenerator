@@ -172,9 +172,8 @@ def get_file_name(file_path):
     return (strSplit[len(strSplit) - 1]).split('.')[0]
      
     
-def summary(doc, title, file_name, dir_t):
+def summary(doc, title, file_name, dir_t, pie_chart_param):
     summ_param = 'height=8.5cm'
-    pie_chart_trim_param = 'trim={4cm 8cm 4cm 5cm},clip,height=12cm'
     title = sanitize(title)
     doc.section(sanitize(title))
     doc.subsection('Summary')
@@ -186,7 +185,7 @@ def summary(doc, title, file_name, dir_t):
     doc.figure(title + 'URLIP', title + ' - URL/IP ratio', summ_param)
     doc.newpage()
     doc.text("\\subsection[TLD Distribution]{TLD Distribution{\\protect\\footnote{TLD Distribution - Top Level Domain Distribution of compromised machines which serve systems registered with a .hk top level domain, or whose network geolocation is Hong Kong.}}}\n")
-    doc.figure(file_name, file_name + " - TLD Distribution", pie_chart_trim_param)
+    doc.figure(file_name, file_name + " - TLD Distribution", pie_chart_param)
     doc.rc_table(file_name + '.csv', dir_t)
 
     
@@ -198,7 +197,7 @@ def print_no_newline(text):
  
 def create_report(dir, prev_month_dir, output, yymm):
     isp_param = 'height=13cm' 
-    pie_chart_trim_param = 'trim={4cm 8cm 4cm 5.5cm},clip,height=12cm'
+    pie_chart_param = 'trim={4cm 8cm 4cm 5cm},clip,height=12cm'
     input_dir = dir
     prev_dir = prev_month_dir
     dir_t = (input_dir, prev_dir)
@@ -217,18 +216,11 @@ def create_report(dir, prev_month_dir, output, yymm):
     report.text(header.replace('__FONT__',f('family')))
     
     #sections 1-3
-    print_no_newline('Section 1')
-    summary(report, 'Defacement', 'DefacementTld', dir_t)
-    report.newpage()
-    print('[DONE]')
-    print_no_newline('Section 2')
-    summary(report, 'Phishing', 'PhishingTld', dir_t)
-    report.newpage()
-    print('[DONE]')
-    print_no_newline('Section 3')
-    summary(report, 'Malware', 'MalwareTld', dir_t)
-    report.newpage()
-    print('[DONE]')
+    for i, j in [(1, 'Defacement'),(2, 'Phishing'),(3, 'Malware')]:
+        print_no_newline('Section ' + str(i))
+        summary(report, j, j + 'Tld', dir_t, pie_chart_param)
+        report.newpage()
+        print('[DONE]')
     
     #section 4
     print_no_newline('Section 4')
@@ -252,12 +244,12 @@ def create_report(dir, prev_month_dir, output, yymm):
     isp = ['Defacement', 'Phishing', 'Malware']
     for i in isp:
         report.subsection('Top 10 ISPs hosting ' + i)
-        report.figure('ISP' + i, i + ' - Top ISPs', pie_chart_trim_param)
+        report.figure('ISP' + i, i + ' - Top ISPs', pie_chart_param)
         report.rc_table('ISP' + i + '.csv', dir_t)
         report.newpage()
     
     report.subsection('Top 10 ISPs of unique botnets (Bots)')
-    report.figure('ISPBotnetsPie', 'Botnet (Bots) - Top ISPs', pie_chart_trim_param)
+    report.figure('ISPBotnetsPie', 'Botnet (Bots) - Top ISPs', pie_chart_param)
     report.rc_table('ISPBotnets.csv', dir_t)
     report.newpage()
     report.subsection('Top 10 ISPs of Botnet C&Cs')
@@ -277,7 +269,7 @@ def create_report(dir, prev_month_dir, output, yymm):
     for i in isp_info:
         title = i[0]
         report.subsection('Top 10 ISPs for ' + i[0])
-        report.figure(i[2] + 'Pie', i[1] + ' - Top ISPs', pie_chart_trim_param)
+        report.figure(i[2] + 'Pie', i[1] + ' - Top ISPs', pie_chart_param)
         isp_all_hdr, isp_all_data = rutil.read_csv(input_dir + i[2] + '.csv')
         headers_prev, data_prev = rutil.read_csv(prev_dir + i[2] + '.csv')
         data, headers = calculate_rank_change([(isp_all_hdr, isp_all_data), (headers_prev, data_prev)])
