@@ -163,12 +163,13 @@ def plotly_bar_chart(x_label, data, chart_title='', bar_mode='group', color=[], 
         ),
         barmode=bar_mode,
         annotations=[Annotation(
+            font=Font(color=('rgba(245, 246, 249, 1)' if bar_mode=='stack' else 'rgba(30,30,30,1)')),
             x=xi,
             y=yi,
             text=str(zi),
             xanchor='center',
             yanchor='bottom',
-             showarrow=False,
+            showarrow=False,
         ) for xi, yi, zi in anno_data]
     )
     fig = Figure(data=chart_data,layout=layout)
