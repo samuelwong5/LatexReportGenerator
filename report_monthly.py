@@ -1,3 +1,4 @@
+import argparse
 import ConfigParser
 import csv
 import os 
@@ -39,21 +40,6 @@ def month_string_format(year, month):
         year -= 1
     y_str = str(year) if year >= 10 else '0' + str(year)   # year 9 -> 09, 8 -> 08 ...
     return ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][month-1] + y_str  
-    
-    
-def monthly_help():
-    print ('Usage: python report_monthly.py <YYMM> [--help] [<commands>]')
-    print('''\nCommands:
-    --clean
-        Clears the latex output directory of all files except
-        the file dependencies for report generation
-    --latex-only
-        Only compiles the latex report without replotting the 
-        charts. REQUIRES THE GRAPHS TO BE PLOTTED PREVIOUSLY
-    --graph-only
-        Only generates the charts for the report without compiling
-        the LaTeX pdf''')   
-    sys.exit(0)
  
  
 def monthly_create_multi_bar(config):
@@ -167,12 +153,34 @@ def create_server_summary(file_paths, config):
         plot_url = rutil.plotly_bar_chart(months, [(url_data, 'URL/IP Ratio')], type + ' URL/IP Ratio', color=colors)
         rutil.plotly_download_png(plot_url, output_dir + type + 'URLIP.png')
   
-    
+def clean(ltx_output):
+    """
+    Cleans the output latex directory of all files except
+    the required dependencies.
+    """
+    # File dependencies 
+    required_files = ['footer.tex',
+                      'header.tex',
+                      'HKCERT.png']     
+    for file in os.listdir(ltx_output):
+        if (not file in required_files) and os.path.isfile(ltx_output + file):
+            os.remove(ltx_output + file)
+    sys.exit(0)
+   
 def parse_config():
     """
     Parses the config.cfg file and outputs it to the global
     python dictionary variable config.
     """
+    parser = argparse.ArgumentParser()
+    g = parser.add_mutually_exclusive_group(required=True)
+    g.add_argument('-c', '--clean', action='store_true', help='Clean output folder of all files that are not dependencies.')
+    g.add_argument('YYMM', nargs='?', type=int, action='store', help='Report month in YYMM format')
+    h = parser.add_mutually_exclusive_group()
+    h.add_argument('-l', '--latex-only', action='store_true', help='Only compiles the latex report without replotting charts. Note: Requires the charts to be generated previously.')
+    h.add_argument('-g', '--graph-only', action='store_true', help='Only generates the charts for the report without compiling the LaTeX and PDF.')
+    args = parser.parse_args(sys.argv[1:])
+  
     # File dependencies 
     required_files = ['footer.tex',
                       'header.tex',
@@ -182,30 +190,21 @@ def parse_config():
     cfg.read('config.cfg')
     ltx_output = cfg.get('monthly','output')
     data_folder = cfg.get('monthly','input')
-    if len(sys.argv) < 2:
-        print ('[FATAL] Error: Missing YYMM argument.')
-        sys.exit(1)
-        
-    # Clean output folder
-    if sys.argv[1] == '--clean':
-        for file in os.listdir(ltx_output):
-            if (not file in required_files) and os.path.isfile(ltx_output + file):
-                os.remove(ltx_output + file)
-        sys.exit(0)
+
+    # Clean output folder if --clean flag
+    if args.clean:
+        clean(ltx_output)
         
     # Check arguments
-    if len(sys.argv[1]) != 4:
+    if args.YYMM < 1000 or args.YYMM > 10000 or args.YYMM % 100 > 12:
         print('[FATAL] Error: Argument should be in format YYMM (e.g. 1403 for 2014 March)')
-        sys.exit(1)
-    yymm = 0
-    year = 0
-    month = 0
+        sys.exit(-1)
     try:
-        yymm = int(sys.argv[1])
+        yymm = args.YYMM
         month = yymm % 100
         year = (yymm-month) / 100
     except:
-        print('Invalid argument. Expected format: YYMM (e.g. 1403 for 2014 March')
+        print('[FATAL] Error: Invalid argument. Expected format: YYMM (e.g. 1403 for 2014 March')
         sys.exit(1)
     file_paths = [data_folder + month_format(year, month - 2) + '/report/',  
         data_folder + month_format(year, month - 1) + '/report/',  
@@ -229,6 +228,10 @@ def parse_config():
                          cfg.get('monthly',k).split(',')) 
                          for k in ['defce_color','phish_color','malwr_color','other_color']})
     rutil.set_bar_deflt_colors(config['other_color'])
+    if args.latex_only:
+        config['only'] = 'latex'
+    elif args.graph_only:
+        config['only'] = 'graph'
     return config
     
     
@@ -297,13 +300,11 @@ def create_monthly_report():
         Only generates the charts for the report without compiling
         the LaTeX pdf        
     """
-    if len(sys.argv) == 1 or '--help' in sys.argv: 
-        monthly_help()
     config = parse_config()       
-    if not '--latex-only' in sys.argv: 
+    if config['only'] != 'latex': 
         monthly_create_bar_charts(config)    
         monthly_create_pie_charts(config)
-    if not '--graph-only' in sys.argv: 
+    if config['only'] != 'graph': 
         ltxutils.create_report(config["file_paths"][2], 
                                config["file_paths"][1], 
                                config['output_dir'], 
