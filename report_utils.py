@@ -98,6 +98,7 @@ def plotly_line_chart(x_label, data, chart_title=''):
     chart_title -- the above chart title (default: empty string)    
     """
     print_no_newline(chart_title)
+    x_label = map(lambda x: x if len(x) < 15 else x[:14] + '...', x_label)
     data = Data([Scatter(x=x_label,y=data_array,mode='lines+markers',
                       name=data_name) for data_array, data_name in data])
     layout = Layout(title=chart_title)
@@ -121,7 +122,7 @@ def plotly_bar_chart(x_label, data, chart_title='', bar_mode='group', color=[], 
         color = bar_deflt_colors
     print_no_newline(chart_title)
     anno_data = [] 
-    
+    x_label = map(lambda x: x if len(x) < 15 else x[:14] + '...', x_label)
     # Calculate annotations positions 
     if (bar_mode=='group' or len(data) == 1) and annotations:
         # Previously calculated offsets for bar labels
