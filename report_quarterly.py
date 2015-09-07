@@ -56,6 +56,8 @@ def parse_config():
         config['only'] = 'latex'
     elif args.graph_only:
         config['only'] = 'graph'
+    else:
+        config['only'] = 'all'
     config['YYQQ'] = args.YYQQ
     return config
     
