@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*- 
+import argparse
 import codecs
 import ConfigParser
 import csv
@@ -8,11 +9,37 @@ import sys
 import report_utils as rutil
 
 
+def clean(output):
+    """
+    Cleans the output latex directory of all files except
+    the required dependencies.
+    """
+    # File dependencies
+    required_files = ['report_qrtr_temp_chi.tex',
+                      'report_quarterly_temp.tex',
+                      'lightbulb.jpg',
+                      'warning.png',
+                      'HKCERT.png']   
+    for file in os.listdir(output):
+        if not file in required_files and os.path.isfile(output + file):
+            os.remove(output + file)
+    sys.exit(0)
+    
+    
 def parse_config():
     """
     Parses the config.cfg file and outputs it to the global
     python dictionary variable config.
     """
+    parser = argparse.ArgumentParser()
+    g = parser.add_mutually_exclusive_group(required=True)
+    g.add_argument('-c', '--clean', action='store_true', help='Clean output folder of all files that are not dependencies.')
+    g.add_argument('YYQQ', nargs='?', type=int, action='store', help='Report month in YYQQ format')
+    h = parser.add_mutually_exclusive_group()
+    h.add_argument('-l', '--latex-only', action='store_true', help='Only compiles the latex report without replotting charts. Note: Requires the charts to be generated previously.')
+    h.add_argument('-g', '--graph-only', action='store_true', help='Only generates the charts for the report without compiling the LaTeX and PDF.')
+    args = parser.parse_args(sys.argv[1:])
+        
     cfg = ConfigParser.ConfigParser(allow_no_value=True)
     cfg.read('config.cfg')
     config = {key : cfg.get('quarterly',key) for key in ['input','output']}
@@ -20,6 +47,18 @@ def parse_config():
                          cfg.get('quarterly',k).split(',')) 
                          for k in ['defce_color','phish_color','malwr_color','other_color']})
     rutil.set_bar_deflt_colors(config['other_color'])
+        
+    # Clean output folder if --clean flag
+    if args.clean:
+        clean(config['output'])
+    config['trim_config'] = (cfg.get('quarterly', 'bar_chart').replace('-','='), cfg.get('quarterly', 'pie_chart').replace('-','='))
+    if args.latex_only:
+        config['only'] = 'latex'
+    elif args.graph_only:
+        config['only'] = 'graph'
+    else:
+        config['only'] = 'all'
+    config['YYQQ'] = args.YYQQ
     return config
     
     
@@ -44,21 +83,6 @@ def prev_qrtr(year, qrtr, offset=0):
     return str(new_year).zfill(2) + str(new_qrtr).zfill(2)
 
 
-def quarterly_help():
-    print ('Usage: python report_quarterly.py <YYQQ> [--help] [<commands>]')
-    print('''\nCommands:
-    --clean
-        Clears the latex output directory of all files except
-        the file dependencies for report generation
-    --latex-only
-        Only compiles the latex report without replotting the 
-        charts. REQUIRES THE GRAPHS TO BE PLOTTED PREVIOUSLY
-    --graph-only
-        Only generates the charts for the report without compiling
-        the LaTeX pdf''')   
-    sys.exit(0)
- 
-    
 def check_file_dependencies(config):
     """
     Checks whether the required file dependencies exist. 
@@ -72,27 +96,16 @@ def check_file_dependencies(config):
                       'warning.png',
                       'HKCERT.png']   
                       
-    if len(sys.argv) < 2:
-        print('Missing parameter: YYQQ (Y=Year / Q=Quarter)')
-        sys.exit()
     input = config['input']
     output = os.path.join(os.getcwd(), config['output'])    
     config['output'] = output
     
-    # Clean output_dir if --clean flag
-    if sys.argv[1] == '--clean':
-        for file in os.listdir(output):
-            if not file in required_files and os.path.isfile(output + file):
-                os.remove(output + file)
-        sys.exit(0)
-    yyqq = int(sys.argv[1])
-    if yyqq < 1000:
+
+    yyqq = config['YYQQ']
+    if yyqq < 100 or yyqq > 10000 or yyqq % 100 > 4:
         print('Invalid input. Expected format: YYQQ')
         sys.exit()
     qrtr = yyqq % 10
-    if qrtr <= 0 or qrtr > 4:
-        print('Invalid quarter. Accepted range: 0 < QQ <= 4')
-        sys.exit()
           
     # Check file dependencies    
     file_missing = False                      
@@ -205,7 +218,6 @@ def quarterly_create_charts(config):
     """
     yyqq, year, qrtr, qrtr_label, data_paths = config['params']
     output = config['output']
-    
     print('Generating Security Watch Report for ' + qrtr_label[4])
     print('Creating charts:')
     
@@ -311,6 +323,7 @@ def quarterly_latex(config):
     
     yyqq, year, qrtr, qrtr_label, data_paths = config['params']
     output = config['output']
+    bar_chart_param, pie_chart_param = config['trim_config']
     
     # Top 5 Botnets Table
     top_bn_data, top_bn_name, _ = config['top_bn']
@@ -383,6 +396,8 @@ def quarterly_latex(config):
     ltx_temp = ltx_temp.replace('QUARTER', qrtr_label[4])
     ltx_temp = ltx_temp.replace('UNIQUEEVENTS', serv_events[4])
     ltx_temp = ltx_temp.replace('table\\_top\\_bot', table_top_bot)
+    ltx_temp = ltx_temp.replace('__PIE_CHART__', pie_chart_param)
+    ltx_temp = ltx_temp.replace('__BAR_CHART__', bar_chart_param)
     with open(output + 'SecurityWatchReport.tex', 'w+') as f:
         f.write(ltx_temp)
         
@@ -390,6 +405,8 @@ def quarterly_latex(config):
         ltx_temp = f.read()
     ltx_temp = ltx_temp.replace('UNIQUEEVENTS', serv_events[4])
     ltx_temp = ltx_temp.replace('table\\_top\\_bot', table_top_bot)
+    ltx_temp = ltx_temp.replace('__PIE_CHART__', pie_chart_param)
+    ltx_temp = ltx_temp.replace('__BAR_CHART__', bar_chart_param)
     with open(output + 'SecurityWatchReportChi.tex', 'w+') as f:
         f.write(ltx_temp)
     with codecs.open(output + 'chiqrtr.tex', mode='w+', encoding='utf-8-sig') as f:
@@ -429,14 +446,12 @@ def create_quarterly_report():
         Only generates the charts for the report without compiling
         the LaTeX pdf        
     """
-    if len(sys.argv) == 1 or '--help' in sys.argv: 
-        quarterly_help()
     config = parse_config()
     check_file_dependencies(config)
     quarterly_compile_data(config)
-    if not '--latex-only' in sys.argv: 
+    if config['only'] != 'latex': 
         quarterly_create_charts(config)
-    if not '--graph-only' in sys.argv: 
+    if config['only'] != 'latex': 
         quarterly_latex(config)
     
             
