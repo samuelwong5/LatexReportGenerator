@@ -316,5 +316,4 @@ def create_monthly_report():
            
     
 if __name__ == "__main__":    
->>>>>>> dev
     create_monthly_report()  
