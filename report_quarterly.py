@@ -51,7 +51,7 @@ def parse_config():
     # Clean output folder if --clean flag
     if args.clean:
         clean(config['output'])
-        
+    config['trim_config'] = (cfg.get('quarterly', 'bar_chart').replace('-','='), cfg.get('quarterly', 'pie_chart').replace('-','='))
     if args.latex_only:
         config['only'] = 'latex'
     elif args.graph_only:
@@ -218,7 +218,6 @@ def quarterly_create_charts(config):
     """
     yyqq, year, qrtr, qrtr_label, data_paths = config['params']
     output = config['output']
-    
     print('Generating Security Watch Report for ' + qrtr_label[4])
     print('Creating charts:')
     
@@ -227,9 +226,9 @@ def quarterly_create_charts(config):
      
     
     # Defacement, Phishing and Malware Trend and URL/IP
-    url_ip_col = [('Defacement', 1, u'網頁塗改',config['defce_color']), 
-                  ('Phishing', 2, u'釣魚網站',config['phish_color']), 
-                  ('Malware',3,u'惡意程式寄存',config['malwr_color'])]
+    url_ip_col = [('Defacement', 1, u'網�?塗改',config['defce_color']), 
+                  ('Phishing', 2, u'???網�?',config['phish_color']), 
+                  ('Malware',3,u'?��?程�?寄�?',config['malwr_color'])]
     for type, index, type_c, clr in url_ip_col:
         url_ip_unique_data, url_ip_ratio_data = config[type + '_url_data']
         plot_url = rutil.plotly_bar_chart(qrtr_label, zip(url_ip_unique_data, ['Unique URL', 'Unique IP']), 
@@ -238,11 +237,11 @@ def quarterly_create_charts(config):
         plot_url = rutil.plotly_bar_chart(qrtr_label, [(url_ip_ratio_data[0],'URL/IP ratio')], 
                        'URL/IP ratio of ' + type + ' security events',color=clr)        
         rutil.plotly_download_png(plot_url, output + type + 'RatioBar.png')  
-        plot_url = rutil.plotly_bar_chart(qrtr_label, zip(url_ip_unique_data, ['唯一網址', '唯一IP']), 
+        plot_url = rutil.plotly_bar_chart(qrtr_label, zip(url_ip_unique_data, ['?��?網�?', '?��?IP']), 
                        type_c + u'安全事件趨勢',color=clr)  
         rutil.plotly_download_png(plot_url, output + type + 'UniqueBarChi.png')        
-        plot_url = rutil.plotly_bar_chart(qrtr_label, [(url_ip_ratio_data[0],'唯一網址/IP比')], 
-                       type_c + u'安全事件唯一網址/IP比',color=clr)        
+        plot_url = rutil.plotly_bar_chart(qrtr_label, [(url_ip_ratio_data[0],'?��?網�?/IP�?)], 
+                       type_c + u'安全事件?��?網�?/IP�?,color=clr)        
         rutil.plotly_download_png(plot_url, output + type + 'RatioBarChi.png')         
     
     # Botnet (C&C) Distribution and Trend
@@ -254,14 +253,14 @@ def quarterly_create_charts(config):
     rutil.plotly_download_png(plot_url, output + 'BotnetCCDisBar.png')                   
     plot_url = rutil.plotly_bar_chart(qrtr_label,
                     zip(cc_data[0:2], ['IRC','HTTP']),
-                   u'殭屍網絡控制中心安全事件的趨勢和分佈',
+                   u'殭�?網絡?�制中�?安全事件?�趨?��??��?',
                    'stack')
     rutil.plotly_download_png(plot_url, output + 'BotnetCCDisBarChi.png')  
     plot_url = qrtr_bar([(cc_data[2], 'Botnet C&Cs')],
                    'Trend of Botnet (C&C) security events')  
     rutil.plotly_download_png(plot_url, output + 'BotnetCCBar.png')   
-    plot_url = qrtr_bar([(cc_data[2], u'殭屍網絡控制中心(C&C)')],
-                   u'殭屍網絡控制中心(C&C)安全事件趨勢')  
+    plot_url = qrtr_bar([(cc_data[2], u'殭�?網絡?�制中�?(C&C)')],
+                   u'殭�?網絡?�制中�?(C&C)安全事件趨勢')  
     rutil.plotly_download_png(plot_url, output + 'BotnetCCBarChi.png')
     
     # Unique Botnet (Bots) Trend
@@ -269,8 +268,8 @@ def quarterly_create_charts(config):
     plot_url = qrtr_bar([(bn_data,'Botnet (Bots)')],
                    'Trend of Botnet (Bots) security events')
     rutil.plotly_download_png(plot_url, output + 'BotnetBotsBar.png')   
-    plot_url = qrtr_bar([(bn_data,u'殭屍電腦')],
-                   u'殭屍網絡(殭屍電腦)安全事件趨勢')
+    plot_url = qrtr_bar([(bn_data,u'殭�??�腦')],
+                   u'殭�?網絡(殭�??�腦)安全事件趨勢')
     rutil.plotly_download_png(plot_url, output + 'BotnetBotsBarChi.png')          
            
     # Top 5 Botnets 
@@ -281,7 +280,7 @@ def quarterly_create_charts(config):
     rutil.plotly_download_png(plot_url, output + 'BotnetFamTopLine.png')   
     plot_url = rutil.plotly_line_chart(qrtr_label,
                    zip(top_bn_data, top_bn_name),
-                   u'五大主要殭屍網絡趨勢')      
+                   u'五大主�?殭�?網絡趨勢')      
     rutil.plotly_download_png(plot_url, output + 'BotnetFamTopLineChi.png')   
     
     # Server-related Events
@@ -292,8 +291,8 @@ def quarterly_create_charts(config):
                    'stack')
     rutil.plotly_download_png(plot_url, output + 'ServerDisBar.png')   
     plot_url = rutil.plotly_bar_chart(qrtr_label,
-                   zip(url_data, [u'網頁塗改',u'釣魚網站',u'惡意程式寄存']),
-                   u'與伺服器有關的安全事件的趨勢和分佈',
+                   zip(url_data, [u'網�?塗改',u'???網�?',u'?��?程�?寄�?']),
+                   u'?�伺?�器?��??��??��?件�?趨勢?��?�?,
                    'stack')
     rutil.plotly_download_png(plot_url, output + 'ServerDisBarChi.png')   
 
@@ -303,7 +302,7 @@ def quarterly_create_charts(config):
     plot_url = qrtr_bar([(serv_events, 'Unique security events')],
                    'Trend of Security events')      
     rutil.plotly_download_png(plot_url, output + 'TotalEventBar.png')   
-    plot_url = qrtr_bar([(serv_events, u'唯一安全事件')],
+    plot_url = qrtr_bar([(serv_events, u'?��?安全事件')],
                    u'安全事件趨勢')      
     rutil.plotly_download_png(plot_url, output + 'TotalEventBarChi.png')   
     
@@ -324,6 +323,7 @@ def quarterly_latex(config):
     
     yyqq, year, qrtr, qrtr_label, data_paths = config['params']
     output = config['output']
+    bar_chart_param, pie_chart_param = config['trim_config']
     
     # Top 5 Botnets Table
     top_bn_data, top_bn_name, _ = config['top_bn']
@@ -375,9 +375,9 @@ def quarterly_latex(config):
     
     # Create Chinese and English version of Major Botnet Families
     table_ltx_cap_eng = 'Major Botnet Families in Hong Kong Networks'
-    table_ltx_cap_chi = u'香港網絡內的主要殭屍網絡'
+    table_ltx_cap_chi = u'香港網絡?��?主�?殭�?網絡'
     table_ltx_hdr_eng = '&'.join(map(lambda x:'\\bf ' + x,headers)) + '\\\\\n&&& \\bf IP addresses & \\bf previous period\n'
-    table_ltx_hdr_chi = u'\\bf 排名 & \\bf $\\Uparrow\\Downarrow$ & \\bf 殭屍網絡名稱 & \\bf 唯一IP地址 & \\bf 變化 \n'
+    table_ltx_hdr_chi = u'\\bf ?��? & \\bf $\\Uparrow\\Downarrow$ & \\bf 殭�?網絡?�稱 & \\bf ?��?IP?��? & \\bf 變�? \n'
     table_eng = table_ltx.replace('__HEADERS__', table_ltx_hdr_eng)
     table_eng = table_eng.replace('__CAPTION__', table_ltx_cap_eng)
     table_chi = table_ltx.replace('__HEADERS__', table_ltx_hdr_chi)
@@ -396,6 +396,8 @@ def quarterly_latex(config):
     ltx_temp = ltx_temp.replace('QUARTER', qrtr_label[4])
     ltx_temp = ltx_temp.replace('UNIQUEEVENTS', serv_events[4])
     ltx_temp = ltx_temp.replace('table\\_top\\_bot', table_top_bot)
+    ltx_temp = ltx_temp.replace('__PIE_CHART__', pie_chart_param)
+    ltx_temp = ltx_temp.replace('__BAR_CHART__', bar_chart_param)
     with open(output + 'SecurityWatchReport.tex', 'w+') as f:
         f.write(ltx_temp)
         
@@ -403,10 +405,12 @@ def quarterly_latex(config):
         ltx_temp = f.read()
     ltx_temp = ltx_temp.replace('UNIQUEEVENTS', serv_events[4])
     ltx_temp = ltx_temp.replace('table\\_top\\_bot', table_top_bot)
+    ltx_temp = ltx_temp.replace('__PIE_CHART__', pie_chart_param)
+    ltx_temp = ltx_temp.replace('__BAR_CHART__', bar_chart_param)
     with open(output + 'SecurityWatchReportChi.tex', 'w+') as f:
         f.write(ltx_temp)
     with codecs.open(output + 'chiqrtr.tex', mode='w+', encoding='utf-8-sig') as f:
-        f.write(u'20' + unicode(year) + u'第' + [u'一',u'二',u'三',u'四'][qrtr-1] + u'季度')
+        f.write(u'20' + unicode(year) + u'�? + [u'一',u'�?,u'�?,u'??][qrtr-1] + u'�?��')
     with codecs.open(output + 'botnetchitable.tex', mode='w+', encoding='utf-8-sig') as f:
         f.write(table_chi)
         

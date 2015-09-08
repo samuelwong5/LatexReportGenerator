@@ -228,6 +228,7 @@ def parse_config():
                          cfg.get('monthly',k).split(',')) 
                          for k in ['defce_color','phish_color','malwr_color','other_color']})
     rutil.set_bar_deflt_colors(config['other_color'])
+    config['trim_config'] = (cfg.get('monthly', 'bar_chart').replace('-','='), cfg.get('monthly', 'pie_chart').replace('-','='))
     if args.latex_only:
         config['only'] = 'latex'
     elif args.graph_only:
@@ -307,11 +308,13 @@ def create_monthly_report():
         monthly_create_bar_charts(config)    
         monthly_create_pie_charts(config)
     if config['only'] != 'graph': 
-        ltxutils.create_report(config["file_paths"][2], 
-                               config["file_paths"][1], 
+        ltxutils.create_report(config['file_paths'][2], 
+                               config['file_paths'][1], 
                                config['output_dir'], 
-                               config["yymm"])
+                               config['yymm'],
+                               config['trim_config'])
            
     
 if __name__ == "__main__":    
+>>>>>>> dev
     create_monthly_report()  

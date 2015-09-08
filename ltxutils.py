@@ -195,9 +195,8 @@ def print_no_newline(text):
     sys.stdout.flush()     
     
  
-def create_report(dir, prev_month_dir, output, yymm):
-    isp_param = 'height=13cm' 
-    pie_chart_param = 'trim={4cm 8cm 4cm 5cm},clip,height=12cm'
+def create_report(dir, prev_month_dir, output, yymm, trim_config):
+    isp_param, pie_chart_param = trim_config
     input_dir = dir
     prev_dir = prev_month_dir
     dir_t = (input_dir, prev_dir)
