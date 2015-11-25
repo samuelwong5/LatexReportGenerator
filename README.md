@@ -3,6 +3,8 @@ ReportGrapher
 
 Generating full-fledged report from data.
 
+Project during internship at HKCERT.
+
 **Usage**
 
 Folder structure:
